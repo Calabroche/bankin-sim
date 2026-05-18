@@ -11,56 +11,110 @@ import styles from "./simulateur.module.css";
    differentiator: no form, the app already knows). */
 
 type Contrat = "CDI" | "CDD" | "AE";
+type Structure = "micro" | "eurl" | "sasu" | "sas" | "sarl";
+type Annees = "lt1" | "1to3" | "3plus";
+type Situation = "locataire" | "proprietaire";
+type TypeBien = "neuf" | "ancien";
+
+interface PersonAE {
+  structure: Structure;
+  annees: Annees;
+  caMensuel: number;
+  chargesProMensuel: number;
+}
 
 interface UserData {
   prenom: string;
   conjoint: string;
   enCouple: boolean;
   enfants: number;
+  situation: Situation;
   primoAccedant: boolean;
+
   contrat1: Contrat;
+  revenu1: number;          // €/mois — salaire net (CDI/CDD)
+  ae1: PersonAE;            // utilisé si contrat1 === "AE"
+
   contrat2: Contrat;
-  revenu1: number;          // €/mois — net for CDI/CDD, CA for AE
   revenu2: number;
-  revenusStable: number;    // mois sans variation
-  charges: number;          // €/mois — crédits en cours
+  ae2: PersonAE;
+
+  revenusStable: number;
+  charges: number;          // crédits en cours
   loyerActuel: number;
   depensesTotales: number;
   epargneMensuelle: number;
-  epargneDispo: number;     // disponible pour apport
+  epargneDispo: number;
+
+  // Projet
+  typeBien: TypeBien;
+  travaux: number;
+  duree: number;            // années (10-25)
+  apportProjet: number;     // € mobilisés (≤ épargneDispo)
+
   ville: string;
 }
+
+const DEFAULT_AE: PersonAE = {
+  structure: "micro",
+  annees: "3plus",
+  caMensuel: 4000,
+  chargesProMensuel: 1000,
+};
 
 const INITIAL_USER: UserData = {
   prenom: "Sophie",
   conjoint: "Thomas",
   enCouple: true,
   enfants: 2,
+  situation: "locataire",
   primoAccedant: true,
+
   contrat1: "CDI",
-  contrat2: "CDI",
   revenu1: 2500,
+  ae1: DEFAULT_AE,
+
+  contrat2: "CDI",
   revenu2: 2000,
+  ae2: DEFAULT_AE,
+
   revenusStable: 26,
   charges: 0,
   loyerActuel: 1100,
   depensesTotales: 3400,
   epargneMensuelle: 1100,
   epargneDispo: 22000,
+
+  typeBien: "neuf",
+  travaux: 0,
+  duree: 25,
+  apportProjet: 20000,
+
   ville: "Lyon",
 };
 
-/* Revenue weighting by contract type (how banks count it) */
-function weightedRevenue(contrat: Contrat, revenu: number): number {
-  if (contrat === "AE") return revenu * 0.7;  // 70 % du CA pour indépendants
-  if (contrat === "CDD") return revenu * 0.85; // 85 % pour CDD
-  return revenu; // CDI: 100 %
+/* Revenue actually counted by banks. Indépendants : 70 % du bénéfice
+   net (CA - charges pro). CDD : 85 %. CDI : 100 %. */
+function personRevenue(contrat: Contrat, revenu: number, ae: PersonAE): number {
+  if (contrat === "AE") {
+    const benefice = Math.max(0, ae.caMensuel - ae.chargesProMensuel);
+    return benefice * 0.7;
+  }
+  if (contrat === "CDD") return revenu * 0.85;
+  return revenu;
 }
 
 function computeTotalRevenue(u: UserData): number {
-  let total = weightedRevenue(u.contrat1, u.revenu1);
-  if (u.enCouple) total += weightedRevenue(u.contrat2, u.revenu2);
+  let total = personRevenue(u.contrat1, u.revenu1, u.ae1);
+  if (u.enCouple) total += personRevenue(u.contrat2, u.revenu2, u.ae2);
   return Math.round(total);
+}
+
+function describeContrats(u: UserData): string {
+  const left = u.contrat1 === "AE" ? "AE" : u.contrat1;
+  if (!u.enCouple) return left;
+  const right = u.contrat2 === "AE" ? "AE" : u.contrat2;
+  return `${left} + ${right}`;
 }
 
 interface CatBudget {
@@ -118,10 +172,12 @@ interface Scenario {
 }
 
 function buildScenarios(u: UserData): Scenario[] {
-  const taux = 3.75;
-  const duree = 25;
-  const apport = u.epargneDispo;
-  const ptz = u.primoAccedant ? ptzFromKids(u.enfants) : 0;
+  // Taux selon la durée (grille indicative octobre 2026)
+  const tauxParDuree: Record<number, number> = { 10: 3.3, 15: 3.45, 20: 3.6, 25: 3.75 };
+  const taux = tauxParDuree[u.duree] ?? 3.75;
+  const duree = u.duree;
+  const apport = u.apportProjet;
+  const ptz = u.primoAccedant && u.situation === "locataire" ? ptzFromKids(u.enfants) : 0;
   const totalRev = computeTotalRevenue(u);
   const maxMensualite = Math.max(0, totalRev * 0.35 - u.charges);
 
@@ -381,7 +437,7 @@ export default function SimulateurPage() {
                 <div className={styles.dataLabel}>Revenus nets du foyer</div>
                 <div className={styles.dataValue}>{formatEUR(totalRevenue)}</div>
                 <div className={`${styles.dataSub} ${styles.dataSubGood}`}>
-                  Stables depuis {user.revenusStable} mois ({user.enCouple ? `${user.contrat1} + ${user.contrat2}` : user.contrat1})
+                  Stables depuis {user.revenusStable} mois ({describeContrats(user)})
                 </div>
               </div>
 
@@ -780,8 +836,166 @@ interface EditPanelProps {
 
 function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
   const update = (patch: Partial<UserData>) => onChange({ ...draft, ...patch });
-  const contratLabel = (c: Contrat) => (c === "AE" ? "Indépendant" : c);
+  const updateAE = (which: 1 | 2, patch: Partial<PersonAE>) => {
+    if (which === 1) update({ ae1: { ...draft.ae1, ...patch } });
+    else update({ ae2: { ...draft.ae2, ...patch } });
+  };
   const contrats: Contrat[] = ["CDI", "CDD", "AE"];
+  const contratLabel = (c: Contrat) => (c === "AE" ? "Indépendant" : c);
+
+  const structures: { id: Structure; label: string }[] = [
+    { id: "micro", label: "Micro-entr." },
+    { id: "eurl", label: "EURL" },
+    { id: "sasu", label: "SASU" },
+    { id: "sas", label: "SAS" },
+    { id: "sarl", label: "SARL" },
+  ];
+  const anneesOpts: { id: Annees; label: string }[] = [
+    { id: "lt1", label: "< 1 an" },
+    { id: "1to3", label: "1–3 ans" },
+    { id: "3plus", label: "3+ ans ✓" },
+  ];
+
+  const renderPersonAE = (which: 1 | 2, ae: PersonAE) => (
+    <>
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Structure juridique</label>
+        <div className={styles.editSubChips}>
+          {structures.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              className={`${styles.editSubChip} ${ae.structure === s.id ? styles.editSubChipActive : ""}`}
+              onClick={() => updateAE(which, { structure: s.id })}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Années d'activité</label>
+        <div className={styles.editSubChips}>
+          {anneesOpts.map((a) => (
+            <button
+              key={a.id}
+              type="button"
+              className={`${styles.editSubChip} ${ae.annees === a.id ? styles.editSubChipActive : ""}`}
+              onClick={() => updateAE(which, { annees: a.id })}
+            >
+              {a.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Chiffre d'affaires mensuel net</label>
+        <div className={styles.editInputWrap}>
+          <input
+            type="number"
+            className={styles.editInput}
+            value={ae.caMensuel}
+            onChange={(e) => updateAE(which, { caMensuel: Number(e.target.value) || 0 })}
+            min={0}
+            step={100}
+          />
+          <span className={styles.editUnit}>€ / mois</span>
+        </div>
+      </div>
+      <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+        <label className={styles.editLabel}>Charges professionnelles mensuelles</label>
+        <div className={styles.editInputWrap}>
+          <input
+            type="number"
+            className={styles.editInput}
+            value={ae.chargesProMensuel}
+            onChange={(e) => updateAE(which, { chargesProMensuel: Number(e.target.value) || 0 })}
+            min={0}
+            step={50}
+          />
+          <span className={styles.editUnit}>€ / mois</span>
+        </div>
+        <div className={styles.editComputed}>
+          <span>Revenu net estimé (banques, 70 % du bénéfice)</span>
+          <strong>{formatEUR(Math.max(0, ae.caMensuel - ae.chargesProMensuel) * 0.7)} /&nbsp;mois</strong>
+        </div>
+      </div>
+    </>
+  );
+
+  const renderPersonSalarie = (which: 1 | 2) => {
+    const revenu = which === 1 ? draft.revenu1 : draft.revenu2;
+    const setRevenu = (v: number) =>
+      which === 1 ? update({ revenu1: v }) : update({ revenu2: v });
+    return (
+      <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+        <label className={styles.editLabel}>Salaire net mensuel</label>
+        <div className={styles.editInputWrap}>
+          <input
+            type="number"
+            className={styles.editInput}
+            value={revenu}
+            onChange={(e) => setRevenu(Number(e.target.value) || 0)}
+            min={0}
+            step={50}
+          />
+          <span className={styles.editUnit}>€ / mois</span>
+        </div>
+      </div>
+    );
+  };
+
+  // ── Contextual "Bon à savoir" hint based on contract combo
+  const c1 = draft.contrat1;
+  const c2 = draft.enCouple ? draft.contrat2 : null;
+  const hasAE = c1 === "AE" || c2 === "AE";
+  const bothAE = c1 === "AE" && c2 === "AE";
+  const hasCDD = c1 === "CDD" || c2 === "CDD";
+  const bothCDI = c1 === "CDI" && (c2 === null || c2 === "CDI");
+
+  let infoTone: "green" | "orange" | "yellow" = "yellow";
+  let infoTitle = "💡 Bon à savoir";
+  let infoBody: React.ReactNode = null;
+
+  if (bothCDI) {
+    infoTone = "green";
+    infoBody = (
+      <>
+        ✅ <strong>CDI{draft.enCouple ? " + CDI" : ""}</strong> : profil le plus
+        favorable pour les banques. Accès au crédit optimal.{" "}
+        {draft.situation === "locataire" && (
+          <>Locataire depuis 2+ ans sans avoir été propriétaire → éligible au <strong>PTZ</strong>{draft.enfants > 0 ? ` (jusqu'à ${ptzFromKids(draft.enfants).toLocaleString("fr-FR")} €)` : ""}.</>
+        )}
+      </>
+    );
+  } else if (bothAE) {
+    infoTone = "orange";
+    infoBody = (
+      <>
+        🔴 <strong>Deux profils indépendants</strong> : dossier très complexe.
+        Les banques exigent <strong>au minimum 3 ans d'activité</strong> pour
+        chacun, et un apport de 20 à 30 % est fortement recommandé.
+      </>
+    );
+  } else if (hasAE) {
+    infoTone = "orange";
+    infoBody = (
+      <>
+        ⚠️ <strong>Profil indépendant</strong> : minimum 3 ans d'activité
+        nécessaires. Les revenus sont pris à <strong>70 % du bénéfice net</strong>{" "}
+        (CA − charges pro). Un apport renforce le dossier.
+      </>
+    );
+  } else if (hasCDD) {
+    infoTone = "yellow";
+    infoBody = (
+      <>
+        📋 <strong>CDD</strong> : prêt possible si la période d'essai est
+        terminée. Les revenus sont pris à <strong>85 %</strong> par les
+        banques.{c2 && (c2 === "CDI" || c1 === "CDI") ? " Le CDI de l'autre personne rassure les banques." : ""}
+      </>
+    );
+  }
 
   return (
     <div className={styles.editPanel}>
@@ -791,6 +1005,9 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
           Fermer ✕
         </button>
       </div>
+
+      {/* ── FOYER ─────────────────────────────────────────────────── */}
+      <div className={styles.editSectionTitle}>Foyer</div>
 
       <div className={styles.editGroup}>
         <label className={styles.editLabel}>Vous empruntez…</label>
@@ -813,6 +1030,26 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
       </div>
 
       <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Situation actuelle</label>
+        <div className={styles.editSeg}>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.situation === "locataire" ? styles.editSegActive : ""}`}
+            onClick={() => update({ situation: "locataire" })}
+          >
+            🏠 Locataire
+          </button>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.situation === "proprietaire" ? styles.editSegActive : ""}`}
+            onClick={() => update({ situation: "proprietaire" })}
+          >
+            🏡 Propriétaire
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.editGroup}>
         <label className={styles.editLabel}>Enfants à charge</label>
         <div className={styles.editChips}>
           {[0, 1, 2, 3].map((n) => (
@@ -828,10 +1065,11 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
         </div>
       </div>
 
+      {/* ── PERSONNE 1 ────────────────────────────────────────────── */}
       <div className={styles.editPerson}>
         <div className={styles.editPersonHead}>
           <span className={styles.editPersonDot}>V</span>
-          <span>Votre situation</span>
+          <span>Vous — {contratLabel(draft.contrat1)}</span>
         </div>
         <div className={styles.editGroup}>
           <label className={styles.editLabel}>Statut professionnel</label>
@@ -848,29 +1086,15 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
             ))}
           </div>
         </div>
-        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
-          <label className={styles.editLabel}>
-            {draft.contrat1 === "AE" ? "Chiffre d'affaires mensuel net" : "Salaire net mensuel"}
-          </label>
-          <div className={styles.editInputWrap}>
-            <input
-              type="number"
-              className={styles.editInput}
-              value={draft.revenu1}
-              onChange={(e) => update({ revenu1: Number(e.target.value) || 0 })}
-              min={0}
-              step={50}
-            />
-            <span className={styles.editUnit}>€ / mois</span>
-          </div>
-        </div>
+        {draft.contrat1 === "AE" ? renderPersonAE(1, draft.ae1) : renderPersonSalarie(1)}
       </div>
 
+      {/* ── PERSONNE 2 (si couple) ────────────────────────────────── */}
       {draft.enCouple && (
         <div className={styles.editPerson}>
           <div className={styles.editPersonHead}>
             <span className={`${styles.editPersonDot} ${styles.dotC}`}>C</span>
-            <span>Conjoint(e)</span>
+            <span>Conjoint(e) — {contratLabel(draft.contrat2)}</span>
           </div>
           <div className={styles.editGroup}>
             <label className={styles.editLabel}>Statut professionnel</label>
@@ -887,53 +1111,155 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
               ))}
             </div>
           </div>
-          <div className={styles.editGroup} style={{ marginBottom: 0 }}>
-            <label className={styles.editLabel}>
-              {draft.contrat2 === "AE" ? "Chiffre d'affaires mensuel net" : "Salaire net mensuel"}
-            </label>
-            <div className={styles.editInputWrap}>
-              <input
-                type="number"
-                className={styles.editInput}
-                value={draft.revenu2}
-                onChange={(e) => update({ revenu2: Number(e.target.value) || 0 })}
-                min={0}
-                step={50}
-              />
-              <span className={styles.editUnit}>€ / mois</span>
-            </div>
-          </div>
+          {draft.contrat2 === "AE" ? renderPersonAE(2, draft.ae2) : renderPersonSalarie(2)}
         </div>
       )}
 
-      <div className={styles.editTwoCol}>
-        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
-          <label className={styles.editLabel}>Charges mensuelles (crédits en cours)</label>
-          <div className={styles.editInputWrap}>
-            <input
-              type="number"
-              className={styles.editInput}
-              value={draft.charges}
-              onChange={(e) => update({ charges: Number(e.target.value) || 0 })}
-              min={0}
-              step={50}
-            />
-            <span className={styles.editUnit}>€ / mois</span>
-          </div>
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Charges mensuelles du foyer (crédits en cours)</label>
+        <div className={styles.editInputWrap}>
+          <input
+            type="number"
+            className={styles.editInput}
+            value={draft.charges}
+            onChange={(e) => update({ charges: Number(e.target.value) || 0 })}
+            min={0}
+            step={50}
+          />
+          <span className={styles.editUnit}>€ / mois</span>
         </div>
-        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
-          <label className={styles.editLabel}>Apport disponible</label>
-          <div className={styles.editInputWrap}>
+      </div>
+
+      {/* Bon à savoir contextuel */}
+      {infoBody && (
+        <div
+          className={`${styles.editInfoBox} ${
+            infoTone === "green"
+              ? styles.editInfoBoxGreen
+              : infoTone === "orange"
+              ? styles.editInfoBoxOrange
+              : ""
+          }`}
+        >
+          <div className={styles.infoTitle}>{infoTitle}</div>
+          <div>{infoBody}</div>
+        </div>
+      )}
+
+      {/* ── PROJET ────────────────────────────────────────────────── */}
+      <div className={styles.editSectionTitle}>Projet immobilier</div>
+
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Type de bien</label>
+        <div className={styles.editSeg}>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.typeBien === "neuf" ? styles.editSegActive : ""}`}
+            onClick={() => update({ typeBien: "neuf" })}
+          >
+            🏗️ Neuf
+          </button>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.typeBien === "ancien" ? styles.editSegActive : ""}`}
+            onClick={() => update({ typeBien: "ancien" })}
+          >
+            🏚️ Ancien
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Travaux prévus ?</label>
+        <div className={styles.editSeg}>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.travaux === 0 ? styles.editSegActive : ""}`}
+            onClick={() => update({ travaux: 0 })}
+          >
+            Non
+          </button>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.travaux > 0 ? styles.editSegActive : ""}`}
+            onClick={() => update({ travaux: draft.travaux > 0 ? draft.travaux : 15000 })}
+          >
+            Oui
+          </button>
+        </div>
+        {draft.travaux > 0 && (
+          <div className={styles.editInputWrap} style={{ marginTop: 10 }}>
             <input
               type="number"
               className={styles.editInput}
-              value={draft.epargneDispo}
-              onChange={(e) => update({ epargneDispo: Number(e.target.value) || 0 })}
+              value={draft.travaux}
+              onChange={(e) => update({ travaux: Number(e.target.value) || 0 })}
               min={0}
               step={1000}
             />
-            <span className={styles.editUnit}>€</span>
+            <span className={styles.editUnit}>€ (montant estimé)</span>
           </div>
+        )}
+      </div>
+
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>C'est…</label>
+        <div className={styles.editSeg}>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.primoAccedant ? styles.editSegActive : ""}`}
+            onClick={() => update({ primoAccedant: true })}
+          >
+            Ma 1ère acquisition
+          </button>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${!draft.primoAccedant ? styles.editSegActive : ""}`}
+            onClick={() => update({ primoAccedant: false })}
+          >
+            Un 2ème achat
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.editSliderWrap}>
+        <div className={styles.editSliderRow}>
+          <label className={styles.editLabel}>Durée du prêt</label>
+          <strong>{draft.duree} ans</strong>
+        </div>
+        <input
+          type="range"
+          className={styles.editSlider}
+          min={10}
+          max={25}
+          step={5}
+          value={draft.duree}
+          onChange={(e) => update({ duree: Number(e.target.value) })}
+        />
+        <div className={styles.editSliderBounds}>
+          <span>10 ans</span>
+          <span>15 ans</span>
+          <span>20 ans</span>
+          <span>25 ans</span>
+        </div>
+      </div>
+
+      <div className={styles.editGroup} style={{ marginTop: 18, marginBottom: 0 }}>
+        <label className={styles.editLabel}>Apport personnel</label>
+        <div className={styles.editInputWrap}>
+          <input
+            type="number"
+            className={styles.editInput}
+            value={draft.apportProjet}
+            onChange={(e) => update({ apportProjet: Number(e.target.value) || 0 })}
+            min={0}
+            step={1000}
+          />
+          <span className={styles.editUnit}>€ (mobilisé pour ce projet)</span>
+        </div>
+        <div className={styles.editComputed}>
+          <span>Épargne disponible totale</span>
+          <strong>{formatEUR(draft.epargneDispo)}</strong>
         </div>
       </div>
 

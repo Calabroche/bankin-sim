@@ -557,6 +557,178 @@
 }
 .editBtnCancel:hover { background: #F4F0FF; color: #5C50E8; }
 
+/* Sub-section header (Foyer, Projet) */
+.editSectionTitle {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  color: #5C50E8;
+  text-transform: uppercase;
+  margin: 22px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #E4ECFB;
+}
+.editSectionTitle:first-of-type { margin-top: 4px; }
+
+/* Smaller chip variant for structure juridique / années */
+.editSubChips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.editSubChip {
+  background: #fff;
+  border: 1.5px solid #D4D8FF;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6E6A95;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.editSubChip:hover { border-color: #FA5D89; color: #FA5D89; }
+.editSubChipActive {
+  border-color: #FA5D89;
+  background: #FEF0F5;
+  color: #FA5D89;
+}
+
+/* Period toggle (Mois / An) */
+.editPeriodToggle {
+  display: inline-flex;
+  gap: 2px;
+  background: #EEF0FF;
+  border-radius: 8px;
+  padding: 3px;
+}
+.editPeriodBtn {
+  background: transparent;
+  border: none;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #6E6A95;
+  cursor: pointer;
+  border-radius: 6px;
+  font-family: inherit;
+}
+.editPeriodBtnActive { background: #5C50E8; color: #fff; }
+
+.editLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.editLabelRow .editLabel { margin-bottom: 0; }
+
+/* Computed readout (revenu net estimé banques) */
+.editComputed {
+  background: linear-gradient(135deg, #EEF0FF 0%, #F4F0FF 100%);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #6E6A95;
+}
+.editComputed strong {
+  color: #5C50E8;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+/* Slider (durée du prêt) */
+.editSliderWrap {
+  padding: 6px 4px 0;
+}
+.editSliderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.editSliderRow .editLabel { margin-bottom: 0; }
+.editSliderRow strong {
+  font-size: 16px;
+  font-weight: 900;
+  color: #5C50E8;
+  letter-spacing: -0.3px;
+}
+.editSlider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #EEF0FF;
+  border-radius: 3px;
+  outline: none;
+}
+.editSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #5C50E8;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(92, 80, 232, 0.4);
+  border: 3px solid #fff;
+}
+.editSlider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #5C50E8;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(92, 80, 232, 0.4);
+  border: 3px solid #fff;
+}
+.editSliderBounds {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #9090BB;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* "Bon à savoir" contextual info box */
+.editInfoBox {
+  background: #FFFBEC;
+  border: 1px solid #FFE799;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 18px;
+  font-size: 13px;
+  color: #7A5C00;
+  line-height: 1.55;
+}
+.editInfoBox strong { font-weight: 800; color: #5A4400; }
+.infoTitle {
+  font-weight: 800;
+  font-size: 13px;
+  color: #5A4400;
+  margin-bottom: 6px;
+}
+.editInfoBoxGreen {
+  background: #F0FFF8;
+  border-color: #86EFAC;
+  color: #166534;
+}
+.editInfoBoxGreen strong, .editInfoBoxGreen .infoTitle { color: #0E5A2D; }
+.editInfoBoxOrange {
+  background: #FFF6E5;
+  border-color: #FFA63D;
+  color: #7A4400;
+}
+.editInfoBoxOrange strong, .editInfoBoxOrange .infoTitle { color: #5A3400; }
+
 @media (max-width: 760px) {
   .editTwoCol { grid-template-columns: 1fr; }
 }
