@@ -346,6 +346,221 @@
 }
 .editToggle:hover { text-decoration: underline; }
 
+/* ── Edit panel (manual adjustment of Bankin' data) ───────────────── */
+.editPanel {
+  background: #fff;
+  border: 1px solid #E4ECFB;
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin-top: 18px;
+  box-shadow: 0 16px 36px rgba(92, 80, 232, 0.08);
+}
+.editPanelHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #F0F0F8;
+}
+.editPanelHead h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #1B1A3B;
+}
+.editPanelClose {
+  background: none;
+  border: none;
+  color: #9090BB;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: inherit;
+  border-radius: 6px;
+}
+.editPanelClose:hover { background: #F4F0FF; color: #5C50E8; }
+
+.editGroup {
+  margin-bottom: 18px;
+}
+.editGroup:last-of-type { margin-bottom: 0; }
+.editLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #6E6A95;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* Segmented control (Solo/Couple, CDI/CDD/Indépendant) */
+.editSeg {
+  display: flex;
+  background: #EEF0FF;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+.editSegBtn {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6E6A95;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.editSegBtn:hover:not(.editSegActive) { color: #5C50E8; }
+.editSegActive {
+  background: #fff;
+  color: #5C50E8;
+  box-shadow: 0 2px 8px rgba(92, 80, 232, 0.18);
+}
+
+/* Chips row (enfants) */
+.editChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.editChip {
+  background: #fff;
+  border: 1.5px solid #D4D8FF;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6E6A95;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.editChip:hover { border-color: #5C50E8; color: #5C50E8; }
+.editChipActive {
+  background: #5C50E8;
+  border-color: #5C50E8;
+  color: #fff;
+}
+
+/* Number input */
+.editInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid #D4D8FF;
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: border-color 0.15s;
+}
+.editInputWrap:focus-within {
+  border-color: #5C50E8;
+  background: #F4F0FF;
+}
+.editInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1B1A3B;
+  width: 100%;
+  -moz-appearance: textfield;
+}
+.editInput::-webkit-outer-spin-button,
+.editInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.editUnit {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9090BB;
+}
+
+/* Person section (Vous / Conjoint) */
+.editPerson {
+  background: #F7F8FF;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.editPersonHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #5C50E8;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.editPersonDot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #5C50E8;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+}
+.editPersonDot.dotC { background: #8B7FFF; }
+
+.editTwoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.editActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #F0F0F8;
+}
+.editBtnSave {
+  background: #5C50E8;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.editBtnSave:hover { background: #4B40D6; }
+.editBtnCancel {
+  background: transparent;
+  color: #6E6A95;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid #D4D8FF;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.editBtnCancel:hover { background: #F4F0FF; color: #5C50E8; }
+
+@media (max-width: 760px) {
+  .editTwoCol { grid-template-columns: 1fr; }
+}
+
 /* ──────────────────────────────────────────────────────────────────
    STEP 3 — 3 scénarios
    ────────────────────────────────────────────────────────────────── */

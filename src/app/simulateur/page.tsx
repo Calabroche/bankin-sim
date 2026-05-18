@@ -10,22 +10,58 @@ import styles from "./simulateur.module.css";
    history that the simulator pre-fills automatically (the core
    differentiator: no form, the app already knows). */
 
-const USER = {
+type Contrat = "CDI" | "CDD" | "AE";
+
+interface UserData {
+  prenom: string;
+  conjoint: string;
+  enCouple: boolean;
+  enfants: number;
+  primoAccedant: boolean;
+  contrat1: Contrat;
+  contrat2: Contrat;
+  revenu1: number;          // €/mois — net for CDI/CDD, CA for AE
+  revenu2: number;
+  revenusStable: number;    // mois sans variation
+  charges: number;          // €/mois — crédits en cours
+  loyerActuel: number;
+  depensesTotales: number;
+  epargneMensuelle: number;
+  epargneDispo: number;     // disponible pour apport
+  ville: string;
+}
+
+const INITIAL_USER: UserData = {
   prenom: "Sophie",
   conjoint: "Thomas",
+  enCouple: true,
   enfants: 2,
-  enfantsAges: [4, 7],
   primoAccedant: true,
-  contrat1: "CDI" as const,
-  contrat2: "CDI" as const,
-  revenusNet: 4500,         // €/mois (couple)
-  revenusStable: 26,        // mois sans variation
-  loyerActuel: 1100,        // €/mois
-  depensesTotales: 3400,    // €/mois (hors loyer? non, tout inclus)
-  epargneMensuelle: 1100,   // €/mois (auto-épargne Bankin')
-  epargneDispo: 22000,      // € disponibles pour apport
+  contrat1: "CDI",
+  contrat2: "CDI",
+  revenu1: 2500,
+  revenu2: 2000,
+  revenusStable: 26,
+  charges: 0,
+  loyerActuel: 1100,
+  depensesTotales: 3400,
+  epargneMensuelle: 1100,
+  epargneDispo: 22000,
   ville: "Lyon",
 };
+
+/* Revenue weighting by contract type (how banks count it) */
+function weightedRevenue(contrat: Contrat, revenu: number): number {
+  if (contrat === "AE") return revenu * 0.7;  // 70 % du CA pour indépendants
+  if (contrat === "CDD") return revenu * 0.85; // 85 % pour CDD
+  return revenu; // CDI: 100 %
+}
+
+function computeTotalRevenue(u: UserData): number {
+  let total = weightedRevenue(u.contrat1, u.revenu1);
+  if (u.enCouple) total += weightedRevenue(u.contrat2, u.revenu2);
+  return Math.round(total);
+}
 
 interface CatBudget {
   id: string;
@@ -81,13 +117,14 @@ interface Scenario {
   impactLine: string;
 }
 
-function buildScenarios(): Scenario[] {
+function buildScenarios(u: UserData): Scenario[] {
   const taux = 3.75;
   const duree = 25;
-  const apport = USER.epargneDispo;
-  const ptz = USER.primoAccedant ? ptzFromKids(USER.enfants) : 0;
+  const apport = u.epargneDispo;
+  const ptz = u.primoAccedant ? ptzFromKids(u.enfants) : 0;
+  const totalRev = computeTotalRevenue(u);
+  const maxMensualite = Math.max(0, totalRev * 0.35 - u.charges);
 
-  // Three monthly-payment targets as % of net income
   const tiers: { key: Scenario["key"]; name: string; tag: string; pct: number; adjustments: Record<string, number>; impactLine: string }[] = [
     {
       key: "sereine",
@@ -116,7 +153,8 @@ function buildScenarios(): Scenario[] {
   ];
 
   return tiers.map((t) => {
-    const mensualite = Math.round(USER.revenusNet * t.pct);
+    const targetMensualite = Math.round(totalRev * t.pct);
+    const mensualite = Math.min(targetMensualite, Math.round(maxMensualite));
     const capital = capacityFromMonthly(mensualite, duree, taux);
     const prixMax = capital + apport + ptz;
     return {
@@ -148,40 +186,44 @@ interface StressOption {
   mitigation: string;
 }
 
-const STRESS_OPTIONS: StressOption[] = [
-  {
-    id: "conge_parental",
-    emoji: "👶",
-    title: `${USER.prenom} passe à 80 %`,
-    description: "Congé parental ou temps partiel pendant 12 mois.",
-    monthlyImpact: -450,
-    mitigation: "Votre épargne de précaution (4 200 €) couvre la baisse pendant 9 mois.",
-  },
-  {
-    id: "troisieme_enfant",
-    emoji: "🍼",
-    title: "Un 3ᵉ enfant",
-    description: "Crèche + temps partiel pendant les premiers mois.",
-    monthlyImpact: -680,
-    mitigation: "Ajustement budget Loisirs + activation épargne projet pour 18 mois.",
-  },
-  {
-    id: "taux_up",
-    emoji: "📈",
-    title: "Taux remonte à 4,5 %",
-    description: "Renégociation impossible avant 2 ans.",
-    monthlyImpact: -180,
-    mitigation: "Impact absorbé sans ajustement de votre rythme actuel.",
-  },
-  {
-    id: "chomage",
-    emoji: "💼",
-    title: "6 mois de chômage",
-    description: `${USER.conjoint} traverse une période sans emploi.`,
-    monthlyImpact: -820,
-    mitigation: "Allocation chômage + assurance prêt = solde tenu pendant 8 mois.",
-  },
-];
+function buildStressOptions(u: UserData): StressOption[] {
+  return [
+    {
+      id: "conge_parental",
+      emoji: "👶",
+      title: `${u.prenom} passe à 80 %`,
+      description: "Congé parental ou temps partiel pendant 12 mois.",
+      monthlyImpact: -450,
+      mitigation: "Votre épargne de précaution (4 200 €) couvre la baisse pendant 9 mois.",
+    },
+    {
+      id: "troisieme_enfant",
+      emoji: "🍼",
+      title: "Un 3ᵉ enfant",
+      description: "Crèche + temps partiel pendant les premiers mois.",
+      monthlyImpact: -680,
+      mitigation: "Ajustement budget Loisirs + activation épargne projet pour 18 mois.",
+    },
+    {
+      id: "taux_up",
+      emoji: "📈",
+      title: "Taux remonte à 4,5 %",
+      description: "Renégociation impossible avant 2 ans.",
+      monthlyImpact: -180,
+      mitigation: "Impact absorbé sans ajustement de votre rythme actuel.",
+    },
+    {
+      id: "chomage",
+      emoji: "💼",
+      title: "6 mois de chômage",
+      description: u.enCouple
+        ? `${u.conjoint} traverse une période sans emploi.`
+        : "Vous traversez une période sans emploi.",
+      monthlyImpact: -820,
+      mitigation: "Allocation chômage + assurance prêt = solde tenu pendant 8 mois.",
+    },
+  ];
+}
 
 /* ── Page component ──────────────────────────────────────────────── */
 
@@ -227,11 +269,14 @@ const MOMENT_OPTIONS: { id: Moment; emoji: string; title: string; desc: string }
 export default function SimulateurPage() {
   const [step, setStep] = useState<Step>(0);
   const [moment, setMoment] = useState<Moment | null>(null);
-  const scenarios = useMemo(() => buildScenarios(), []);
+  const [user, setUser] = useState<UserData>(INITIAL_USER);
+  const [editingUser, setEditingUser] = useState<UserData | null>(null);
+  const scenarios = useMemo(() => buildScenarios(user), [user]);
   const [scenarioKey, setScenarioKey] = useState<Scenario["key"]>("cible");
   const [activeStresses, setActiveStresses] = useState<Set<string>>(new Set());
 
   const scenario = scenarios.find((s) => s.key === scenarioKey)!;
+  const totalRevenue = computeTotalRevenue(user);
 
   const goNext = () => setStep((s) => (Math.min(s + 1, 5) as Step));
   const goPrev = () => setStep((s) => (Math.max(s - 1, 0) as Step));
@@ -251,11 +296,12 @@ export default function SimulateurPage() {
     });
   }, [scenario]);
 
-  const soldeActuel = USER.revenusNet - CATEGORIES.reduce((sum, c) => sum + c.actuel, 0);
+  const soldeActuel = totalRevenue - CATEGORIES.reduce((sum, c) => sum + c.actuel, 0);
   const soldeNouveau =
-    USER.revenusNet - newBudget.reduce((sum, c) => sum + c.nouveau, 0);
+    totalRevenue - newBudget.reduce((sum, c) => sum + c.nouveau, 0);
 
-  const isReady = USER.epargneDispo >= 15000 && scenario.endettementPct <= 33;
+  const stressOptions = useMemo(() => buildStressOptions(user), [user]);
+  const isReady = user.epargneDispo >= 15000 && scenario.endettementPct <= 33;
 
   return (
     <div className={styles.page}>
@@ -323,7 +369,7 @@ export default function SimulateurPage() {
           <div className={styles.mainNarrow}>
             <span className={styles.eyebrow}>D'après vos comptes Bankin'</span>
             <h1 className={styles.title}>
-              {USER.prenom} & {USER.conjoint}, <em>voici votre point de départ.</em>
+              {user.prenom}{user.enCouple ? ` & ${user.conjoint}` : ""}, <em>voici votre point de départ.</em>
             </h1>
             <p className={styles.lead}>
               Pas de saisie : on a tout pris dans votre app. Vous pourrez ajuster
@@ -333,15 +379,15 @@ export default function SimulateurPage() {
             <div className={styles.departGrid}>
               <div className={`${styles.dataCard} ${styles.highlight}`}>
                 <div className={styles.dataLabel}>Revenus nets du foyer</div>
-                <div className={styles.dataValue}>{formatEUR(USER.revenusNet)}</div>
+                <div className={styles.dataValue}>{formatEUR(totalRevenue)}</div>
                 <div className={`${styles.dataSub} ${styles.dataSubGood}`}>
-                  Stables depuis {USER.revenusStable} mois (2 CDI)
+                  Stables depuis {user.revenusStable} mois ({user.enCouple ? `${user.contrat1} + ${user.contrat2}` : user.contrat1})
                 </div>
               </div>
 
               <div className={styles.dataCard}>
                 <div className={styles.dataLabel}>Dépenses moyennes / mois</div>
-                <div className={styles.dataValue}>{formatEUR(USER.depensesTotales)}</div>
+                <div className={styles.dataValue}>{formatEUR(user.depensesTotales)}</div>
                 <div className={styles.dataSub}>
                   Sur 12 mois · 7 catégories suivies
                 </div>
@@ -350,24 +396,40 @@ export default function SimulateurPage() {
 
               <div className={styles.dataCard}>
                 <div className={styles.dataLabel}>Épargne mensuelle</div>
-                <div className={styles.dataValue}>{formatEUR(USER.epargneMensuelle)}</div>
+                <div className={styles.dataValue}>{formatEUR(user.epargneMensuelle)}</div>
                 <div className={`${styles.dataSub} ${styles.dataSubGood}`}>
-                  Taux d'épargne 24 % · Bien au-dessus de la moyenne FR
+                  Taux d'épargne {Math.round((user.epargneMensuelle / totalRevenue) * 100)} % · Bien au-dessus de la moyenne FR
                 </div>
               </div>
 
               <div className={styles.dataCard}>
                 <div className={styles.dataLabel}>Épargne disponible</div>
-                <div className={styles.dataValue}>{formatEUR(USER.epargneDispo)}</div>
+                <div className={styles.dataValue}>{formatEUR(user.epargneDispo)}</div>
                 <div className={styles.dataSub}>
                   Sur vos comptes épargne · Mobilisable pour apport
                 </div>
               </div>
             </div>
 
-            <button type="button" className={styles.editToggle}>
-              Ces chiffres ne sont plus à jour ? Ajuster manuellement →
-            </button>
+            {!editingUser ? (
+              <button
+                type="button"
+                className={styles.editToggle}
+                onClick={() => setEditingUser({ ...user })}
+              >
+                Ces chiffres ne sont plus à jour ? Ajuster manuellement →
+              </button>
+            ) : (
+              <EditPanel
+                draft={editingUser}
+                onChange={setEditingUser}
+                onSave={() => {
+                  setUser(editingUser);
+                  setEditingUser(null);
+                }}
+                onCancel={() => setEditingUser(null)}
+              />
+            )}
 
             <div className={styles.actions}>
               <button type="button" className={styles.btnGhost} onClick={goPrev}>← Retour</button>
@@ -394,7 +456,7 @@ export default function SimulateurPage() {
                 const isSelected = s.key === scenarioKey;
                 const isRecommended = s.key === "cible";
                 const soldeProj =
-                  USER.revenusNet -
+                  totalRevenue -
                   CATEGORIES.reduce((sum, c) => {
                     if (c.id === "logement") return sum + s.mensualite;
                     return sum + (s.budgetAdjustments[c.id] ?? c.actuel);
@@ -534,7 +596,7 @@ export default function SimulateurPage() {
             </p>
 
             <div className={styles.stressGrid}>
-              {STRESS_OPTIONS.map((opt) => {
+              {stressOptions.map((opt) => {
                 const active = activeStresses.has(opt.id);
                 return (
                   <button
@@ -595,7 +657,7 @@ export default function SimulateurPage() {
                 <div className={styles.verdict}>
                   <span className={styles.verdictTag}>✓ Vous êtes prêts</span>
                   <h2>
-                    {USER.prenom} & {USER.conjoint}, votre scénario {scenario.name.toLowerCase()} est solide.
+                    {user.prenom}{user.enCouple ? ` & ${user.conjoint}` : ""}, votre scénario {scenario.name.toLowerCase()} est solide.
                   </h2>
                   <p>
                     Un bien jusqu'à <strong>{formatEUR(scenario.prixMax)}</strong>, mensualité
@@ -620,7 +682,7 @@ export default function SimulateurPage() {
                   </a>
                   <a href="#" className={styles.optionCard}>
                     <span className={styles.optionEmoji}>🏛️</span>
-                    <h4>Voir les courtiers à {USER.ville}</h4>
+                    <h4>Voir les courtiers à {user.ville}</h4>
                     <p>
                       3 courtiers locaux indépendants. Rendez-vous en agence ou
                       visio, vous choisissez.
@@ -701,6 +763,188 @@ export default function SimulateurPage() {
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   EDIT PANEL — Manual override of the Bankin'-derived data
+   ────────────────────────────────────────────────────────────────── */
+
+interface EditPanelProps {
+  draft: UserData;
+  onChange: (next: UserData) => void;
+  onSave: () => void;
+  onCancel: () => void;
+}
+
+function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
+  const update = (patch: Partial<UserData>) => onChange({ ...draft, ...patch });
+  const contratLabel = (c: Contrat) => (c === "AE" ? "Indépendant" : c);
+  const contrats: Contrat[] = ["CDI", "CDD", "AE"];
+
+  return (
+    <div className={styles.editPanel}>
+      <div className={styles.editPanelHead}>
+        <h3>Ajuster vos informations</h3>
+        <button type="button" className={styles.editPanelClose} onClick={onCancel}>
+          Fermer ✕
+        </button>
+      </div>
+
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Vous empruntez…</label>
+        <div className={styles.editSeg}>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${!draft.enCouple ? styles.editSegActive : ""}`}
+            onClick={() => update({ enCouple: false })}
+          >
+            Seul(e)
+          </button>
+          <button
+            type="button"
+            className={`${styles.editSegBtn} ${draft.enCouple ? styles.editSegActive : ""}`}
+            onClick={() => update({ enCouple: true })}
+          >
+            À deux
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Enfants à charge</label>
+        <div className={styles.editChips}>
+          {[0, 1, 2, 3].map((n) => (
+            <button
+              key={n}
+              type="button"
+              className={`${styles.editChip} ${draft.enfants === n ? styles.editChipActive : ""}`}
+              onClick={() => update({ enfants: n })}
+            >
+              {n === 0 ? "Aucun" : n === 3 ? "3+" : String(n)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.editPerson}>
+        <div className={styles.editPersonHead}>
+          <span className={styles.editPersonDot}>V</span>
+          <span>Votre situation</span>
+        </div>
+        <div className={styles.editGroup}>
+          <label className={styles.editLabel}>Statut professionnel</label>
+          <div className={styles.editSeg}>
+            {contrats.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={`${styles.editSegBtn} ${draft.contrat1 === c ? styles.editSegActive : ""}`}
+                onClick={() => update({ contrat1: c })}
+              >
+                {contratLabel(c)}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+          <label className={styles.editLabel}>
+            {draft.contrat1 === "AE" ? "Chiffre d'affaires mensuel net" : "Salaire net mensuel"}
+          </label>
+          <div className={styles.editInputWrap}>
+            <input
+              type="number"
+              className={styles.editInput}
+              value={draft.revenu1}
+              onChange={(e) => update({ revenu1: Number(e.target.value) || 0 })}
+              min={0}
+              step={50}
+            />
+            <span className={styles.editUnit}>€ / mois</span>
+          </div>
+        </div>
+      </div>
+
+      {draft.enCouple && (
+        <div className={styles.editPerson}>
+          <div className={styles.editPersonHead}>
+            <span className={`${styles.editPersonDot} ${styles.dotC}`}>C</span>
+            <span>Conjoint(e)</span>
+          </div>
+          <div className={styles.editGroup}>
+            <label className={styles.editLabel}>Statut professionnel</label>
+            <div className={styles.editSeg}>
+              {contrats.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  className={`${styles.editSegBtn} ${draft.contrat2 === c ? styles.editSegActive : ""}`}
+                  onClick={() => update({ contrat2: c })}
+                >
+                  {contratLabel(c)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+            <label className={styles.editLabel}>
+              {draft.contrat2 === "AE" ? "Chiffre d'affaires mensuel net" : "Salaire net mensuel"}
+            </label>
+            <div className={styles.editInputWrap}>
+              <input
+                type="number"
+                className={styles.editInput}
+                value={draft.revenu2}
+                onChange={(e) => update({ revenu2: Number(e.target.value) || 0 })}
+                min={0}
+                step={50}
+              />
+              <span className={styles.editUnit}>€ / mois</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.editTwoCol}>
+        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+          <label className={styles.editLabel}>Charges mensuelles (crédits en cours)</label>
+          <div className={styles.editInputWrap}>
+            <input
+              type="number"
+              className={styles.editInput}
+              value={draft.charges}
+              onChange={(e) => update({ charges: Number(e.target.value) || 0 })}
+              min={0}
+              step={50}
+            />
+            <span className={styles.editUnit}>€ / mois</span>
+          </div>
+        </div>
+        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+          <label className={styles.editLabel}>Apport disponible</label>
+          <div className={styles.editInputWrap}>
+            <input
+              type="number"
+              className={styles.editInput}
+              value={draft.epargneDispo}
+              onChange={(e) => update({ epargneDispo: Number(e.target.value) || 0 })}
+              min={0}
+              step={1000}
+            />
+            <span className={styles.editUnit}>€</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.editActions}>
+        <button type="button" className={styles.editBtnSave} onClick={onSave}>
+          Enregistrer mes ajustements
+        </button>
+        <button type="button" className={styles.editBtnCancel} onClick={onCancel}>
+          Annuler
+        </button>
+      </div>
     </div>
   );
 }
