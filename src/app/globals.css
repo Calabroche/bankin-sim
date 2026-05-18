@@ -387,21 +387,56 @@ body {
   .phone::before { display: none !important; }
 }
 
+/* Simulator-route top bar (renders only on /simulateur) */
+.sim-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: #14122e;
+  border-bottom: 1px solid #2a2750;
+}
+.sim-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+.sim-logo {
+  width: 32px;
+  height: 32px;
+  background: var(--purple);
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 16px;
+}
+.sim-back {
+  color: #a099ff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2750;
+  transition: all .15s;
+}
+.sim-back:hover { background: #2a2750; color: #fff; }
+
+@media (max-width: 640px) {
+  .sim-topbar { padding: 10px 16px; }
+  .sim-brand span:last-child { display: none; }
+}
+
 /* Desktop (≥ 641px) — full-screen web app, no phone frame */
 @media (min-width: 641px) {
-  body::before {
-    content: "Bankin' · Simulateur de capacité d'emprunt";
-    display: block;
-    padding: 16px 32px;
-    background: #14122e;
-    border-bottom: 1px solid #2a2750;
-    color: #a099ff;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    text-align: left;
-  }
   .steps,
   body.desktop .steps {
     background: #14122e;
