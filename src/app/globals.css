@@ -430,6 +430,15 @@ body {
 }
 .sim-back:hover { background: #2a2750; color: #fff; }
 
+/* Hide the obsolete "Accueil" step — we now land on Profil directly
+   (the mock-bank home screen was redundant after we built a real
+   landing page on /). */
+#dot0,
+#line01,
+#s0 {
+  display: none !important;
+}
+
 @media (max-width: 640px) {
   .sim-topbar { padding: 10px 16px; }
   .sim-brand span:last-child { display: none; }

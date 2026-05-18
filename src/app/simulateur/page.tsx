@@ -9,7 +9,9 @@ export default function SimulateurPage() {
     if (document.getElementById("bankin-sim-runtime")) return;
     const tag = document.createElement("script");
     tag.id = "bankin-sim-runtime";
-    tag.text = simulatorScript;
+    // Append a tiny shim that jumps the simulator to the Profil step
+    // immediately, skipping the obsolete "Accueil" mock-bank screen.
+    tag.text = `${simulatorScript}\ntry{ if(typeof go==='function') go(1); }catch(e){}`;
     document.body.appendChild(tag);
   }, []);
 
