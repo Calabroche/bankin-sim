@@ -649,24 +649,24 @@ function updateProfilInfo(){
     if (S.sit==='l') lines.push('• Locataire depuis 2+ ans sans avoir été propriétaire → éligible au PTZ selon revenus (RFR).');
   } else if (bothAE) {
     lines.push('🔴 Deux profils indépendants : dossier très complexe à valider.');
-    lines.push('• Les banques exigent <strong>au minimum 3 ans d\'activité</strong> pour chacun.');
+    lines.push('• Les banques exigent <strong>au minimum 3 ans d\\'activité</strong> pour chacun.');
     lines.push('• Un apport de 20 à 30 % est fortement recommandé.');
     lines.push('• Une analyse approfondie de votre dossier sera indispensable avant toute démarche.');
   } else if (AE_and_CDD) {
     lines.push('🔴 Profil risqué : indépendant + CDD. Les banques seront très prudentes.');
-    lines.push('• L\'indépendant doit justifier <strong>3 ans d\'activité minimum</strong>.');
+    lines.push('• L\\'indépendant doit justifier <strong>3 ans d\\'activité minimum</strong>.');
     lines.push('• Apport important (30 %+) généralement requis.');
   } else if (hasAE) {
-    lines.push('⚠️ Un profil indépendant dans le dossier nécessite <strong>minimum 3 ans d\'activité</strong> pour être pris en compte par les banques.');
-    lines.push('• Les revenus d\'un indépendant sont généralement pris à 70 % du bénéfice net.');
+    lines.push('⚠️ Un profil indépendant dans le dossier nécessite <strong>minimum 3 ans d\\'activité</strong> pour être pris en compte par les banques.');
+    lines.push('• Les revenus d\\'un indépendant sont généralement pris à 70 % du bénéfice net.');
     lines.push('• Un apport est conseillé pour renforcer le dossier.');
     if (S.sit==='l') lines.push('• PTZ : éligible si locataire depuis 2+ ans selon vos revenus (RFR).');
   } else if (bothCDD) {
     lines.push('🔴 Double CDD : prêt très difficile à obtenir.');
-    lines.push('• Apport de 30 %+ généralement requis. La période d\'essai doit être passée pour les deux.');
+    lines.push('• Apport de 30 %+ généralement requis. La période d\\'essai doit être passée pour les deux.');
   } else if (hasCDD) {
-    lines.push('• CDD : prêt possible si la période d\'essai est terminée. Revenus pris à 85 %.');
-    lines.push('• Le CDI de l\'autre personne rassure les banques.');
+    lines.push('• CDD : prêt possible si la période d\\'essai est terminée. Revenus pris à 85 %.');
+    lines.push('• Le CDI de l\\'autre personne rassure les banques.');
     if (S.sit==='l') lines.push('• PTZ : éligible si locataire depuis 2+ ans selon vos revenus (RFR).');
   }
 
@@ -842,10 +842,10 @@ function getStability(){
   if((c1==='cdi'&&c2==='ae')||(c1==='ae'&&c2==='cdi'))
     return{score:2,pct:67,color:'#FF8C00',icon:'⚡',label:'Profil Mixte',msg:'CDI + Indépendant — revenus indépendant pris à 70 % par les banques, apport conseillé'};
   if(c1==='cdd'&&!c2)
-    return{score:1.5,pct:50,color:'#FF8C00',icon:'⚠️',label:'Profil Fragile',msg:'CDD seul — prêt possible mais fin de période d\'essai requise'};
+    return{score:1.5,pct:50,color:'#FF8C00',icon:'⚠️',label:'Profil Fragile',msg:'CDD seul — prêt possible mais fin de période d\\'essai requise'};
   if(c1==='ae'&&!c2){
     const y=S.years1;
-    if(y==='<1') return{score:0.5,pct:17,color:'#FF4136',icon:'🔴',label:'Très difficile',msg:'Indépendant < 1 an — banques refusent généralement, attendez 3 ans d\'activité'};
+    if(y==='<1') return{score:0.5,pct:17,color:'#FF4136',icon:'🔴',label:'Très difficile',msg:'Indépendant < 1 an — banques refusent généralement, attendez 3 ans d\\'activité'};
     if(y==='1-3') return{score:1,pct:33,color:'#FF8C00',icon:'⚠️',label:'Difficile',msg:'Indépendant 1–3 ans — revenus pris à 50 %, apport important recommandé'};
     return{score:1.5,pct:50,color:'#FF8C00',icon:'⚡',label:'Complexe',msg:'Indépendant 3+ ans — revenus pris à 70 % du bénéfice net, dossier exigeant'};
   }
