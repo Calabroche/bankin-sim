@@ -1397,14 +1397,83 @@
 }
 
 @media (max-width: 560px) {
-  .container { padding: 0 20px; }
-  .topbarInner { padding: 14px 0; }
-  .brand { font-size: 24px; }
-  .topCta { padding: 10px 18px; font-size: 13px; }
+  .container { padding: 0 18px; }
+  .topbarInner { padding: 12px 0; }
+  .brand { font-size: 22px; }
+  .topCta { padding: 9px 16px; font-size: 13px; }
   .phoneBack { display: none; }
   .phoneFront { transform: none; }
+  .phone { width: 220px; height: 460px; }
+  .phoneStage { height: 460px; }
   .dlCard { flex-direction: column; padding: 16px; }
   .heroFootnote { display: none; }
   .footerGrid { grid-template-columns: 1fr; gap: 32px; }
   .footerBottom { flex-direction: column; align-items: flex-start; }
+
+  /* Hero: stack CTAs full-width for thumb-friendly tap */
+  .heroCtas { flex-direction: column; gap: 10px; }
+  .heroCta,
+  .heroCtaSecondary {
+    width: 100%;
+    justify-content: center;
+    padding: 16px 24px;
+    font-size: 15px;
+  }
+  .heroTrust { gap: 10px 14px; font-size: 12.5px; justify-content: center; }
+  .heroLeft { text-align: center; }
+  .heroLeft .heroEyebrow { justify-content: center; }
+  .newBadge { font-size: 10px; padding: 6px 13px; letter-spacing: 1px; }
+
+  /* Hero partners strip: tighter spacing, smaller logos */
+  .heroPartners { padding: 14px 0 18px; }
+  .heroPartnersInner { gap: 10px 16px; }
+  .heroPartnersLabel {
+    width: 100%;
+    text-align: center;
+    margin-right: 0;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+  }
+  .heroPartner { font-size: 12px; gap: 5px; }
+  .heroPartner .dot { width: 20px; height: 20px; font-size: 8.5px; }
+
+  /* Stats: tighter typography */
+  .statsGrid { gap: 18px; }
+  .statsGrid strong { font-size: 32px; }
+  .statsGrid span { font-size: 13px; }
+
+  /* Trust bar — drop separators, stack */
+  .trustBarInner { flex-direction: column; gap: 8px; font-size: 13px; }
+  .trustBarInner .sep { display: none; }
+
+  /* Spotlight — tighter hero card on phone */
+  .spotlight { padding: 56px 0; }
+  .spotlight h2 { font-size: 26px; }
+  .spotlightLead { font-size: 14.5px; }
+  .spotlightCta { width: 100%; padding: 15px 22px; text-align: center; }
+  .spotlightMockup { padding: 24px 20px; }
+  .spotlightAmount { font-size: 38px; }
+  .spotlightMockupChips > div { padding: 8px 6px; font-size: 9px; }
+  .spotlightMockupChips strong { font-size: 12px; }
+
+  /* Features / steps / banks */
+  .section, .sectionDark { padding: 48px 0; }
+  .featureCard { padding: 24px 22px; }
+  .stepCard { padding: 22px 18px; }
+  .stepNumber { width: 42px; height: 42px; font-size: 18px; }
+  .banks { padding: 36px 0; }
+  .banksGrid { gap: 14px 18px; }
+  .bankLogo { font-size: 13px; }
+  .bankLogo .dot { width: 22px; height: 22px; font-size: 9px; }
+
+  /* Testimonials */
+  .testimonial { padding: 24px 22px; }
+  .testimonial p { font-size: 14px; }
+
+  /* Final CTA */
+  .finalCta a { padding: 16px 26px; font-size: 14px; width: calc(100% - 36px); text-align: center; }
+
+  /* Footer typography */
+  .footerCol h4 { font-size: 12px; }
+  .footerCol a, .footerCol p { font-size: 13px; }
 }

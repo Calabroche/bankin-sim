@@ -66,8 +66,11 @@
   border-radius: 8px;
   border: 1px solid #2a2750;
   transition: all 0.15s;
+  white-space: nowrap;
 }
 .back:hover { background: #2a2750; color: #fff; }
+.backShort { display: none; }
+.progressLabel { /* hidden on mobile, see breakpoint below */ }
 
 /* ── Progress rail ─────────────────────────────────────────────────── */
 .progressBar {
@@ -731,6 +734,160 @@
 
 @media (max-width: 760px) {
   .editTwoCol { grid-template-columns: 1fr; }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Phone breakpoint (≤ 480 px) — last-mile polish for small screens
+   ────────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  /* Topbar: shorten back label */
+  .topbar { padding: 10px 14px; }
+  .brand { font-size: 18px; }
+  .brandMark { width: 28px; height: 28px; font-size: 14px; }
+  .back { padding: 7px 10px; font-size: 12px; }
+  .backLong { display: none; }
+  .backShort { display: inline; }
+
+  /* Progress bar — drop the long step label, keep just "Étape X / 6" */
+  .progressBar { padding: 10px 14px; }
+  .progressLabel { display: none; }
+
+  /* Main padding */
+  .main { padding: 20px 14px 28px; }
+
+  /* Smaller hero headlines, more breathable margins */
+  .eyebrow { font-size: 10px; padding: 5px 10px; }
+  .title { font-size: 24px; letter-spacing: -0.6px; }
+  .lead { font-size: 14px; margin-bottom: 20px; }
+
+  /* Action buttons go full-width on phone (more tappable) */
+  .actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+    width: 100%;
+  }
+  .btnPrimary,
+  .btnGhost {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+  }
+  .footNav {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  /* Moment cards — tighter padding, smaller emoji */
+  .momentCard { padding: 16px 18px; gap: 12px; }
+  .momentEmoji { font-size: 26px; }
+  .momentBody h3 { font-size: 15px; }
+  .momentBody p { font-size: 12.5px; }
+
+  /* Depart data cards */
+  .dataCard { padding: 18px 20px; }
+  .dataValue { font-size: 26px; }
+  .dataLabel { font-size: 11px; }
+  .dataDonut { width: 48px; height: 48px; top: 18px; right: 18px; }
+  .dataDonut::after { inset: 10px; }
+
+  /* Scenarios — full single column, tighter card */
+  .scenarioCard { padding: 18px 18px 20px; }
+  .scenarioPrice { font-size: 26px; }
+  .scenarioCard.recommended::before {
+    font-size: 9px;
+    padding: 4px 10px;
+    left: 16px;
+    top: -10px;
+  }
+
+  /* Impact header / table */
+  .impactHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 18px;
+  }
+  .impactHeader .right { text-align: left; }
+  .impactHeader h2 { font-size: 20px; }
+  .budgetHead, .budgetRow, .budgetFoot {
+    grid-template-columns: 1.4fr 1fr 1fr !important;
+    padding: 11px 14px;
+    font-size: 12px;
+    column-gap: 6px;
+  }
+  .budgetHead > :nth-child(4),
+  .budgetRow > :nth-child(4),
+  .budgetFoot > :nth-child(4) { display: none; }
+  .budgetCat { gap: 6px; }
+  .budgetCat span:first-child { font-size: 15px; }
+  .budgetCat span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Stress cards */
+  .stressCard { padding: 16px 18px; }
+  .stressEmoji { font-size: 20px; }
+  .stressBody h4 { font-size: 14px; }
+
+  /* Final / verdict / options */
+  .verdict { padding: 24px 22px; border-radius: 18px; }
+  .verdictTag { font-size: 10px; padding: 5px 11px; }
+  .verdict h2 { font-size: 24px; letter-spacing: -0.8px; }
+  .verdict p { font-size: 14px; }
+  .optionCard { padding: 20px 22px; }
+  .roadmap { padding: 22px 20px; }
+  .roadmapItem { padding: 14px 16px; }
+  .roadmapItem h5 { font-size: 13.5px; }
+
+  /* ── Edit panel on phone ─────────────────────────────────────── */
+  .editPanel { padding: 18px 16px; margin-top: 14px; }
+  .editPanelHead h3 { font-size: 15px; }
+  .editSectionTitle { font-size: 10px; margin: 18px 0 12px; }
+  .editLabel { font-size: 10.5px; }
+
+  /* Segmented controls: smaller font so 3-option (CDI/CDD/Indépendant)
+     fits without truncation */
+  .editSegBtn { padding: 9px 4px; font-size: 12px; }
+
+  /* Sub-chips wrap into 2 rows naturally */
+  .editSubChip { padding: 7px 10px; font-size: 11.5px; }
+
+  /* Inputs */
+  .editInputWrap { padding: 10px 14px; }
+  .editInput { font-size: 14px; }
+
+  /* Person section */
+  .editPerson { padding: 14px 14px; margin-bottom: 12px; }
+  .editPersonHead { font-size: 11px; }
+  .editPersonDot { width: 20px; height: 20px; font-size: 10px; }
+
+  /* Action row in panel: full-width, primary first (logical order) */
+  .editActions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .editBtnSave,
+  .editBtnCancel {
+    width: 100%;
+    text-align: center;
+    padding: 13px 20px;
+  }
+
+  /* Computed readout — stack value below label on phone */
+  .editComputed {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .editComputed strong { font-size: 17px; }
+
+  /* Slider bounds — keep first/last only to avoid clutter */
+  .editSliderBounds > :nth-child(2),
+  .editSliderBounds > :nth-child(3) { display: none; }
+
+  /* Info box */
+  .editInfoBox { padding: 12px 14px; font-size: 12.5px; }
 }
 
 /* ──────────────────────────────────────────────────────────────────

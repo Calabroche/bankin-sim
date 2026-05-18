@@ -366,7 +366,11 @@ export default function SimulateurPage() {
           <span className={styles.brandMark}>B</span>
           <span>Bankin'</span>
         </Link>
-        <Link href="/" className={styles.back}>← Retour à l'accueil</Link>
+        <Link href="/" className={styles.back}>
+          <span>←</span>
+          <span className={styles.backLong}>&nbsp;Retour à l'accueil</span>
+          <span className={styles.backShort}>&nbsp;Accueil</span>
+        </Link>
       </header>
 
       <div className={styles.progressBar}>
@@ -375,7 +379,8 @@ export default function SimulateurPage() {
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
           <div className={styles.progressMeta}>
-            <strong>Étape {step + 1} / 6</strong> — {STEP_LABELS[step]}
+            <strong>Étape {step + 1} / 6</strong>
+            <span className={styles.progressLabel}> — {STEP_LABELS[step]}</span>
           </div>
         </div>
       </div>
