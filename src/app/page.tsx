@@ -85,45 +85,51 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Phone 2 — Analyse (front) */}
+              {/* Phone 2 — NEW Simulator Result (front) */}
               <div className={`${styles.phone} ${styles.phoneFront}`} aria-hidden="true">
                 <div className={styles.phoneScreen}>
-                  <div className={styles.phStatus}>
-                    <span>9:41</span>
-                    <span>📶 🔋</span>
-                  </div>
-                  <div className={styles.phHeader}>Analyse</div>
-                  <div className={styles.phPills}>
-                    <span>Entrées</span>
-                    <span className={styles.active}>Sorties</span>
-                    <span>Récurrents</span>
-                  </div>
-                  <div className={styles.phDonut}>
-                    <div className={styles.phDonutCenter}>
-                      <strong>1 625,72 €</strong>
-                      <small>SORTIES D'ARGENT</small>
+                  <div className={styles.phSimHero}>
+                    <div className={styles.phSimNewTag}>✨ NOUVEAU</div>
+                    <div className={styles.phSimLabel}>Capacité d'emprunt</div>
+                    <div className={styles.phSimAmount}>325 000 €</div>
+                    <div className={styles.phSimSub}>Sur 25 ans · Taux 3,75 %</div>
+                    <div className={styles.phSimChips}>
+                      <div><strong>1 580 €</strong>Mensualité</div>
+                      <div><strong>380 k€</strong>Prix max</div>
+                      <div><strong>+ 18 k€</strong>PTZ</div>
                     </div>
                   </div>
-                  <div className={styles.phBudget}>
-                    <div className={styles.phBudgetTop}>
-                      <span>Budget mois</span>
-                      <strong>2 803,56 € / 3 000 €</strong>
+                  <div className={styles.phSimStab}>
+                    <div className={styles.phSimStabHead}>
+                      <span>✅ Profil Excellent</span>
+                      <strong>3 / 3</strong>
                     </div>
-                    <div className={styles.phBudgetBar} />
-                    <div className={styles.phBudgetSub}>87 %</div>
+                    <div className={styles.phSimStabBar} />
+                  </div>
+                  <div className={styles.phSimBroker}>
+                    <div className={styles.phSimBrokerRow}>
+                      <span>Pretto · Réponse 24h</span>
+                      <strong>3,42 %</strong>
+                    </div>
+                    <div className={styles.phSimBrokerRow}>
+                      <span>Meilleurtaux · 100 banques</span>
+                      <strong>3,55 %</strong>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className={styles.heroText}>
+              <div className={styles.heroEyebrow}>
+                <span className={styles.newBadge}>Nouveau dans Bankin'</span>
+              </div>
               <h1 className={styles.heroH1}>
-                Votre capacité d'emprunt
-                <br />
-                <em>en 2 minutes</em>
+                Votre prêt immo, <em>simulé en 2 minutes</em>
               </h1>
               <p className={styles.heroSub}>
-                Tous vos comptes, 1 seule app, 0 stress
+                Calculez votre capacité d'emprunt, comparez les meilleurs taux
+                du marché. <strong>Gratuit, sans engagement.</strong>
               </p>
             </div>
 
@@ -151,14 +157,83 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
+          TRUST BAR — 6M users (Bankin' brand signal)
+          ══════════════════════════════════════════════════════════ */}
+      <section className={styles.trustBar}>
+        <div className={styles.container}>
+          <div className={styles.trustBarInner}>
+            <span><strong>6 millions</strong> d'utilisateurs nous font confiance</span>
+            <span className={styles.sep}>·</span>
+            <span>Indépendant de toute institution financière</span>
+            <span className={styles.sep}>·</span>
+            <span>★★★★★ <strong>4,6</strong> sur l'App&nbsp;Store</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          SPOTLIGHT — the NEW credit immo simulator (HERO #2)
+          ══════════════════════════════════════════════════════════ */}
+      <section className={styles.spotlight}>
+        <div className={styles.container}>
+          <div className={styles.spotlightGrid}>
+            <div>
+              <span className={styles.newBadge}>Nouveauté · Octobre 2026</span>
+              <h2>
+                Simulez votre prêt immo,<br />
+                <em>découvrez votre capacité</em>
+              </h2>
+              <p className={styles.spotlightLead}>
+                La toute nouvelle feature Bankin' qui calcule votre capacité
+                d'emprunt en 2 minutes et compare automatiquement les meilleurs
+                taux parmi nos 15 banques partenaires.
+              </p>
+              <ul className={styles.spotlightList}>
+                <li>Adapté à tous les profils — CDI, CDD, indépendant ou couple mixte</li>
+                <li>Inclut le PTZ, les frais de notaire et le taux d'assurance</li>
+                <li>Comparaison Pretto, Meilleurtaux et 15 banques partenaires</li>
+                <li>Vos données restent confidentielles — aucun partage sans accord</li>
+              </ul>
+              <Link href="/simulateur" className={styles.spotlightCta}>
+                Lancer la simulation →
+              </Link>
+            </div>
+
+            <div className={styles.spotlightMockup} aria-hidden="true">
+              <span className={styles.spotlightMockupBadge}>RÉSULTAT DE SIMULATION</span>
+              <h3>Capacité d'emprunt estimée</h3>
+              <div className={styles.spotlightAmount}>325 000 €</div>
+              <div className={styles.spotlightInfo}>
+                Sur 25 ans · Taux estimé 3,75 % · Profil CDI
+              </div>
+              <div className={styles.spotlightMockupChips}>
+                <div><strong>1 580 €</strong>Mensualité max</div>
+                <div><strong>380 k€</strong>Prix achat max</div>
+                <div><strong>+ 18 k€</strong>PTZ estimé</div>
+              </div>
+              <div className={styles.spotlightStab}>
+                <div className={styles.spotlightStabHead}>
+                  <span>✅ Profil Excellent</span>
+                  <strong>3 / 3</strong>
+                </div>
+                <div className={styles.spotlightStabBar}>
+                  <div />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
           STATS
           ══════════════════════════════════════════════════════════ */}
       <section className={styles.stats}>
         <div className={styles.container}>
           <div className={styles.statsGrid}>
             <div>
-              <strong>50 000+</strong>
-              <span>simulations en 2026</span>
+              <strong>6 M+</strong>
+              <span>utilisateurs en France</span>
             </div>
             <div>
               <strong>15</strong>
@@ -166,7 +241,7 @@ export default function LandingPage() {
             </div>
             <div>
               <strong>2 min</strong>
-              <span>temps moyen</span>
+              <span>temps de simulation</span>
             </div>
             <div>
               <strong>0 €</strong>
@@ -177,40 +252,52 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          FEATURES
+          FEATURES — Bankin's 4 core features
           ══════════════════════════════════════════════════════════ */}
       <section id="features" className={styles.section}>
         <div className={styles.container}>
           <div className={styles.sectionHead}>
-            <h2>Pourquoi calculer avec Bankin' ?</h2>
+            <h2>L'app tout-en-1 pour mieux gérer son argent</h2>
             <p>
-              Une estimation précise, transparente et adaptée à votre profil —
-              salarié, contrat précaire ou indépendant.
+              Pilotez vos dépenses, anticipez votre solde de fin de mois,
+              gagnez de l'argent avec le cashback — et simulez votre prêt
+              immobilier en 2 minutes.
             </p>
           </div>
           <div className={styles.features}>
             <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>🎯</div>
-              <h3>Estimation précise</h3>
+              <div className={styles.featureIcon}>💰</div>
+              <h3>Budget automatique</h3>
               <p>
-                Calcul basé sur les taux actuels du marché (octobre 2026) et le
-                taux d'endettement légal de 35 % imposé par le HCSF.
+                Un budget personnalisé, simple et évolutif, basé sur la moyenne
+                de vos dépenses des 3 derniers mois. Modifiable à tout moment.
               </p>
             </div>
             <div className={styles.featureCard}>
-              <div className={`${styles.featureIcon} ${styles.purple}`}>🔒</div>
-              <h3>100 % confidentiel</h3>
+              <div className={`${styles.featureIcon} ${styles.green}`}>📊</div>
+              <h3>Solde fin de mois anticipé</h3>
               <p>
-                Vos données restent dans votre navigateur. Aucune transmission à
-                un courtier ou à une banque sans votre accord explicite.
+                Projection mise à jour en temps réel — vos transactions
+                récurrentes et opérations à venir sont prises en compte.
               </p>
             </div>
             <div className={styles.featureCard}>
-              <div className={`${styles.featureIcon} ${styles.green}`}>📈</div>
-              <h3>Meilleurs taux du marché</h3>
+              <div className={`${styles.featureIcon} ${styles.purple}`}>🛍️</div>
+              <h3>Cashback intégré</h3>
               <p>
-                Comparez instantanément les offres de Pretto, Meilleurtaux et de
-                nos 15 banques partenaires pour obtenir le meilleur taux.
+                Gagnez de l'argent quand vous en dépensez chez nos enseignes
+                partenaires. Crédité directement sur votre compte Bankin'.
+              </p>
+            </div>
+            <div className={styles.featureCard} style={{ borderColor: "#5C50E8", boxShadow: "0 8px 32px rgba(92,80,232,0.18)" }}>
+              <div className={styles.featureIcon} style={{ background: "linear-gradient(135deg,#5C50E8,#8B7FFF)" }}>🏠</div>
+              <h3>
+                Prêt immobilier
+                <span style={{ display: "inline-block", marginLeft: 8, background: "linear-gradient(135deg,#5C50E8,#8B7FFF)", color: "#fff", fontSize: 9, fontWeight: 900, padding: "3px 8px", borderRadius: 8, letterSpacing: 0.8, verticalAlign: "middle" }}>NOUVEAU</span>
+              </h3>
+              <p>
+                Calculez votre capacité d'emprunt en 2 minutes et comparez
+                instantanément les meilleurs taux parmi 15 banques partenaires.
               </p>
             </div>
           </div>
@@ -350,6 +437,26 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          INDEPENDENCE — trust signal
+          ══════════════════════════════════════════════════════════ */}
+      <section className={styles.indep}>
+        <div className={styles.container}>
+          <h2>Indépendants de toute institution financière</h2>
+          <p>
+            Bankin' n'appartient à aucune banque. C'est cette indépendance qui
+            nous permet de vous accompagner sans conflit d'intérêt, de comparer
+            objectivement les taux et de toujours défendre votre intérêt.
+          </p>
+          <div className={styles.indepPills}>
+            <span className={styles.indepPill}>Aucune commission cachée</span>
+            <span className={styles.indepPill}>Comparaison objective</span>
+            <span className={styles.indepPill}>Vos données restent les vôtres</span>
+            <span className={styles.indepPill}>Agréé ACPR</span>
           </div>
         </div>
       </section>

@@ -267,7 +267,128 @@
 }
 .phRow span:first-child { color: #1B1A3B; font-weight: 600; }
 
-/* Phone 2 — Analyse view */
+/* ── NEW badge (used in hero + feature card) ─────────────────────── */
+.newBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #5C50E8 0%, #8B7FFF 100%);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  box-shadow: 0 10px 28px rgba(92, 80, 232, 0.45);
+  animation: newPulse 2.4s ease-in-out infinite;
+  margin-bottom: 22px;
+}
+.newBadge::before { content: "✨"; font-size: 14px; }
+@keyframes newPulse {
+  0%, 100% { box-shadow: 0 10px 28px rgba(92, 80, 232, 0.45),
+                          0 0 0 0 rgba(92, 80, 232, 0); }
+  50%      { box-shadow: 0 14px 36px rgba(92, 80, 232, 0.65),
+                          0 0 0 8px rgba(92, 80, 232, 0.15); }
+}
+.heroEyebrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* ── Phone 2 (front) — NEW Simulator Result view ──────────────────── */
+.phSimHero {
+  background: linear-gradient(160deg, #5C50E8 0%, #3d34c8 100%);
+  margin: -44px -12px 8px;
+  padding: 50px 14px 12px;
+  border-radius: 36px 36px 14px 14px;
+  color: #fff;
+}
+.phSimNewTag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  padding: 3px 9px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.phSimLabel { font-size: 9px; opacity: 0.78; margin-bottom: 2px; }
+.phSimAmount { font-size: 26px; font-weight: 900; line-height: 1; letter-spacing: -1.2px; }
+.phSimSub { font-size: 8.5px; color: #C5C0FF; margin-top: 5px; }
+.phSimChips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 10px;
+}
+.phSimChips > div {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 7px;
+  padding: 5px 3px;
+  text-align: center;
+  font-size: 7.5px;
+  color: #C5C0FF;
+}
+.phSimChips strong {
+  display: block;
+  color: #fff;
+  font-weight: 800;
+  font-size: 9.5px;
+  margin-bottom: 1px;
+}
+.phSimStab {
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin: 0 6px 6px;
+}
+.phSimStabHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  font-weight: 800;
+  color: #1B1A3B;
+  font-size: 9.5px;
+}
+.phSimStabHead strong { color: #00C48C; }
+.phSimStabBar {
+  height: 4px;
+  background: #EEF0FF;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.phSimStabBar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #00C48C, #4ECDC4);
+  border-radius: 2px;
+}
+.phSimBroker {
+  background: #fff;
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin: 0 6px;
+  font-size: 9px;
+}
+.phSimBrokerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #F0F0F8;
+}
+.phSimBrokerRow:last-child { border-bottom: none; }
+.phSimBrokerRow strong { color: #5C50E8; font-weight: 800; }
+
+/* Phone 2 — Analyse view (kept for the back phone) */
 .phHeader {
   text-align: center;
   font-weight: 800;
@@ -511,6 +632,233 @@
   border: 2px solid #fff;
 }
 
+/* ── Trust line — 6M users ────────────────────────────────────────── */
+.trustBar {
+  background: #fff;
+  border-bottom: 1px solid #E4ECFB;
+  padding: 22px 0;
+}
+.trustBarInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  text-align: center;
+  color: #6E6A95;
+  font-size: 14px;
+  font-weight: 600;
+}
+.trustBarInner strong {
+  color: #1B1A3B;
+  font-weight: 900;
+  font-size: 18px;
+}
+.trustBarInner .sep { color: #C8CCEA; }
+
+/* ── Feature spotlight — the NEW credit immo simulator ───────────── */
+.spotlight {
+  padding: 96px 0;
+  background: linear-gradient(180deg, #F4F8FF 0%, #EEF0FF 100%);
+  position: relative;
+  overflow: hidden;
+}
+.spotlightGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.spotlight h2 {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  color: #1B1A3B;
+  line-height: 1.05;
+  margin: 12px 0 18px;
+}
+.spotlight h2 em {
+  font-style: normal;
+  background: linear-gradient(135deg, #5C50E8 0%, #8B7FFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.spotlightLead {
+  font-size: 17px;
+  color: #6E6A95;
+  line-height: 1.65;
+  margin-bottom: 28px;
+  max-width: 520px;
+}
+.spotlightList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+}
+.spotlightList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 15px;
+  color: #1B1A3B;
+  font-weight: 500;
+}
+.spotlightList li::before {
+  content: "✓";
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: #00C48C;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 12px;
+  margin-top: 1px;
+}
+.spotlightCta {
+  display: inline-block;
+  background: #0F0F19;
+  color: #fff;
+  padding: 16px 30px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.18s;
+  box-shadow: 0 10px 28px rgba(15, 15, 25, 0.2);
+}
+.spotlightCta:hover { background: #1F1F2F; transform: translateY(-2px); }
+
+.spotlightMockup {
+  background: linear-gradient(160deg, #5C50E8 0%, #3d34c8 100%);
+  border-radius: 24px;
+  padding: 36px 30px 28px;
+  color: #fff;
+  box-shadow: 0 32px 80px rgba(92, 80, 232, 0.3);
+}
+.spotlightMockupBadge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.spotlightMockup h3 {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.spotlightAmount {
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -1.8px;
+  line-height: 1;
+}
+.spotlightInfo {
+  font-size: 13px;
+  color: #C5C0FF;
+  margin: 10px 0 22px;
+}
+.spotlightMockupChips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.spotlightMockupChips > div {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 10px;
+  color: #C5C0FF;
+}
+.spotlightMockupChips strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.spotlightStab {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #1B1A3B;
+}
+.spotlightStabHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-weight: 800;
+  font-size: 12px;
+}
+.spotlightStabHead strong { color: #00C48C; }
+.spotlightStabBar {
+  height: 6px;
+  background: #EEF0FF;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.spotlightStabBar > div {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #00C48C, #4ECDC4);
+  border-radius: 3px;
+}
+
+/* ── Independence / trust ─────────────────────────────────────────── */
+.indep {
+  background: #0F0F19;
+  color: #fff;
+  padding: 96px 0;
+  text-align: center;
+}
+.indep h2 {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  margin-bottom: 18px;
+  color: #fff;
+}
+.indep p {
+  font-size: 17px;
+  color: #C5C0E8;
+  max-width: 640px;
+  margin: 0 auto 40px;
+  line-height: 1.65;
+}
+.indepPills {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.indepPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.indepPill::before { content: "✓"; color: #00C48C; font-weight: 900; }
+
 /* ── Stats strip (white card on white bg) ─────────────────────────── */
 .stats {
   padding: 64px 0 24px;
@@ -560,8 +908,8 @@
 /* ── Features ─────────────────────────────────────────────────────── */
 .features {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 .featureCard {
   background: #fff;
@@ -810,9 +1158,11 @@
 
 /* ── Responsive ───────────────────────────────────────────────────── */
 @media (max-width: 1100px) {
-  .phoneBack { transform: translateX(90px) translateY(-20px) rotate(2deg); }
-  .phoneFront { transform: translateX(-90px) translateY(0) rotate(-2deg); }
+  .phoneBack { transform: translateX(-160px) translateY(20px) rotate(-3deg); }
+  .phoneFront { transform: translateX(-50px) translateY(0) rotate(2deg); }
   .heroH1 { font-size: 44px; }
+  .spotlightGrid { grid-template-columns: 1fr; gap: 48px; }
+  .spotlight h2 { font-size: 34px; }
 }
 
 @media (max-width: 860px) {
