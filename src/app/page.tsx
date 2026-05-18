@@ -137,16 +137,49 @@ export default function LandingPage() {
                       </div>
                       <div className={styles.phSimStabBar} />
                     </div>
-                    <div className={styles.phSimBroker}>
-                      <div className={styles.phSimBrokerRow}>
-                        <span>Pretto · 24h</span>
-                        <strong>3,42 %</strong>
+                    <div className={styles.phSimDetail}>
+                      <div className={styles.phSimDetailHead}>Détail du financement</div>
+                      <div className={styles.phSimDetailRow}>
+                        <span>Prix d'achat max</span>
+                        <strong>380 000 €</strong>
                       </div>
-                      <div className={styles.phSimBrokerRow}>
-                        <span>Meilleurtaux</span>
-                        <strong>3,55 %</strong>
+                      <div className={styles.phSimDetailRow}>
+                        <span>Apport personnel</span>
+                        <strong>20 000 €</strong>
+                      </div>
+                      <div className={styles.phSimDetailRow}>
+                        <span>Frais de notaire</span>
+                        <strong>6 921 €</strong>
+                      </div>
+                      <div className={styles.phSimDetailRow}>
+                        <span>PTZ estimé</span>
+                        <strong style={{ color: "#00C48C" }}>+ 18 000 €</strong>
                       </div>
                     </div>
+                    <div className={styles.phSimBroker}>
+                      <div className={styles.phSimBrokerHead}>Meilleurs taux</div>
+                      <div className={styles.phSimBrokerRow}>
+                        <div className={styles.phSimBrokerLeft}>
+                          <span className={styles.phSimBrokerLogo} style={{ background: "#5C50E8" }}>P</span>
+                          <div className={styles.phSimBrokerName}>
+                            <strong>Pretto</strong>
+                            <small>Réponse en 24h</small>
+                          </div>
+                        </div>
+                        <span className={styles.phSimBrokerRate}>3,42 %</span>
+                      </div>
+                      <div className={styles.phSimBrokerRow}>
+                        <div className={styles.phSimBrokerLeft}>
+                          <span className={styles.phSimBrokerLogo} style={{ background: "#003366" }}>M</span>
+                          <div className={styles.phSimBrokerName}>
+                            <strong>Meilleurtaux</strong>
+                            <small>100+ banques</small>
+                          </div>
+                        </div>
+                        <span className={styles.phSimBrokerRate}>3,55 %</span>
+                      </div>
+                    </div>
+                    <div className={styles.phSimCta}>Obtenir mon offre →</div>
                   </div>
                 </div>
               </div>
@@ -154,9 +187,41 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <a href="#" className={styles.heroFootnote}>
-          Installer l'extension <span className={styles.chromeIcon} />
-        </a>
+        {/* Partner strip — fills the bottom of the hero */}
+        <div className={styles.container}>
+          <div className={styles.heroPartners}>
+            <div className={styles.heroPartnersInner}>
+              <span className={styles.heroPartnersLabel}>Comparé parmi</span>
+              <span className={styles.heroPartner}>
+                <span className={styles.dot} style={{ background: "#0E7C3A" }}>CA</span>
+                Crédit Agricole
+              </span>
+              <span className={styles.heroPartner}>
+                <span className={styles.dot} style={{ background: "#009639" }}>BNP</span>
+                BNP Paribas
+              </span>
+              <span className={styles.heroPartner}>
+                <span className={styles.dot} style={{ background: "#E60028" }}>SG</span>
+                Société Générale
+              </span>
+              <span className={styles.heroPartner}>
+                <span className={styles.dot} style={{ background: "#FFE800", color: "#1B1A3B" }}>LCL</span>
+                LCL
+              </span>
+              <span className={styles.heroPartner}>
+                <span className={styles.dot} style={{ background: "#5C50E8" }}>P</span>
+                Pretto
+              </span>
+              <span className={styles.heroPartner}>
+                <span className={styles.dot} style={{ background: "#003366" }}>M</span>
+                Meilleurtaux
+              </span>
+              <a href="#" className={styles.heroFootnote}>
+                <span className={styles.chromeIcon} /> Installer l'extension
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════
