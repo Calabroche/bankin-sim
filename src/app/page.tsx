@@ -2,98 +2,157 @@ import Link from "next/link";
 import styles from "./landing.module.css";
 
 export const metadata = {
-  title: "Bankin' — Crédit immobilier · Capacité d'emprunt en 2 minutes",
+  title: "Bankin' — L'app tout-en-1 pour mieux gérer son argent",
   description:
-    "Calculez gratuitement votre capacité d'emprunt et comparez les meilleurs taux du marché — CDI, CDD ou indépendant. Sans engagement, 100 % en ligne.",
+    "Calculez votre capacité d'emprunt en 2 minutes et comparez les meilleurs taux du marché. Tous vos comptes, 1 seule app, 0 stress.",
 };
 
 export default function LandingPage() {
   return (
     <div className={styles.page}>
-      {/* ── Top nav ─────────────────────────────────────────────── */}
-      <header className={styles.topbar}>
-        <div className={styles.topbarInner}>
-          <Link href="/" className={styles.brand}>
-            <span className={styles.brandMark}>B</span>
-            <span>Bankin'</span>
-          </Link>
-          <nav className={styles.nav}>
-            <a href="#features">Crédit immobilier</a>
-            <a href="#how">Comment ça marche</a>
-            <a href="#banks">Partenaires</a>
-            <a href="#testimonials">Témoignages</a>
-          </nav>
-          <div className={styles.topRight}>
-            <a href="#" className={styles.topLogin}>Connexion</a>
-            <Link href="/simulateur" className={styles.topCta}>
-              Simuler maintenant
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* ── Hero ────────────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          HERO — sky-blue gradient with clouds (Bankin' identity)
+          ══════════════════════════════════════════════════════════ */}
       <section className={styles.hero}>
+        {/* Cloud decorations */}
+        <div className={`${styles.cloud} ${styles.cloud1}`} />
+        <div className={`${styles.cloud} ${styles.cloud2}`} />
+        <div className={`${styles.cloud} ${styles.cloud3}`} />
+        <div className={`${styles.cloud} ${styles.cloud4}`} />
+
+        {/* Top nav */}
         <div className={styles.container}>
-          <div className={styles.heroGrid}>
-            <div>
-              <span className={styles.eyebrow}>Crédit immobilier · Octobre 2026</span>
-              <h1 className={styles.heroH1}>
-                Votre capacité d'emprunt <em>en 2 minutes</em>
-              </h1>
-              <p className={styles.heroLead}>
-                Calculez gratuitement combien vous pouvez emprunter pour votre projet
-                immobilier. Réponse immédiate, comparaison parmi 15 banques partenaires,
-                sans engagement.
-              </p>
-              <div className={styles.heroCtas}>
-                <Link href="/simulateur" className={styles.primary}>
-                  Démarrer la simulation →
+          <header className={styles.topbar}>
+            <div className={styles.topbarInner}>
+              <Link href="/" className={styles.brand}>Bankin'</Link>
+              <nav className={styles.nav}>
+                <a href="#features">À propos</a>
+                <a href="#how">Nos offres et services B2B</a>
+              </nav>
+              <div className={styles.topRight}>
+                <a href="#" className={styles.topSupport}>Support</a>
+                <Link href="/simulateur" className={styles.topCta}>
+                  Me connecter
                 </Link>
-                <a href="#how" className={styles.secondary}>Comment ça marche</a>
               </div>
-              <div className={styles.trust}>
-                <span>Gratuit</span>
-                <span>Sans engagement</span>
-                <span>100 % en ligne</span>
-                <span>Résultat instantané</span>
+            </div>
+          </header>
+
+          {/* Phone mockups + headline */}
+          <div className={styles.heroCenter}>
+            <div className={styles.phoneStage}>
+              <div className={styles.phoneBase} />
+
+              {/* Phone 1 — Accounts (back) */}
+              <div className={`${styles.phone} ${styles.phoneBack}`} aria-hidden="true">
+                <div className={styles.phoneScreen}>
+                  <div className={styles.phStatus}>
+                    <span>16:19</span>
+                    <span>📶 🔋</span>
+                  </div>
+                  <div className={styles.phAmount}>
+                    20 405,16 €
+                    <small>Solde total</small>
+                  </div>
+                  <div className={styles.phTabs}>
+                    <span className={styles.active}>Tous</span>
+                    <span>Courant</span>
+                    <span>Épargne</span>
+                    <span>Crédits</span>
+                  </div>
+                  <div className={styles.phCard}>
+                    <div className={styles.phCardHead}>BOURSOBANK</div>
+                    <div className={styles.phRow}>
+                      <span>Compte courant</span>
+                      <strong>2 153,98 €</strong>
+                    </div>
+                    <div className={styles.phRow}>
+                      <span>Compte joint</span>
+                      <strong style={{ color: "#FF5957" }}>- 32,12 €</strong>
+                    </div>
+                  </div>
+                  <div className={styles.phCard}>
+                    <div className={`${styles.phCardHead} ${styles.green}`}>BNP</div>
+                    <div className={styles.phRow}>
+                      <span>Compte courant</span>
+                      <strong>256,87 €</strong>
+                    </div>
+                    <div className={styles.phRow}>
+                      <span>Livret A</span>
+                      <strong>12 245,25 €</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Phone 2 — Analyse (front) */}
+              <div className={`${styles.phone} ${styles.phoneFront}`} aria-hidden="true">
+                <div className={styles.phoneScreen}>
+                  <div className={styles.phStatus}>
+                    <span>9:41</span>
+                    <span>📶 🔋</span>
+                  </div>
+                  <div className={styles.phHeader}>Analyse</div>
+                  <div className={styles.phPills}>
+                    <span>Entrées</span>
+                    <span className={styles.active}>Sorties</span>
+                    <span>Récurrents</span>
+                  </div>
+                  <div className={styles.phDonut}>
+                    <div className={styles.phDonutCenter}>
+                      <strong>1 625,72 €</strong>
+                      <small>SORTIES D'ARGENT</small>
+                    </div>
+                  </div>
+                  <div className={styles.phBudget}>
+                    <div className={styles.phBudgetTop}>
+                      <span>Budget mois</span>
+                      <strong>2 803,56 € / 3 000 €</strong>
+                    </div>
+                    <div className={styles.phBudgetBar} />
+                    <div className={styles.phBudgetSub}>87 %</div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className={styles.preview} aria-hidden="true">
-              <div className={styles.previewBadge}>Aperçu de votre résultat</div>
-              <div className={styles.previewLabel}>Capacité d'emprunt estimée</div>
-              <div className={styles.previewAmount}>325 000 €</div>
-              <div className={styles.previewSub}>
-                Sur 25 ans · Taux estimé 3,75 % · Profil CDI
-              </div>
-              <div className={styles.previewChips}>
-                <div>
-                  <strong>1 580 €</strong>
-                  Mensualité max
+            <div className={styles.heroText}>
+              <h1 className={styles.heroH1}>
+                Votre capacité d'emprunt
+                <br />
+                <em>en 2 minutes</em>
+              </h1>
+              <p className={styles.heroSub}>
+                Tous vos comptes, 1 seule app, 0 stress
+              </p>
+            </div>
+
+            {/* Download CTA card */}
+            <div className={styles.dlCard}>
+              <div className={styles.dlQr} aria-hidden="true" />
+              <div className={styles.dlInfo}>
+                <strong>Démarrez votre simulation</strong>
+                <div className={styles.dlButtons}>
+                  <Link href="/simulateur" className={`${styles.dlBtn} ${styles.dlBtnPrimary}`}>
+                    Simuler maintenant →
+                  </Link>
+                  <a href="#how" className={styles.dlBtn}>
+                    <span>Comment <small>ça marche</small></span>
+                  </a>
                 </div>
-                <div>
-                  <strong>380 k€</strong>
-                  Prix achat max
-                </div>
-                <div>
-                  <strong>+ 18 k€</strong>
-                  PTZ estimé
-                </div>
-              </div>
-              <div className={styles.previewProfilLabel}>
-                <span>✅ Profil Excellent</span>
-                <small>3 / 3</small>
-              </div>
-              <div className={styles.previewBar}>
-                <div />
               </div>
             </div>
           </div>
         </div>
+
+        <a href="#" className={styles.heroFootnote}>
+          Installer l'extension <span className={styles.chromeIcon} />
+        </a>
       </section>
 
-      {/* ── Stats ───────────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          STATS
+          ══════════════════════════════════════════════════════════ */}
       <section className={styles.stats}>
         <div className={styles.container}>
           <div className={styles.statsGrid}>
@@ -117,7 +176,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features ────────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          FEATURES
+          ══════════════════════════════════════════════════════════ */}
       <section id="features" className={styles.section}>
         <div className={styles.container}>
           <div className={styles.sectionHead}>
@@ -137,7 +198,7 @@ export default function LandingPage() {
               </p>
             </div>
             <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>🔒</div>
+              <div className={`${styles.featureIcon} ${styles.purple}`}>🔒</div>
               <h3>100 % confidentiel</h3>
               <p>
                 Vos données restent dans votre navigateur. Aucune transmission à
@@ -145,7 +206,7 @@ export default function LandingPage() {
               </p>
             </div>
             <div className={styles.featureCard}>
-              <div className={styles.featureIcon}>📈</div>
+              <div className={`${styles.featureIcon} ${styles.green}`}>📈</div>
               <h3>Meilleurs taux du marché</h3>
               <p>
                 Comparez instantanément les offres de Pretto, Meilleurtaux et de
@@ -156,7 +217,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── How it works ────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          HOW IT WORKS
+          ══════════════════════════════════════════════════════════ */}
       <section id="how" className={styles.sectionDark}>
         <div className={styles.container}>
           <div className={styles.sectionHead}>
@@ -188,7 +251,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Bank partners ───────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          BANK PARTNERS
+          ══════════════════════════════════════════════════════════ */}
       <section id="banks" className={styles.banks}>
         <div className={styles.container}>
           <div className={styles.banksLabel}>
@@ -231,7 +296,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Testimonials ────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          TESTIMONIALS
+          ══════════════════════════════════════════════════════════ */}
       <section id="testimonials" className={styles.section}>
         <div className={styles.container}>
           <div className={styles.sectionHead}>
@@ -287,30 +354,29 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Final CTA ───────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          FINAL CTA (sky blue with clouds)
+          ══════════════════════════════════════════════════════════ */}
       <section className={styles.finalCta}>
         <div className={styles.container}>
           <h2>Prêt à devenir propriétaire ?</h2>
           <p>Découvrez en 2 minutes combien vous pouvez emprunter.</p>
-          <Link href="/simulateur" className={styles.primary}>
-            Démarrer la simulation →
-          </Link>
+          <Link href="/simulateur">Démarrer la simulation →</Link>
         </div>
       </section>
 
-      {/* ── Footer ──────────────────────────────────────────────── */}
+      {/* ══════════════════════════════════════════════════════════
+          FOOTER
+          ══════════════════════════════════════════════════════════ */}
       <footer className={styles.footer}>
         <div className={styles.container}>
           <div className={styles.footerGrid}>
             <div className={styles.footerCol}>
-              <div className={styles.footerLogo}>
-                <span className={styles.brandMark}>B</span>
-                <span>Bankin'</span>
-              </div>
+              <div className={styles.footerLogo}>Bankin'</div>
               <p>
-                Le partenaire de votre projet immobilier depuis 2011. Plus de
-                50 000 simulations en 2026, et 15 banques partenaires pour
-                obtenir le meilleur taux.
+                L'app tout-en-1 pour mieux gérer son argent. Le partenaire de
+                votre projet immobilier depuis 2011. Plus de 50 000 simulations
+                en 2026.
               </p>
             </div>
             <div className={styles.footerCol}>
