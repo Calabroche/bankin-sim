@@ -1,0 +1,854 @@
+/* ──────────────────────────────────────────────────────────────────────
+   Bankin' simulator — customer-first redesign
+   Steps: moment de vie → point de départ → 3 scénarios →
+          impact vie quotidienne → stress-test → roadmap / prêts
+   ────────────────────────────────────────────────────────────────────── */
+
+.page {
+  background: #F4F8FF;
+  color: #1B1A3B;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+/* ── Top bar ───────────────────────────────────────────────────────── */
+.topbar {
+  background: #0F0F19;
+  border-bottom: 1px solid #2a2750;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: -0.8px;
+  line-height: 1;
+}
+.brandMark {
+  width: 30px;
+  height: 30px;
+  background: #5C50E8;
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  font-style: normal;
+}
+.back {
+  color: #a099ff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2750;
+  transition: all 0.15s;
+}
+.back:hover { background: #2a2750; color: #fff; }
+
+/* ── Progress rail ─────────────────────────────────────────────────── */
+.progressBar {
+  background: #fff;
+  padding: 16px 24px;
+  border-bottom: 1px solid #E4ECFB;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.progressInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.progressTrack {
+  flex: 1;
+  height: 6px;
+  background: #EEF0FF;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #5C50E8, #8B7FFF);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.progressMeta {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6E6A95;
+  white-space: nowrap;
+}
+.progressMeta strong {
+  color: #1B1A3B;
+  font-weight: 900;
+}
+
+/* ── Main column ───────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 24px 48px;
+}
+.mainNarrow {
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+}
+.mainWide {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Common section heading */
+.eyebrow {
+  display: inline-block;
+  background: #EEF0FF;
+  color: #5C50E8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.title {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  margin: 0 0 12px;
+  line-height: 1.1;
+}
+.title em {
+  font-style: normal;
+  background: linear-gradient(135deg, #5C50E8, #8B7FFF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lead {
+  font-size: 17px;
+  color: #6E6A95;
+  margin: 0 0 32px;
+  line-height: 1.55;
+  max-width: 620px;
+}
+
+/* Step actions */
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0F0F19;
+  color: #fff;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 10px 24px rgba(15, 15, 25, 0.2);
+}
+.btnPrimary:hover { background: #1F1F2F; transform: translateY(-1px); }
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: #6E6A95;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #D4D8FF;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnGhost:hover { background: #fff; border-color: #5C50E8; color: #5C50E8; }
+
+/* ──────────────────────────────────────────────────────────────────
+   STEP 1 — Moment de vie
+   ────────────────────────────────────────────────────────────────── */
+.momentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+.momentCard {
+  background: #fff;
+  border: 2px solid #E4ECFB;
+  border-radius: 18px;
+  padding: 22px 24px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: all 0.18s;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.momentCard:hover {
+  border-color: #8B7FFF;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(92, 80, 232, 0.12);
+}
+.momentCard.selected {
+  border-color: #5C50E8;
+  background: linear-gradient(135deg, #fff 0%, #F4F0FF 100%);
+  box-shadow: 0 12px 28px rgba(92, 80, 232, 0.18);
+}
+.momentEmoji {
+  font-size: 32px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.momentBody h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: #1B1A3B;
+}
+.momentBody p {
+  font-size: 13.5px;
+  color: #6E6A95;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   STEP 2 — Point de départ (data from Bankin')
+   ────────────────────────────────────────────────────────────────── */
+.departGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.dataCard {
+  background: #fff;
+  border: 1px solid #E4ECFB;
+  border-radius: 16px;
+  padding: 22px 24px;
+  position: relative;
+}
+.dataCard.highlight {
+  background: linear-gradient(135deg, #5C50E8 0%, #3d34c8 100%);
+  color: #fff;
+  border-color: transparent;
+}
+.dataLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6E6A95;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 10px;
+}
+.dataCard.highlight .dataLabel { color: rgba(255, 255, 255, 0.75); }
+.dataLabel::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background: #5C50E8;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.dataCard.highlight .dataLabel::before { background: #fff; }
+.dataValue {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.dataSub {
+  font-size: 13px;
+  color: #6E6A95;
+  font-weight: 600;
+}
+.dataCard.highlight .dataSub { color: #C5C0FF; }
+.dataSubGood::before { content: "✓ "; color: #00C48C; font-weight: 900; }
+.dataDonut {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #5C50E8 0deg 120deg,
+    #FFA63D 120deg 200deg,
+    #4ECDC4 200deg 270deg,
+    #FF5E78 270deg 320deg,
+    #FFC700 320deg 360deg
+  );
+}
+.dataDonut::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.editToggle {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #5C50E8;
+  font-weight: 700;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+}
+.editToggle:hover { text-decoration: underline; }
+
+/* ──────────────────────────────────────────────────────────────────
+   STEP 3 — 3 scénarios
+   ────────────────────────────────────────────────────────────────── */
+.scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 14px;
+}
+.scenarioCard {
+  background: #fff;
+  border: 2px solid #E4ECFB;
+  border-radius: 20px;
+  padding: 22px 22px 24px;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.scenarioCard:hover {
+  border-color: #8B7FFF;
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(92, 80, 232, 0.14);
+}
+.scenarioCard.selected {
+  border-color: #5C50E8;
+  background: linear-gradient(160deg, #fff 0%, #F4F0FF 100%);
+  box-shadow: 0 16px 36px rgba(92, 80, 232, 0.22);
+}
+.scenarioCard.recommended {
+  border-color: #5C50E8;
+}
+.scenarioCard.recommended::before {
+  content: "Recommandé pour vous";
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: linear-gradient(135deg, #5C50E8, #8B7FFF);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 5px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(92, 80, 232, 0.35);
+}
+.scenarioName {
+  font-size: 14px;
+  font-weight: 800;
+  color: #5C50E8;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.scenarioTag {
+  font-size: 12px;
+  color: #6E6A95;
+  margin-bottom: 18px;
+}
+.scenarioPrice {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: #1B1A3B;
+}
+.scenarioPriceLbl { font-size: 12px; color: #6E6A95; margin-top: 4px; font-weight: 600; }
+.scenarioBody {
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.scenarioRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #6E6A95;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0F0F8;
+}
+.scenarioRow:last-child { border-bottom: none; }
+.scenarioRow strong { color: #1B1A3B; font-weight: 800; }
+.scenarioRow.solde strong { color: #00C48C; }
+.scenarioRow.solde.bad strong { color: #FF5957; }
+.scenarioImpact {
+  background: #F4F0FF;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #4A4680;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.scenarioImpact strong { color: #5C50E8; font-weight: 800; }
+.scenarioCta {
+  margin-top: 18px;
+  background: transparent;
+  border: 1.5px solid #5C50E8;
+  color: #5C50E8;
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+}
+.scenarioCard.selected .scenarioCta {
+  background: #5C50E8;
+  color: #fff;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   STEP 4 — Impact sur la vie quotidienne
+   ────────────────────────────────────────────────────────────────── */
+.impactHeader {
+  background: linear-gradient(160deg, #5C50E8 0%, #3d34c8 100%);
+  border-radius: 18px;
+  padding: 22px 28px;
+  color: #fff;
+  margin-bottom: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.impactHeader .left small {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.impactHeader h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+}
+.impactHeader p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #C5C0FF;
+}
+.impactHeader .right {
+  text-align: right;
+}
+.impactHeader .right strong {
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+.impactHeader .right span {
+  font-size: 12px;
+  color: #C5C0FF;
+}
+.impactChangeBtn {
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.impactChangeBtn:hover { background: rgba(255, 255, 255, 0.25); }
+
+.budget {
+  background: #fff;
+  border: 1px solid #E4ECFB;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.budgetHead {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 80px;
+  padding: 14px 24px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #6E6A95;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 1px solid #E4ECFB;
+  background: #F7F8FF;
+}
+.budgetRow {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 80px;
+  padding: 14px 24px;
+  align-items: center;
+  border-bottom: 1px solid #F0F0F8;
+  font-size: 14px;
+}
+.budgetRow:last-child { border-bottom: none; }
+.budgetCat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: #1B1A3B;
+}
+.budgetCat span:first-child { font-size: 18px; }
+.budgetVal {
+  font-weight: 800;
+  color: #1B1A3B;
+  font-variant-numeric: tabular-nums;
+}
+.budgetValDiff {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.budgetValDiff.up { color: #FF5957; }
+.budgetValDiff.down { color: #00C48C; }
+.budgetValDiff.flat { color: #9090BB; }
+.budgetDelta {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6E6A95;
+  text-align: right;
+}
+.budgetDelta.up { color: #FF5957; }
+.budgetDelta.down { color: #00C48C; }
+
+.budgetFoot {
+  background: linear-gradient(135deg, #F4F0FF 0%, #EEF0FF 100%);
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 80px;
+  padding: 18px 24px;
+  font-weight: 900;
+  font-size: 15px;
+}
+.budgetFoot .label { color: #5C50E8; font-weight: 800; }
+.budgetFoot .val { color: #1B1A3B; }
+.budgetFoot .valDiff { color: #00C48C; }
+.budgetFoot .valDiff.bad { color: #FF5957; }
+
+/* ──────────────────────────────────────────────────────────────────
+   STEP 5 — Stress test
+   ────────────────────────────────────────────────────────────────── */
+.stressGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 8px 0 32px;
+}
+.stressCard {
+  background: #fff;
+  border: 2px solid #E4ECFB;
+  border-radius: 16px;
+  padding: 20px 22px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: all 0.18s;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.stressCard:hover {
+  border-color: #FFA63D;
+  transform: translateY(-2px);
+}
+.stressCard.active {
+  border-color: #FFA63D;
+  background: linear-gradient(135deg, #FFFDF5 0%, #FFF6E5 100%);
+  box-shadow: 0 12px 28px rgba(255, 166, 61, 0.16);
+}
+.stressEmoji {
+  font-size: 24px;
+  line-height: 1;
+}
+.stressBody h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1B1A3B;
+}
+.stressBody p {
+  margin: 0;
+  font-size: 13px;
+  color: #6E6A95;
+  line-height: 1.5;
+}
+.stressImpact {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #E07800;
+}
+.stressOk {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #00C48C;
+}
+
+.stressSummary {
+  background: linear-gradient(135deg, #FFF6E5 0%, #FFFDF5 100%);
+  border: 1px solid #FFE799;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: #7A5C00;
+  line-height: 1.55;
+}
+.stressSummary strong { font-weight: 800; color: #5A4400; }
+.stressSummaryClean {
+  background: linear-gradient(135deg, #F0FFF8 0%, #E6FBF0 100%);
+  border-color: #86EFAC;
+  color: #166534;
+}
+.stressSummaryClean strong { color: #0E5A2D; }
+
+/* ──────────────────────────────────────────────────────────────────
+   STEP 6 — Final (ready / roadmap)
+   ────────────────────────────────────────────────────────────────── */
+.verdict {
+  background: linear-gradient(160deg, #5C50E8 0%, #3d34c8 100%);
+  border-radius: 22px;
+  padding: 36px 40px;
+  color: #fff;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.verdict::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 70%);
+  pointer-events: none;
+}
+.verdict.notReady {
+  background: linear-gradient(160deg, #FFA63D 0%, #E07800 100%);
+}
+.verdictTag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+.verdict h2 {
+  margin: 0 0 14px;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  line-height: 1.1;
+  position: relative;
+}
+.verdict p {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 620px;
+  line-height: 1.6;
+  position: relative;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.optionCard {
+  background: #fff;
+  border: 1px solid #E4ECFB;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+.optionCard:hover {
+  border-color: #5C50E8;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(92, 80, 232, 0.14);
+}
+.optionEmoji { font-size: 28px; line-height: 1; }
+.optionCard h4 { margin: 0; font-size: 16px; font-weight: 800; color: #1B1A3B; }
+.optionCard p { margin: 0; font-size: 13.5px; color: #6E6A95; line-height: 1.55; flex: 1; }
+.optionCta {
+  margin-top: 4px;
+  color: #5C50E8;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.roadmap {
+  background: #fff;
+  border: 1px solid #E4ECFB;
+  border-radius: 18px;
+  padding: 26px 28px;
+  margin-bottom: 24px;
+}
+.roadmap h3 { margin: 0 0 6px; font-size: 18px; font-weight: 900; color: #1B1A3B; letter-spacing: -0.3px; }
+.roadmap p.sub { margin: 0 0 22px; font-size: 14px; color: #6E6A95; line-height: 1.5; }
+.roadmapList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.roadmapItem {
+  background: #F7F8FF;
+  border: 1px solid #E4ECFB;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: all 0.18s;
+}
+.roadmapItem:hover { border-color: #8B7FFF; background: #EEF0FF; }
+.roadmapItem.recommended { border-color: #5C50E8; background: linear-gradient(135deg, #fff, #F4F0FF); }
+.roadmapItem .left { flex: 1; }
+.roadmapItem h5 { margin: 0 0 4px; font-size: 14.5px; font-weight: 800; color: #1B1A3B; }
+.roadmapItem p { margin: 0; font-size: 13px; color: #6E6A95; line-height: 1.5; }
+.roadmapItem .right strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 900;
+  color: #5C50E8;
+  letter-spacing: -0.5px;
+}
+.roadmapItem .right span {
+  display: block;
+  font-size: 11px;
+  color: #6E6A95;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Footer nav ────────────────────────────────────────────────────── */
+.footNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid #E4ECFB;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .topbar { padding: 12px 16px; }
+  .progressBar { padding: 12px 16px; }
+  .main { padding: 24px 16px 32px; }
+  .title { font-size: 26px; letter-spacing: -0.8px; }
+  .lead { font-size: 15px; margin-bottom: 24px; }
+  .momentGrid { grid-template-columns: 1fr; }
+  .departGrid { grid-template-columns: 1fr; }
+  .scenarios { grid-template-columns: 1fr; }
+  .stressGrid { grid-template-columns: 1fr; }
+  .options { grid-template-columns: 1fr; }
+  .budgetHead, .budgetRow, .budgetFoot {
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 12.5px;
+  }
+  .budgetHead > :nth-child(4), .budgetRow > :nth-child(4), .budgetFoot > :nth-child(4) {
+    display: none;
+  }
+  .impactHeader { padding: 18px 20px; }
+  .impactHeader h2 { font-size: 22px; }
+  .verdict { padding: 28px 22px; }
+  .verdict h2 { font-size: 26px; }
+  .roadmapItem { flex-direction: column; align-items: flex-start; }
+}

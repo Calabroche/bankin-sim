@@ -48,24 +48,25 @@ export default function LandingPage() {
                   <span className={styles.newBadge}>Nouveau dans Bankin'</span>
                 </div>
                 <h1 className={styles.heroH1}>
-                  Votre prêt immo, <em>simulé en 2 minutes</em>
+                  Vous y pensez ? <em>On regarde si c'est faisable.</em>
                 </h1>
                 <p className={styles.heroSub}>
-                  Calculez votre capacité d'emprunt et comparez les meilleurs
-                  taux parmi 15 banques partenaires. <strong>Gratuit, sans engagement.</strong>
+                  Bankin' connaît déjà vos revenus, vos charges et votre rythme
+                  d'épargne. On vous montre <strong>3 scénarios et l'impact réel sur votre quotidien</strong> —
+                  pas un score bancaire.
                 </p>
                 <div className={styles.heroCtas}>
                   <Link href="/simulateur" className={styles.heroCta}>
-                    Simuler maintenant →
+                    Voir si c'est faisable →
                   </Link>
                   <a href="#how" className={styles.heroCtaSecondary}>
                     Comment ça marche
                   </a>
                 </div>
                 <div className={styles.heroTrust}>
-                  <span>6 M+ utilisateurs</span>
-                  <span>★★★★★ 4,6 sur l'App Store</span>
-                  <span>Indépendant</span>
+                  <span>Pré-rempli depuis vos comptes</span>
+                  <span>2 minutes, sans engagement</span>
+                  <span>Pas de mise en relation forcée</span>
                 </div>
               </div>
             </div>
@@ -378,29 +379,29 @@ export default function LandingPage() {
       <section id="how" className={styles.sectionDark}>
         <div className={styles.container}>
           <div className={styles.sectionHead}>
-            <h2>Votre simulation en 4 étapes</h2>
-            <p>Moins de 2 minutes pour découvrir votre capacité d'emprunt.</p>
+            <h2>Comment ça marche</h2>
+            <p>2 minutes — Bankin' fait le travail à votre place.</p>
           </div>
           <div className={styles.steps}>
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>1</div>
-              <h3>Profil</h3>
-              <p>Votre situation pro et familiale (CDI, indépendant, enfants).</p>
+              <h3>Votre point de départ</h3>
+              <p>Pré-rempli depuis vos comptes : revenus, charges, épargne, stabilité.</p>
             </div>
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>2</div>
-              <h3>Revenus</h3>
-              <p>Salaires nets et charges mensuelles de votre foyer.</p>
+              <h3>3 scénarios</h3>
+              <p>Sereine, Cible, Ambitieux — chacun avec son impact sur votre rythme de vie.</p>
             </div>
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>3</div>
-              <h3>Projet</h3>
-              <p>Type de bien, durée du prêt et apport personnel.</p>
+              <h3>Votre quotidien</h3>
+              <p>Vos vraies catégories de dépenses, avant / après le projet immobilier.</p>
             </div>
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>4</div>
-              <h3>Résultat</h3>
-              <p>Votre capacité d'emprunt + les meilleurs taux du marché.</p>
+              <h3>Stress-test & roadmap</h3>
+              <p>« Et si la vie change ? » Et si vous n'êtes pas prêts : le chemin pour y arriver.</p>
             </div>
           </div>
         </div>
