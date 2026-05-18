@@ -327,3 +327,102 @@ kbd{background:#2a2750;color:#a099ff;border:1px solid #4a4680;border-radius:4px;
 .ae-info-b .ae-info-title{font-weight:800;font-size:10px;margin-bottom:5px;}
 .ae-info-b ul{padding-left:14px;margin-top:4px;}
 .ae-info-b ul li{margin-bottom:3px;}
+
+/* ──────────────────────────────────────────────────────────────────────
+   RESPONSIVE LAYOUT — replaces the original "concept showcase" frame.
+   Mobile  : fills the viewport like a native app.
+   Desktop : centered web-app card, no phone bezel, no fake iOS chrome.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Hide the demo chrome (title badge, toggle button, fake status bar, hint) */
+.hdr,
+.toggle-view-btn,
+.hint,
+.status {
+  display: none !important;
+}
+
+html, body { height: auto; }
+
+body {
+  display: block;
+  padding: 0;
+  margin: 0;
+  zoom: 1;
+  min-height: 100vh;
+  background: #1C1A3A;
+}
+
+/* Step indicator: top-of-page nav, centered */
+.steps {
+  margin: 0 auto;
+  padding: 20px 16px 12px;
+  justify-content: center;
+}
+.st .lbl { max-width: none; }
+
+/* Wrapper: phone-frame stripped, becomes a centered card */
+.phone-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px 32px;
+  width: 100%;
+  max-width: none;
+}
+
+/* Default (≥ 641px) — desktop card */
+.phone {
+  width: 100%;
+  max-width: 480px;
+  height: min(840px, calc(100vh - 110px));
+  background: var(--bg);
+  border-radius: 20px;
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Kill the iOS notch */
+.phone::before { display: none !important; }
+
+/* Mobile (≤ 640px) — full viewport, no bezel */
+@media (max-width: 640px) {
+  .phone-wrap { padding: 0; }
+  .phone {
+    max-width: 100%;
+    width: 100vw;
+    height: calc(100vh - 64px);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .steps { padding: 12px 12px 10px; }
+  .st .dot { width: 24px; height: 24px; font-size: 10px; }
+  .st .lbl { font-size: 8px; }
+  .st-line { width: 14px; }
+}
+
+/* Larger desktops — slightly roomier card */
+@media (min-width: 1024px) {
+  .phone {
+    max-width: 560px;
+    height: min(860px, calc(100vh - 130px));
+  }
+}
+
+/* Wide desktops — show a soft branding header above the card */
+@media (min-width: 768px) {
+  body::before {
+    content: "Bankin' · Simulateur de capacité d'emprunt";
+    display: block;
+    color: #a099ff;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 28px 16px 4px;
+  }
+}
