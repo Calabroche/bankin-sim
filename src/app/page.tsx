@@ -38,113 +38,116 @@ export default function LandingPage() {
             </div>
           </header>
 
-          {/* Phone mockups + headline */}
-          <div className={styles.heroCenter}>
-            <div className={styles.phoneStage}>
-              <div className={styles.phoneBase} />
-
-              {/* Phone 1 — Accounts (back) */}
-              <div className={`${styles.phone} ${styles.phoneBack}`} aria-hidden="true">
-                <div className={styles.phoneScreen}>
-                  <div className={styles.phStatus}>
-                    <span>16:19</span>
-                    <span>📶 🔋</span>
-                  </div>
-                  <div className={styles.phAmount}>
-                    20 405,16 €
-                    <small>Solde total</small>
-                  </div>
-                  <div className={styles.phTabs}>
-                    <span className={styles.active}>Tous</span>
-                    <span>Courant</span>
-                    <span>Épargne</span>
-                    <span>Crédits</span>
-                  </div>
-                  <div className={styles.phCard}>
-                    <div className={styles.phCardHead}>BOURSOBANK</div>
-                    <div className={styles.phRow}>
-                      <span>Compte courant</span>
-                      <strong>2 153,98 €</strong>
-                    </div>
-                    <div className={styles.phRow}>
-                      <span>Compte joint</span>
-                      <strong style={{ color: "#FF5957" }}>- 32,12 €</strong>
-                    </div>
-                  </div>
-                  <div className={styles.phCard}>
-                    <div className={`${styles.phCardHead} ${styles.green}`}>BNP</div>
-                    <div className={styles.phRow}>
-                      <span>Compte courant</span>
-                      <strong>256,87 €</strong>
-                    </div>
-                    <div className={styles.phRow}>
-                      <span>Livret A</span>
-                      <strong>12 245,25 €</strong>
-                    </div>
-                  </div>
+          {/* 2-column hero: content left, phones right.  Everything
+              fits in the viewport — no scroll required to hit the
+              simulator CTA. */}
+          <div className={styles.heroBody}>
+            <div className={styles.heroLeft}>
+              <div className={styles.heroText}>
+                <div className={styles.heroEyebrow}>
+                  <span className={styles.newBadge}>Nouveau dans Bankin'</span>
                 </div>
-              </div>
-
-              {/* Phone 2 — NEW Simulator Result (front) */}
-              <div className={`${styles.phone} ${styles.phoneFront}`} aria-hidden="true">
-                <div className={styles.phoneScreen}>
-                  <div className={styles.phSimHero}>
-                    <div className={styles.phSimNewTag}>✨ NOUVEAU</div>
-                    <div className={styles.phSimLabel}>Capacité d'emprunt</div>
-                    <div className={styles.phSimAmount}>325 000 €</div>
-                    <div className={styles.phSimSub}>Sur 25 ans · Taux 3,75 %</div>
-                    <div className={styles.phSimChips}>
-                      <div><strong>1 580 €</strong>Mensualité</div>
-                      <div><strong>380 k€</strong>Prix max</div>
-                      <div><strong>+ 18 k€</strong>PTZ</div>
-                    </div>
-                  </div>
-                  <div className={styles.phSimStab}>
-                    <div className={styles.phSimStabHead}>
-                      <span>✅ Profil Excellent</span>
-                      <strong>3 / 3</strong>
-                    </div>
-                    <div className={styles.phSimStabBar} />
-                  </div>
-                  <div className={styles.phSimBroker}>
-                    <div className={styles.phSimBrokerRow}>
-                      <span>Pretto · Réponse 24h</span>
-                      <strong>3,42 %</strong>
-                    </div>
-                    <div className={styles.phSimBrokerRow}>
-                      <span>Meilleurtaux · 100 banques</span>
-                      <strong>3,55 %</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.heroText}>
-              <div className={styles.heroEyebrow}>
-                <span className={styles.newBadge}>Nouveau dans Bankin'</span>
-              </div>
-              <h1 className={styles.heroH1}>
-                Votre prêt immo, <em>simulé en 2 minutes</em>
-              </h1>
-              <p className={styles.heroSub}>
-                Calculez votre capacité d'emprunt, comparez les meilleurs taux
-                du marché. <strong>Gratuit, sans engagement.</strong>
-              </p>
-            </div>
-
-            {/* Download CTA card */}
-            <div className={styles.dlCard}>
-              <div className={styles.dlQr} aria-hidden="true" />
-              <div className={styles.dlInfo}>
-                <strong>Démarrez votre simulation</strong>
-                <div className={styles.dlButtons}>
-                  <Link href="/simulateur" className={`${styles.dlBtn} ${styles.dlBtnPrimary}`}>
+                <h1 className={styles.heroH1}>
+                  Votre prêt immo, <em>simulé en 2 minutes</em>
+                </h1>
+                <p className={styles.heroSub}>
+                  Calculez votre capacité d'emprunt et comparez les meilleurs
+                  taux parmi 15 banques partenaires. <strong>Gratuit, sans engagement.</strong>
+                </p>
+                <div className={styles.heroCtas}>
+                  <Link href="/simulateur" className={styles.heroCta}>
                     Simuler maintenant →
                   </Link>
-                  <a href="#how" className={styles.dlBtn}>
-                    <span>Comment <small>ça marche</small></span>
+                  <a href="#how" className={styles.heroCtaSecondary}>
+                    Comment ça marche
                   </a>
+                </div>
+                <div className={styles.heroTrust}>
+                  <span>6 M+ utilisateurs</span>
+                  <span>★★★★★ 4,6 sur l'App Store</span>
+                  <span>Indépendant</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.heroRight}>
+              <div className={styles.phoneStage}>
+                <div className={styles.phoneBase} />
+
+                {/* Phone 1 — Accounts (back, Bankin' brand context) */}
+                <div className={`${styles.phone} ${styles.phoneBack}`} aria-hidden="true">
+                  <div className={styles.phoneScreen}>
+                    <div className={styles.phStatus}>
+                      <span>16:19</span>
+                      <span>📶 🔋</span>
+                    </div>
+                    <div className={styles.phAmount}>
+                      20 405,16 €
+                      <small>Solde total</small>
+                    </div>
+                    <div className={styles.phTabs}>
+                      <span className={styles.active}>Tous</span>
+                      <span>Courant</span>
+                      <span>Épargne</span>
+                      <span>Crédits</span>
+                    </div>
+                    <div className={styles.phCard}>
+                      <div className={styles.phCardHead}>BOURSOBANK</div>
+                      <div className={styles.phRow}>
+                        <span>Compte courant</span>
+                        <strong>2 153,98 €</strong>
+                      </div>
+                      <div className={styles.phRow}>
+                        <span>Compte joint</span>
+                        <strong style={{ color: "#FF5957" }}>- 32,12 €</strong>
+                      </div>
+                    </div>
+                    <div className={styles.phCard}>
+                      <div className={`${styles.phCardHead} ${styles.green}`}>BNP</div>
+                      <div className={styles.phRow}>
+                        <span>Compte courant</span>
+                        <strong>256,87 €</strong>
+                      </div>
+                      <div className={styles.phRow}>
+                        <span>Livret A</span>
+                        <strong>12 245,25 €</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Phone 2 — NEW Simulator Result (front, the new feature) */}
+                <div className={`${styles.phone} ${styles.phoneFront}`} aria-hidden="true">
+                  <div className={styles.phoneScreen}>
+                    <div className={styles.phSimHero}>
+                      <div className={styles.phSimNewTag}>✨ NOUVEAU</div>
+                      <div className={styles.phSimLabel}>Capacité d'emprunt</div>
+                      <div className={styles.phSimAmount}>325 000 €</div>
+                      <div className={styles.phSimSub}>Sur 25 ans · Taux 3,75 %</div>
+                      <div className={styles.phSimChips}>
+                        <div><strong>1 580 €</strong>Mensualité</div>
+                        <div><strong>380 k€</strong>Prix max</div>
+                        <div><strong>+ 18 k€</strong>PTZ</div>
+                      </div>
+                    </div>
+                    <div className={styles.phSimStab}>
+                      <div className={styles.phSimStabHead}>
+                        <span>✅ Profil Excellent</span>
+                        <strong>3 / 3</strong>
+                      </div>
+                      <div className={styles.phSimStabBar} />
+                    </div>
+                    <div className={styles.phSimBroker}>
+                      <div className={styles.phSimBrokerRow}>
+                        <span>Pretto · 24h</span>
+                        <strong>3,42 %</strong>
+                      </div>
+                      <div className={styles.phSimBrokerRow}>
+                        <span>Meilleurtaux</span>
+                        <strong>3,55 %</strong>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
