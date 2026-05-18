@@ -481,15 +481,114 @@ body {
     margin-right: 0;
   }
 
-  /* Bottom nav: full-width, desktop look */
-  .bottom-nav {
-    background: #14122e;
-    border-top: 1px solid #2a2750;
-    padding: 14px 0 18px;
-  }
-  .bottom-nav .nav-label { color: var(--purp-md); }
-  .bottom-nav .nav-label.active-nav { color: #a099ff; }
+  /* Bottom nav (mobile pattern) — only appears on the mock-bank home
+     screen, hide it on desktop since it's not actionable */
+  .bottom-nav { display: none !important; }
 
-  /* The home banner pulse animation looks heavy at full width */
-  .banner-wrap { padding-bottom: 20px; }
+  /* ── HOME SCREEN (s0) ─ strip the mock bank app, keep the CTA hero ──
+     The simulator IS the product. The fake "Bankin' bank dashboard"
+     (account balances, transaction tabs, "Outils" card) was scaffolding
+     for the phone-frame demo. On desktop the CTA banner becomes the
+     hero, centered vertically with proper hero typography. */
+  #s0 .topbar,
+  #s0 .pill-tabs,
+  #s0 .bank-card,
+  #s0 .sec-title,
+  #s0 .outils-grid,
+  #s0 .tap-label {
+    display: none !important;
+  }
+  #s0 .home-scroll {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  #s0 .banner-wrap {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 0;
+  }
+  #s0 .banner {
+    padding: 32px 36px;
+    border-radius: 24px;
+  }
+  #s0 .b-h { font-size: 26px; line-height: 1.25; margin-bottom: 8px; }
+  #s0 .b-p { font-size: 14px; margin-bottom: 18px; }
+  #s0 .b-cta { padding: 12px 22px; font-size: 14px; }
+
+  /* ── FORM SCREENS (s1, s2, s3) — constrain widths for desktop ─────
+     A 960 px wide segmented control feels broken; humans expect form
+     controls around 400-720 px on a laptop. */
+  #s1 > *,
+  #s2 > *,
+  #s3 > *,
+  body.desktop #s1 > *,
+  body.desktop #s2 > *,
+  body.desktop #s3 > * {
+    max-width: 720px;
+  }
+  #s1 .form-sec,
+  #s2 .form-sec,
+  #s3 .form-sec {
+    padding: 0 0 12px;
+  }
+  /* Tighten the form section grid */
+  .seg-ctrl { gap: 4px; }
+  .seg-btn { padding: 10px 8px; font-size: 13px; }
+  .ct-chip { padding: 12px 8px; font-size: 12px; }
+
+  /* CTA buttons (Continuer / Calculer): readable laptop size, not a
+     thumb-sized tap target the width of the page */
+  .cta-purple {
+    width: calc(100% - 32px);
+    max-width: 360px;
+    margin: 12px auto !important;
+    padding: 14px 20px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+  .cta-main {
+    max-width: 360px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Page header (back arrow + title) — align to the form column */
+  .page-hdr { padding: 14px 0 6px; }
+  .progress-bar, .progress-lbl { padding: 0; }
+
+  /* Hover affordances — make clickable controls obviously interactive */
+  .ct-chip:not(.active):hover,
+  .chip:not(.active):hover,
+  .seg-btn:not(.active):hover,
+  .struct-chip:not(.active):hover,
+  .year-chip:not(.active):hover {
+    border-color: var(--purp-md);
+    background: var(--purp-lt);
+    color: var(--purple);
+    cursor: pointer;
+  }
+  .cta-purple:hover,
+  .cta-main:hover { filter: brightness(1.06); }
+  .b-cta:hover { transform: translateY(-1px); }
+  .back-circle:hover { background: var(--purp-lt); cursor: pointer; }
+  .nav-item, .pill-tab, .toggle-period .tp-btn { cursor: pointer; }
+
+  /* ── RESULT SCREEN (s4) ── full-width gradient, content column ──── */
+  #s4 .stability-card,
+  #s4 .d-card,
+  #s4 .broker-card,
+  #s4 .ae-info-b {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #s4 .share-row {
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #s4 .cta-main { font-size: 14px; padding: 14px 20px; }
 }
