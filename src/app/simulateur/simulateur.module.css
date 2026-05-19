@@ -1015,7 +1015,8 @@
   border-radius: 18px;
   padding: 22px 28px;
   color: #fff;
-  margin-bottom: 22px;
+  margin: 0 auto 18px;
+  max-width: 820px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1074,11 +1075,13 @@
   border: 1px solid #E4ECFB;
   border-radius: 18px;
   overflow: hidden;
+  max-width: 820px;
+  margin: 0 auto;
 }
 .budgetHead {
   display: grid;
-  grid-template-columns: 280px 1fr 1fr 100px;
-  padding: 14px 24px;
+  grid-template-columns: 240px 1fr 200px 90px;
+  padding: 13px 20px;
   font-size: 12px;
   font-weight: 800;
   color: #6E6A95;
@@ -1093,8 +1096,8 @@
 
 .budgetRow {
   display: grid;
-  grid-template-columns: 280px 1fr 1fr 100px;
-  padding: 12px 24px;
+  grid-template-columns: 240px 1fr 200px 90px;
+  padding: 12px 20px;
   align-items: center;
   border-bottom: 1px solid #F0F0F8;
   font-size: 14px;
@@ -1208,8 +1211,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 14px;
-  margin-bottom: 10px;
+  padding: 10px 16px;
+  margin: 0 auto 10px;
+  max-width: 820px;
   background: #F4F0FF;
   border: 1px solid #D4D8FF;
   border-radius: 10px;
@@ -1243,8 +1247,8 @@
 .budgetFoot {
   background: linear-gradient(135deg, #F4F0FF 0%, #EEF0FF 100%);
   display: grid;
-  grid-template-columns: 280px 1fr 1fr 100px;
-  padding: 18px 24px;
+  grid-template-columns: 240px 1fr 200px 90px;
+  padding: 16px 20px;
   font-weight: 900;
   font-size: 15px;
   align-items: center;
