@@ -57,6 +57,26 @@
   font-size: 15px;
   font-style: normal;
 }
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.viewToggle {
+  background: #2a2750;
+  color: #a099ff;
+  border: 1px solid #3a3670;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.viewToggle:hover { background: #3a3670; color: #fff; }
+
 .back {
   color: #a099ff;
   text-decoration: none;
@@ -71,6 +91,142 @@
 .back:hover { background: #2a2750; color: #fff; }
 .backShort { display: none; }
 .progressLabel { /* hidden on mobile, see breakpoint below */ }
+
+/* ─── Mobile preview frame ────────────────────────────────────────
+   When viewMode === 'mobile', the .main becomes a phone-shaped
+   container with the screen content inside. Uses CSS container
+   queries to reflow inner layouts at this narrow width. */
+.mobileMain {
+  /* phone-shaped wrapper */
+  width: 420px;
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 36px auto 48px;
+  background: #1B1A3B;
+  border-radius: 44px;
+  padding: 10px;
+  box-shadow: 0 0 0 6px #0F0F19,
+              0 36px 80px rgba(0, 0, 0, 0.45);
+  position: relative;
+  min-height: 800px;
+}
+.mobileMain > .mainNarrow,
+.mobileMain > .mainWide {
+  background: #F4F8FF;
+  border-radius: 36px;
+  padding: 52px 16px 24px;
+  max-width: none;
+  margin: 0;
+}
+.phoneNotch {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 26px;
+  background: #000;
+  border-radius: 14px;
+  z-index: 10;
+}
+
+/* Mobile preview — when the phone-frame is active, force 1-col
+   layouts and tighter typography on everything inside via descendant
+   selectors with .mobileMain (higher specificity than the base
+   rules). Avoids CSS-module + @container query interaction quirks. */
+.mobileMain .title { font-size: 22px; letter-spacing: -0.6px; line-height: 1.1; }
+.mobileMain .lead { font-size: 13.5px; margin-bottom: 18px; }
+.mobileMain .eyebrow { font-size: 10px; padding: 5px 9px; }
+.mobileMain .actions { flex-direction: column-reverse; gap: 8px; }
+.mobileMain .btnPrimary,
+.mobileMain .btnGhost { width: 100%; justify-content: center; padding: 12px 18px; font-size: 13.5px; }
+
+/* Step 1 — Moment de vie */
+.mobileMain .momentGrid { grid-template-columns: 1fr; gap: 10px; }
+.mobileMain .momentCard { padding: 14px 16px; gap: 10px; }
+.mobileMain .momentEmoji { font-size: 22px; }
+.mobileMain .momentBody h3 { font-size: 14px; }
+.mobileMain .momentBody p { font-size: 12px; }
+
+/* Step 2 — Point de départ */
+.mobileMain .departGrid { grid-template-columns: 1fr; gap: 10px; }
+.mobileMain .dataCard { padding: 16px 18px; }
+.mobileMain .dataValue { font-size: 22px; }
+.mobileMain .dataLabel { font-size: 10px; }
+.mobileMain .dataDonut { width: 40px; height: 40px; top: 14px; right: 14px; }
+.mobileMain .dataDonut::after { inset: 8px; }
+
+/* Step 3 — Scénarios */
+.mobileMain .scenarios { grid-template-columns: 1fr; gap: 12px; }
+.mobileMain .scenarioCard { padding: 18px 18px 20px; }
+.mobileMain .scenarioPrice { font-size: 24px; }
+.mobileMain .scenarioCard.recommended::before { font-size: 9px; padding: 4px 10px; left: 14px; top: -9px; }
+
+/* Step 4 — Impact budget */
+.mobileMain .impactHeader {
+  flex-direction: column; align-items: flex-start;
+  padding: 14px 16px; gap: 8px; max-width: none;
+}
+.mobileMain .impactHeader .right { text-align: left; }
+.mobileMain .impactHeader h2 { font-size: 18px; }
+.mobileMain .budgetHint {
+  padding: 8px 12px; max-width: none; font-size: 11.5px;
+  flex-direction: column; align-items: flex-start; gap: 6px;
+}
+.mobileMain .budget { max-width: none; }
+.mobileMain .budgetHead,
+.mobileMain .budgetRow,
+.mobileMain .budgetFoot {
+  grid-template-columns: 1.5fr 1fr 1fr 0;
+  padding: 9px 12px;
+  font-size: 11px;
+  column-gap: 4px;
+}
+.mobileMain .budgetHead > :nth-child(4),
+.mobileMain .budgetRow > :nth-child(4),
+.mobileMain .budgetFoot > :nth-child(4) { display: none; }
+.mobileMain .budgetCat { gap: 4px; }
+.mobileMain .budgetCat span:first-child { font-size: 13px; }
+.mobileMain .budgetCat span:last-child {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mobileMain .budgetEditWrap { padding: 4px 7px; }
+.mobileMain .budgetEdit { width: 44px; font-size: 11px; }
+.mobileMain .budgetEditWrap::after { width: 12px; height: 12px; font-size: 7px; top: -5px; right: -5px; }
+.mobileMain .budgetValLocked { padding: 5px 7px; font-size: 11px; }
+
+/* Step 5 — Stress test */
+.mobileMain .stressGrid { grid-template-columns: 1fr; gap: 10px; }
+.mobileMain .stressCard { padding: 14px 16px; gap: 10px; }
+.mobileMain .stressEmoji { font-size: 20px; }
+.mobileMain .stressBody h4 { font-size: 13.5px; }
+.mobileMain .stressBody p { font-size: 12px; }
+.mobileMain .stressSummary { padding: 12px 14px; font-size: 12px; }
+
+/* Step 6 — Final */
+.mobileMain .verdict { padding: 22px 20px; border-radius: 16px; }
+.mobileMain .verdictTag { font-size: 9px; padding: 4px 10px; }
+.mobileMain .verdict h2 { font-size: 20px; letter-spacing: -0.6px; }
+.mobileMain .verdict p { font-size: 13px; }
+.mobileMain .options { grid-template-columns: 1fr; gap: 10px; }
+.mobileMain .optionCard { padding: 18px 20px; }
+.mobileMain .roadmap { padding: 20px 18px; }
+.mobileMain .roadmapItem { flex-direction: column; align-items: flex-start; padding: 12px 14px; gap: 6px; }
+
+/* Edit panel inside phone frame: compact spacing */
+.mobileMain .editPanel { padding: 16px 14px; }
+.mobileMain .editSectionTitle { font-size: 9.5px; margin: 16px 0 10px; }
+.mobileMain .editSeg { padding: 3px; }
+.mobileMain .editSegBtn { padding: 8px 4px; font-size: 11.5px; }
+.mobileMain .editSubChip { padding: 6px 9px; font-size: 11px; }
+.mobileMain .editPerson { padding: 12px; }
+.mobileMain .editTwoCol { grid-template-columns: 1fr; }
+.mobileMain .editActions { flex-direction: column-reverse; gap: 6px; }
+.mobileMain .editBtnSave,
+.mobileMain .editBtnCancel { width: 100%; text-align: center; }
 
 /* ── Progress rail ─────────────────────────────────────────────────── */
 .progressBar {
