@@ -97,6 +97,7 @@ export default function LandingPage() {
                         <div className={styles.lapCardImpact}>
                           <strong>Impact :</strong> ~95 % de votre rythme actuel. Pas de gros arbitrage.
                         </div>
+                        <div className={styles.lapCardCta}>Choisir ce scénario</div>
                       </div>
                       <div className={`${styles.lapCard} ${styles.lapCardActive}`}>
                         <div className={styles.lapCardName}>CIBLE</div>
@@ -111,6 +112,7 @@ export default function LandingPage() {
                         <div className={styles.lapCardImpact}>
                           <strong>Impact :</strong> Loisirs −280 € et Vacances −100 € par mois.
                         </div>
+                        <div className={styles.lapCardCta}>✓ Scénario choisi</div>
                       </div>
                       <div className={styles.lapCard}>
                         <div className={styles.lapCardName}>AMBITIEUX</div>
@@ -125,6 +127,7 @@ export default function LandingPage() {
                         <div className={styles.lapCardImpact}>
                           <strong>Impact :</strong> Loisirs, vacances et épargne enfants réduits.
                         </div>
+                        <div className={styles.lapCardCta}>Choisir ce scénario</div>
                       </div>
                     </div>
                   </div>
@@ -152,6 +155,7 @@ export default function LandingPage() {
                         <div className={styles.phScenCardImpact}>
                           <strong>Impact :</strong> ~95 % de votre rythme actuel.
                         </div>
+                        <div className={styles.phScenCardCta}>Choisir ce scénario</div>
                       </div>
                       <div className={`${styles.phScenCard} ${styles.phScenCardActive}`}>
                         <div className={styles.phScenCardHead}>
@@ -166,6 +170,7 @@ export default function LandingPage() {
                         <div className={styles.phScenCardImpact}>
                           <strong>Impact :</strong> Loisirs −280 € et Vacances −100 €/mois.
                         </div>
+                        <div className={styles.phScenCardCta}>✓ Scénario choisi</div>
                       </div>
                       <div className={styles.phScenCard}>
                         <div className={styles.phScenCardHead}>
@@ -180,6 +185,7 @@ export default function LandingPage() {
                         <div className={styles.phScenCardImpact}>
                           <strong>Impact :</strong> Loisirs, vacances, épargne enfants.
                         </div>
+                        <div className={styles.phScenCardCta}>Choisir ce scénario</div>
                       </div>
                     </div>
                   </div>
