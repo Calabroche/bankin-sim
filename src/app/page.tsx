@@ -76,46 +76,50 @@ export default function LandingPage() {
               <div className={styles.phoneStage}>
                 <div className={styles.phoneBase} />
 
-                {/* Phone 1 — Accounts (back, Bankin' brand context) */}
-                <div className={`${styles.phone} ${styles.phoneBack}`} aria-hidden="true">
-                  <div className={styles.phoneScreen}>
-                    <div className={styles.phStatus}>
-                      <span>16:19</span>
-                      <span>📶 🔋</span>
-                    </div>
-                    <div className={styles.phAmount}>
-                      20 405,16 €
-                      <small>Solde total</small>
-                    </div>
-                    <div className={styles.phTabs}>
-                      <span className={styles.active}>Tous</span>
-                      <span>Courant</span>
-                      <span>Épargne</span>
-                      <span>Crédits</span>
-                    </div>
-                    <div className={styles.phCard}>
-                      <div className={styles.phCardHead}>BOURSOBANK</div>
-                      <div className={styles.phRow}>
-                        <span>Compte courant</span>
-                        <strong>2 153,98 €</strong>
+                {/* Laptop — back, showing the 3 scénarios view */}
+                <div className={styles.laptop} aria-hidden="true">
+                  <div className={styles.laptopScreen}>
+                    <span className={styles.lapEyebrow}>PAS UN CHIFFRE — UN ÉVENTAIL</span>
+                    <h3 className={styles.lapTitle}>
+                      3 scénarios pour <em>vous projeter</em>
+                    </h3>
+                    <div className={styles.lapScenarios}>
+                      <div className={styles.lapCard}>
+                        <div className={styles.lapCardName}>SEREINE</div>
+                        <div className={styles.lapCardSub}>Rythme actuel</div>
+                        <div className={styles.lapCardPrice}>271 k€</div>
+                        <div className={styles.lapCardPriceLbl}>Bien jusqu'à</div>
+                        <div className={styles.lapCardRow}>
+                          <span>Mensualité</span>
+                          <strong>1 215 €</strong>
+                        </div>
+                        <div className={styles.lapCardSolde}>+ 985 €/mois</div>
                       </div>
-                      <div className={styles.phRow}>
-                        <span>Compte joint</span>
-                        <strong style={{ color: "#FF5957" }}>- 32,12 €</strong>
+                      <div className={`${styles.lapCard} ${styles.lapCardActive}`}>
+                        <div className={styles.lapCardName}>CIBLE</div>
+                        <div className={styles.lapCardSub}>Bon équilibre</div>
+                        <div className={styles.lapCardPrice}>324 k€</div>
+                        <div className={styles.lapCardPriceLbl}>Bien jusqu'à</div>
+                        <div className={styles.lapCardRow}>
+                          <span>Mensualité</span>
+                          <strong>1 485 €</strong>
+                        </div>
+                        <div className={styles.lapCardSolde}>+ 1 095 €/mois</div>
                       </div>
-                    </div>
-                    <div className={styles.phCard}>
-                      <div className={`${styles.phCardHead} ${styles.green}`}>BNP</div>
-                      <div className={styles.phRow}>
-                        <span>Compte courant</span>
-                        <strong>256,87 €</strong>
-                      </div>
-                      <div className={styles.phRow}>
-                        <span>Livret A</span>
-                        <strong>12 245,25 €</strong>
+                      <div className={styles.lapCard}>
+                        <div className={styles.lapCardName}>AMBITIEUX</div>
+                        <div className={styles.lapCardSub}>Plafond 35 %</div>
+                        <div className={styles.lapCardPrice}>341 k€</div>
+                        <div className={styles.lapCardPriceLbl}>Bien jusqu'à</div>
+                        <div className={styles.lapCardRow}>
+                          <span>Mensualité</span>
+                          <strong>1 575 €</strong>
+                        </div>
+                        <div className={styles.lapCardSolde}>+ 1 205 €/mois</div>
                       </div>
                     </div>
                   </div>
+                  <div className={styles.laptopBase} />
                 </div>
 
                 {/* Phone 2 — NEW Simulator Result (front, the new feature) */}
