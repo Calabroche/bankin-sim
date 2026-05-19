@@ -48,7 +48,8 @@ export default function LandingPage() {
                   <span className={styles.newBadge}>Nouveau dans Bankin'</span>
                 </div>
                 <h1 className={styles.heroH1}>
-                  Vous y pensez ? <em>On regarde si c'est faisable.</em>
+                  Être propriétaire ? Vous y pensez…<br />
+                  <em>On regarde si c'est faisable.</em>
                 </h1>
                 <p className={styles.heroSub}>
                   Bankin' connaît déjà vos revenus, vos charges et votre rythme
