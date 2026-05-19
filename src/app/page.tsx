@@ -94,6 +94,9 @@ export default function LandingPage() {
                           <strong>1 215 €</strong>
                         </div>
                         <div className={styles.lapCardSolde}>+ 985 €/mois</div>
+                        <div className={styles.lapCardImpact}>
+                          <strong>Impact :</strong> ~95 % de votre rythme actuel. Pas de gros arbitrage.
+                        </div>
                       </div>
                       <div className={`${styles.lapCard} ${styles.lapCardActive}`}>
                         <div className={styles.lapCardName}>CIBLE</div>
@@ -105,6 +108,9 @@ export default function LandingPage() {
                           <strong>1 485 €</strong>
                         </div>
                         <div className={styles.lapCardSolde}>+ 1 095 €/mois</div>
+                        <div className={styles.lapCardImpact}>
+                          <strong>Impact :</strong> Loisirs −280 € et Vacances −100 € par mois.
+                        </div>
                       </div>
                       <div className={styles.lapCard}>
                         <div className={styles.lapCardName}>AMBITIEUX</div>
@@ -116,76 +122,66 @@ export default function LandingPage() {
                           <strong>1 575 €</strong>
                         </div>
                         <div className={styles.lapCardSolde}>+ 1 205 €/mois</div>
+                        <div className={styles.lapCardImpact}>
+                          <strong>Impact :</strong> Loisirs, vacances et épargne enfants réduits.
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className={styles.laptopBase} />
                 </div>
 
-                {/* Phone 2 — NEW Simulator Result (front, the new feature) */}
+                {/* Phone — 3 scénarios stackés en vue mobile */}
                 <div className={`${styles.phone} ${styles.phoneFront}`} aria-hidden="true">
                   <div className={styles.phoneScreen}>
-                    <div className={styles.phSimHero}>
-                      <div className={styles.phSimNewTag}>✨ NOUVEAU</div>
-                      <div className={styles.phSimLabel}>Capacité d'emprunt</div>
-                      <div className={styles.phSimAmount}>325 000 €</div>
-                      <div className={styles.phSimSub}>Sur 25 ans · Taux 3,75 %</div>
-                      <div className={styles.phSimChips}>
-                        <div><strong>1 580 €</strong>Mensualité</div>
-                        <div><strong>380 k€</strong>Prix max</div>
-                        <div><strong>+ 18 k€</strong>PTZ</div>
-                      </div>
+                    <div className={styles.phScenHero}>
+                      <div className={styles.phScenNewTag}>✨ NOUVEAU</div>
+                      <div className={styles.phScenTitle}>3 scénarios pour vous projeter</div>
                     </div>
-                    <div className={styles.phSimStab}>
-                      <div className={styles.phSimStabHead}>
-                        <span>✅ Profil Excellent</span>
-                        <strong>3 / 3</strong>
-                      </div>
-                      <div className={styles.phSimStabBar} />
-                    </div>
-                    <div className={styles.phSimDetail}>
-                      <div className={styles.phSimDetailHead}>Détail du financement</div>
-                      <div className={styles.phSimDetailRow}>
-                        <span>Prix d'achat max</span>
-                        <strong>380 000 €</strong>
-                      </div>
-                      <div className={styles.phSimDetailRow}>
-                        <span>Apport personnel</span>
-                        <strong>20 000 €</strong>
-                      </div>
-                      <div className={styles.phSimDetailRow}>
-                        <span>Frais de notaire</span>
-                        <strong>6 921 €</strong>
-                      </div>
-                      <div className={styles.phSimDetailRow}>
-                        <span>PTZ estimé</span>
-                        <strong style={{ color: "#00C48C" }}>+ 18 000 €</strong>
-                      </div>
-                    </div>
-                    <div className={styles.phSimBroker}>
-                      <div className={styles.phSimBrokerHead}>Meilleurs taux</div>
-                      <div className={styles.phSimBrokerRow}>
-                        <div className={styles.phSimBrokerLeft}>
-                          <span className={styles.phSimBrokerLogo} style={{ background: "#5C50E8" }}>P</span>
-                          <div className={styles.phSimBrokerName}>
-                            <strong>Pretto</strong>
-                            <small>Réponse en 24h</small>
-                          </div>
+                    <div className={styles.phScenList}>
+                      <div className={styles.phScenCard}>
+                        <div className={styles.phScenCardHead}>
+                          <span className={styles.phScenCardName}>Sereine</span>
+                          <span className={styles.phScenCardPrice}>271 k€</span>
                         </div>
-                        <span className={styles.phSimBrokerRate}>3,42 %</span>
-                      </div>
-                      <div className={styles.phSimBrokerRow}>
-                        <div className={styles.phSimBrokerLeft}>
-                          <span className={styles.phSimBrokerLogo} style={{ background: "#003366" }}>M</span>
-                          <div className={styles.phSimBrokerName}>
-                            <strong>Meilleurtaux</strong>
-                            <small>100+ banques</small>
-                          </div>
+                        <div className={styles.phScenCardRow}>
+                          <span>Mensualité 1 215 €</span>
+                          <strong>27 % endett.</strong>
                         </div>
-                        <span className={styles.phSimBrokerRate}>3,55 %</span>
+                        <div className={styles.phScenCardSolde}>+ 985 €/mois</div>
+                        <div className={styles.phScenCardImpact}>
+                          <strong>Impact :</strong> ~95 % de votre rythme actuel.
+                        </div>
+                      </div>
+                      <div className={`${styles.phScenCard} ${styles.phScenCardActive}`}>
+                        <div className={styles.phScenCardHead}>
+                          <span className={styles.phScenCardName}>Cible</span>
+                          <span className={styles.phScenCardPrice}>324 k€</span>
+                        </div>
+                        <div className={styles.phScenCardRow}>
+                          <span>Mensualité 1 485 €</span>
+                          <strong>33 % endett.</strong>
+                        </div>
+                        <div className={styles.phScenCardSolde}>+ 1 095 €/mois</div>
+                        <div className={styles.phScenCardImpact}>
+                          <strong>Impact :</strong> Loisirs −280 € et Vacances −100 €/mois.
+                        </div>
+                      </div>
+                      <div className={styles.phScenCard}>
+                        <div className={styles.phScenCardHead}>
+                          <span className={styles.phScenCardName}>Ambitieux</span>
+                          <span className={styles.phScenCardPrice}>341 k€</span>
+                        </div>
+                        <div className={styles.phScenCardRow}>
+                          <span>Mensualité 1 575 €</span>
+                          <strong>35 % endett.</strong>
+                        </div>
+                        <div className={styles.phScenCardSolde}>+ 1 205 €/mois</div>
+                        <div className={styles.phScenCardImpact}>
+                          <strong>Impact :</strong> Loisirs, vacances, épargne enfants.
+                        </div>
                       </div>
                     </div>
-                    <div className={styles.phSimCta}>Obtenir mon offre →</div>
                   </div>
                 </div>
               </div>

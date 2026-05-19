@@ -337,6 +337,122 @@
   font-weight: 900;
   color: #00C48C;
 }
+.lapCardImpact {
+  margin-top: 7px;
+  background: #F4F0FF;
+  border-radius: 6px;
+  padding: 5px 7px;
+  font-size: 7.5px;
+  color: #4A4680;
+  line-height: 1.35;
+}
+.lapCardImpact strong { color: #5C50E8; font-weight: 800; }
+
+/* ── Phone scenarios view (3 mini-cards stacked) ─────────────────── */
+.phScenHero {
+  background: linear-gradient(160deg, #5C50E8 0%, #3d34c8 100%);
+  margin: -44px -12px 8px;
+  padding: 50px 12px 12px;
+  border-radius: 36px 36px 14px 14px;
+  color: #fff;
+}
+.phScenNewTag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  padding: 3px 9px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+.phScenTitle {
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+}
+.phScenList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 6px 6px;
+}
+.phScenCard {
+  background: #fff;
+  border: 1.5px solid #E4ECFB;
+  border-radius: 10px;
+  padding: 8px 9px;
+  position: relative;
+}
+.phScenCardActive {
+  border-color: #5C50E8;
+  background: linear-gradient(135deg, #fff 0%, #F4F0FF 100%);
+  box-shadow: 0 4px 12px rgba(92, 80, 232, 0.15);
+}
+.phScenCardActive::before {
+  content: "Recommandé";
+  position: absolute;
+  top: -6px;
+  right: 8px;
+  background: linear-gradient(135deg, #5C50E8, #8B7FFF);
+  color: #fff;
+  font-size: 6.5px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(92, 80, 232, 0.35);
+}
+.phScenCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+}
+.phScenCardName {
+  font-size: 8px;
+  font-weight: 900;
+  color: #5C50E8;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+.phScenCardPrice {
+  font-size: 14px;
+  font-weight: 900;
+  color: #1B1A3B;
+  letter-spacing: -0.4px;
+}
+.phScenCardRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  color: #6E6A95;
+  margin: 4px 0 2px;
+  font-weight: 600;
+}
+.phScenCardRow strong { color: #1B1A3B; }
+.phScenCardSolde {
+  font-size: 8px;
+  font-weight: 900;
+  color: #00C48C;
+  margin-top: 2px;
+}
+.phScenCardImpact {
+  margin-top: 5px;
+  background: #F7F8FF;
+  border-radius: 5px;
+  padding: 4px 6px;
+  font-size: 6.5px;
+  color: #4A4680;
+  line-height: 1.3;
+}
+.phScenCardActive .phScenCardImpact {
+  background: #F4F0FF;
+}
+.phScenCardImpact strong { color: #5C50E8; font-weight: 800; }
 .phone::before {
   content: "";
   position: absolute;
