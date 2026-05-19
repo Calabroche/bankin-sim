@@ -640,24 +640,26 @@ export default function SimulateurPage() {
                     <div className={styles.budgetVal}>{formatEUR(c.actuel)}</div>
                     <div className={`${styles.budgetValDiff} ${cls}`}>
                       {isLocked ? (
-                        <span>{formatEUR(c.nouveau)}</span>
+                        <span className={styles.budgetValLocked}>{formatEUR(c.nouveau)}</span>
                       ) : (
-                        <input
-                          type="number"
-                          className={styles.budgetEdit}
-                          value={c.nouveau}
-                          onChange={(e) =>
-                            setCustomBudget((prev) => ({
-                              ...prev,
-                              [c.id]: Math.max(0, Number(e.target.value) || 0),
-                            }))
-                          }
-                          min={0}
-                          step={10}
-                          aria-label={`Montant ${c.nom} avec ce projet`}
-                        />
+                        <label className={styles.budgetEditWrap}>
+                          <input
+                            type="number"
+                            className={styles.budgetEdit}
+                            value={c.nouveau}
+                            onChange={(e) =>
+                              setCustomBudget((prev) => ({
+                                ...prev,
+                                [c.id]: Math.max(0, Number(e.target.value) || 0),
+                              }))
+                            }
+                            min={0}
+                            step={10}
+                            aria-label={`Montant ${c.nom} avec ce projet`}
+                          />
+                          <span className={styles.budgetEditUnit}>€</span>
+                        </label>
                       )}
-                      {!isLocked && <span>€</span>}
                       {diff > 0 && <span>↑</span>}
                       {diff < 0 && <span>↓</span>}
                     </div>
