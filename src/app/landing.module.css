@@ -1730,7 +1730,8 @@
      back, phone superimposed bottom-right for the same depth effect
      as desktop but contained within the viewport width. */
   .phoneStage {
-    height: 460px;
+    /* top 60 + phone height 432 = 492 → 500 px to leave breathing room */
+    height: 500px;
     max-height: none;
     display: block;
     position: relative;
@@ -1775,8 +1776,9 @@
   .brand { font-size: 22px; }
   .topCta { padding: 9px 16px; font-size: 13px; }
 
-  /* Smaller stage on phone, laptop + phone overlap */
-  .phoneStage { height: 380px; }
+  /* Smaller stage on phone, laptop + phone overlap.  Stage height
+     accommodates the full phone (top 40 + height 388 = 428 → 440). */
+  .phoneStage { height: 440px; }
   .laptop {
     width: 88%;
     max-width: 340px;
