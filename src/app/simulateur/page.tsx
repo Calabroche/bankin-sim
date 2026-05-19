@@ -327,7 +327,6 @@ export default function SimulateurPage() {
   const [moment, setMoment] = useState<Moment | null>(null);
   const [user, setUser] = useState<UserData>(INITIAL_USER);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
-  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const scenarios = useMemo(() => buildScenarios(user), [user]);
   const [scenarioKey, setScenarioKey] = useState<Scenario["key"]>("cible");
   const [activeStresses, setActiveStresses] = useState<Set<string>>(new Set());
@@ -376,21 +375,11 @@ export default function SimulateurPage() {
           <span className={styles.brandMark}>B</span>
           <span>Bankin'</span>
         </Link>
-        <div className={styles.topbarActions}>
-          <button
-            type="button"
-            className={styles.viewToggle}
-            onClick={() => setViewMode(viewMode === "desktop" ? "mobile" : "desktop")}
-            title={viewMode === "desktop" ? "Voir en mode téléphone" : "Voir en mode ordinateur"}
-          >
-            {viewMode === "desktop" ? "📱 Vue mobile" : "🖥 Vue ordi"}
-          </button>
-          <Link href="/" className={styles.back}>
-            <span>←</span>
-            <span className={styles.backLong}>&nbsp;Retour à l'accueil</span>
-            <span className={styles.backShort}>&nbsp;Accueil</span>
-          </Link>
-        </div>
+        <Link href="/" className={styles.back}>
+          <span>←</span>
+          <span className={styles.backLong}>&nbsp;Retour à l'accueil</span>
+          <span className={styles.backShort}>&nbsp;Accueil</span>
+        </Link>
       </header>
 
       <div className={styles.progressBar}>
@@ -405,8 +394,7 @@ export default function SimulateurPage() {
         </div>
       </div>
 
-      <main className={`${styles.main} ${viewMode === "mobile" ? styles.mobileMain : ""}`}>
-        {viewMode === "mobile" && <div className={styles.phoneNotch} aria-hidden="true" />}
+      <main className={styles.main}>
         {step === 0 && (
           <div className={styles.mainNarrow}>
             <span className={styles.eyebrow}>Sans engagement · 2 min</span>
