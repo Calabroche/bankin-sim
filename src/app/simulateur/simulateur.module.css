@@ -1077,7 +1077,7 @@
 }
 .budgetHead {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1.1fr 80px;
+  grid-template-columns: 280px 1fr 1fr 100px;
   padding: 14px 24px;
   font-size: 12px;
   font-weight: 800;
@@ -1088,12 +1088,12 @@
   background: #F7F8FF;
 }
 .budgetHead > :nth-child(2),
-.budgetHead > :nth-child(3) { text-align: right; }
-.budgetHead > :nth-child(4)  { text-align: right; }
+.budgetHead > :nth-child(3),
+.budgetHead > :nth-child(4) { text-align: right; }
 
 .budgetRow {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1.1fr 80px;
+  grid-template-columns: 280px 1fr 1fr 100px;
   padding: 12px 24px;
   align-items: center;
   border-bottom: 1px solid #F0F0F8;
@@ -1243,19 +1243,18 @@
 .budgetFoot {
   background: linear-gradient(135deg, #F4F0FF 0%, #EEF0FF 100%);
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1.1fr 80px;
+  grid-template-columns: 280px 1fr 1fr 100px;
   padding: 18px 24px;
   font-weight: 900;
   font-size: 15px;
   align-items: center;
 }
 .budgetFoot > :nth-child(2),
-.budgetFoot > :nth-child(3) { text-align: right; }
+.budgetFoot > :nth-child(3),
 .budgetFoot > :nth-child(4) { text-align: right; }
-/* The Δ inline span in foot gets right alignment via parent */
 .budgetFoot .label { color: #5C50E8; font-weight: 800; }
 .budgetFoot .val { color: #1B1A3B; font-variant-numeric: tabular-nums; }
-.budgetFoot .valDiff { color: #00C48C; font-variant-numeric: tabular-nums; padding-right: 16px; }
+.budgetFoot .valDiff { color: #00C48C; font-variant-numeric: tabular-nums; }
 .budgetFoot .valDiff.bad { color: #FF5957; }
 
 /* ──────────────────────────────────────────────────────────────────
