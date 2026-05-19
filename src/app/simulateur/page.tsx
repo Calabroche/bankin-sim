@@ -330,6 +330,9 @@ export default function SimulateurPage() {
   const scenarios = useMemo(() => buildScenarios(user), [user]);
   const [scenarioKey, setScenarioKey] = useState<Scenario["key"]>("cible");
   const [activeStresses, setActiveStresses] = useState<Set<string>>(new Set());
+  /* customBudget : overrides utilisateur sur la colonne "Avec ce projet".
+     Reset à chaque changement de scénario pour repartir des suggestions. */
+  const [customBudget, setCustomBudget] = useState<Record<string, number>>({});
 
   const scenario = scenarios.find((s) => s.key === scenarioKey)!;
   const totalRevenue = computeTotalRevenue(user);
@@ -339,18 +342,24 @@ export default function SimulateurPage() {
 
   const progress = ((step + 1) / 6) * 100;
 
-  // Compute the new budget for the selected scenario
+  // Compute the new budget for the selected scenario, with optional
+  // user overrides (customBudget takes priority over scenario suggestion).
   const newBudget = useMemo(() => {
     return CATEGORIES.map((cat) => {
+      let nouveau: number;
       if (cat.id === "logement") {
-        return { ...cat, nouveau: scenario.mensualite };
+        nouveau = scenario.mensualite;
+      } else if (customBudget[cat.id] != null) {
+        nouveau = customBudget[cat.id];
+      } else if (scenario.budgetAdjustments[cat.id] != null) {
+        nouveau = scenario.budgetAdjustments[cat.id];
+      } else {
+        nouveau = cat.actuel;
       }
-      if (scenario.budgetAdjustments[cat.id] != null) {
-        return { ...cat, nouveau: scenario.budgetAdjustments[cat.id] };
-      }
-      return { ...cat, nouveau: cat.actuel };
+      return { ...cat, nouveau };
     });
-  }, [scenario]);
+  }, [scenario, customBudget]);
+  const hasCustomEdits = Object.keys(customBudget).length > 0;
 
   const soldeActuel = totalRevenue - CATEGORIES.reduce((sum, c) => sum + c.actuel, 0);
   const soldeNouveau =
@@ -527,7 +536,10 @@ export default function SimulateurPage() {
                     key={s.key}
                     type="button"
                     className={`${styles.scenarioCard} ${isSelected ? styles.selected : ""} ${isRecommended ? styles.recommended : ""}`}
-                    onClick={() => setScenarioKey(s.key)}
+                    onClick={() => {
+                      setScenarioKey(s.key);
+                      setCustomBudget({});
+                    }}
                   >
                     <div className={styles.scenarioName}>{s.name}</div>
                     <div className={styles.scenarioTag}>{s.tag}</div>
@@ -596,6 +608,18 @@ export default function SimulateurPage() {
               </div>
             </div>
 
+            <div className={styles.budgetHint}>
+              <span>
+                💡 <strong>Vos arbitrages, votre choix.</strong> Cliquez sur un montant
+                pour ajuster vos dépenses futures. Logement = mensualité (verrouillé).
+              </span>
+              {hasCustomEdits && (
+                <button type="button" className={styles.budgetReset} onClick={() => setCustomBudget({})}>
+                  ↺ Réinitialiser
+                </button>
+              )}
+            </div>
+
             <div className={styles.budget}>
               <div className={styles.budgetHead}>
                 <span>Catégorie</span>
@@ -606,6 +630,7 @@ export default function SimulateurPage() {
               {newBudget.map((c) => {
                 const diff = c.nouveau - c.actuel;
                 const cls = diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat;
+                const isLocked = c.id === "logement";
                 return (
                   <div key={c.id} className={styles.budgetRow}>
                     <div className={styles.budgetCat}>
@@ -614,7 +639,25 @@ export default function SimulateurPage() {
                     </div>
                     <div className={styles.budgetVal}>{formatEUR(c.actuel)}</div>
                     <div className={`${styles.budgetValDiff} ${cls}`}>
-                      {formatEUR(c.nouveau)}
+                      {isLocked ? (
+                        <span>{formatEUR(c.nouveau)}</span>
+                      ) : (
+                        <input
+                          type="number"
+                          className={styles.budgetEdit}
+                          value={c.nouveau}
+                          onChange={(e) =>
+                            setCustomBudget((prev) => ({
+                              ...prev,
+                              [c.id]: Math.max(0, Number(e.target.value) || 0),
+                            }))
+                          }
+                          min={0}
+                          step={10}
+                          aria-label={`Montant ${c.nom} avec ce projet`}
+                        />
+                      )}
+                      {!isLocked && <span>€</span>}
                       {diff > 0 && <span>↑</span>}
                       {diff < 0 && <span>↓</span>}
                     </div>

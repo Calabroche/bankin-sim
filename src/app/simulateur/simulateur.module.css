@@ -1119,6 +1119,70 @@
 .budgetValDiff.up { color: #FF5957; }
 .budgetValDiff.down { color: #00C48C; }
 .budgetValDiff.flat { color: #9090BB; }
+
+/* Editable number input inside the "Avec ce projet" column */
+.budgetEdit {
+  background: transparent;
+  border: 1.5px dashed transparent;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: inherit;
+  color: inherit;
+  width: 92px;
+  text-align: right;
+  outline: none;
+  -moz-appearance: textfield;
+  transition: all 0.15s;
+  cursor: text;
+  font-variant-numeric: tabular-nums;
+}
+.budgetEdit:hover {
+  border-color: #C8CCEA;
+  background: #fff;
+}
+.budgetEdit:focus {
+  border-style: solid;
+  border-color: #5C50E8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(92, 80, 232, 0.12);
+}
+.budgetEdit::-webkit-outer-spin-button,
+.budgetEdit::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hint above the table */
+.budgetHint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  background: #F4F0FF;
+  border: 1px solid #D4D8FF;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #4A4680;
+  font-weight: 500;
+}
+.budgetHint strong { color: #5C50E8; font-weight: 800; }
+.budgetReset {
+  background: transparent;
+  border: none;
+  color: #5C50E8;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.budgetReset:hover { background: #fff; }
 .budgetDelta {
   font-size: 12px;
   font-weight: 700;
