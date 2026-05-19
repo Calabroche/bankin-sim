@@ -80,9 +80,9 @@ const INITIAL_USER: UserData = {
 
   revenusStable: 26,
   charges: 0,
-  loyerActuel: 1100,
-  depensesTotales: 3400,
-  epargneMensuelle: 1100,
+  loyerActuel: 1400,
+  depensesTotales: 3700,
+  epargneMensuelle: 800,
   epargneDispo: 22000,
 
   typeBien: "neuf",
@@ -126,7 +126,7 @@ interface CatBudget {
 }
 
 const CATEGORIES: CatBudget[] = [
-  { id: "logement",        nom: "Logement",            emoji: "🏠", actuel: 1100, fixe: true },
+  { id: "logement",        nom: "Logement",            emoji: "🏠", actuel: 1400, fixe: true },
   { id: "courses",         nom: "Courses",             emoji: "🛒", actuel: 680 },
   { id: "enfants",         nom: "Enfants (crèche, école)", emoji: "👶", actuel: 420 },
   { id: "loisirs",         nom: "Loisirs & sorties",   emoji: "🎬", actuel: 580 },
@@ -306,7 +306,7 @@ const MOMENT_OPTIONS: { id: Moment; emoji: string; title: string; desc: string }
     id: "loyer",
     emoji: "💸",
     title: "Marre de payer un loyer",
-    desc: "On donne 1 100 € par mois à quelqu'un d'autre — autant rembourser le nôtre.",
+    desc: "On donne 1 400 € par mois à quelqu'un d'autre — autant rembourser le nôtre.",
   },
   {
     id: "espace",
