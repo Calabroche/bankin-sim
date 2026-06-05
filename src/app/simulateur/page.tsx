@@ -382,7 +382,10 @@ export default function SimulateurPage() {
       } else if (customBudget[cat.id] != null) {
         nouveau = customBudget[cat.id];
       } else if (scenario.budgetAdjustments[cat.id] != null) {
-        nouveau = scenario.budgetAdjustments[cat.id];
+        /* L'arbitrage suggéré est un PLAFOND : si l'utilisateur dépense
+           déjà moins que la suggestion, on garde son montant — sinon on
+           lui imposerait une hausse en prétendant l'aider à couper. */
+        nouveau = Math.min(actuel, scenario.budgetAdjustments[cat.id]);
       } else {
         nouveau = actuel;
       }
@@ -606,8 +609,13 @@ export default function SimulateurPage() {
                    de ce que l'utilisateur verra en cliquant "Choisir". */
                 const sumProj = activeCategories.reduce((sum, c) => {
                   if (c.id === "logement") return sum + s.mensualite;
-                  if (s.budgetAdjustments[c.id] != null) return sum + s.budgetAdjustments[c.id];
                   const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
+                  /* L'arbitrage suggéré est un PLAFOND, pas un remplacement.
+                     Si l'utilisateur dépense déjà moins, on garde sa valeur —
+                     sinon on lui "imposerait" une hausse en disant l'inverse. */
+                  if (s.budgetAdjustments[c.id] != null) {
+                    return sum + Math.min(baseActuel, s.budgetAdjustments[c.id]);
+                  }
                   return sum + baseActuel;
                 }, 0);
                 const soldeAujourdhui = totalRevenue - user.charges - sumActuel;
@@ -650,6 +658,68 @@ export default function SimulateurPage() {
                         </span>
                         <strong style={{ color: soldeDelta >= 0 ? "#1F9D7A" : "#D14545" }}>
                           {soldeDelta >= 0 ? "+ " : "− "}{formatEUR(Math.abs(soldeDelta))}
+                        </strong>
+                      </div>
+                    </div>
+
+                    {/* Composition du solde — rend la math explicite
+                        pour que le chiffre +X soit toujours vérifiable
+                        à la main par l'utilisateur. */}
+                    <div
+                      style={{
+                        marginTop: 12,
+                        padding: "10px 12px",
+                        background: "rgba(125, 90, 255, 0.05)",
+                        borderRadius: 10,
+                        fontSize: 12,
+                        lineHeight: 1.5,
+                        textAlign: "left",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: 0.4,
+                          color: "#6E6A95",
+                          marginBottom: 6,
+                        }}
+                      >
+                        Comment ce solde se calcule
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr auto", rowGap: 3, columnGap: 12 }}>
+                        <span>Revenus du foyer</span>
+                        <strong style={{ color: "#1F9D7A" }}>+ {formatEUR(totalRevenue)}</strong>
+                        {user.charges > 0 && (
+                          <>
+                            <span>Crédits en cours</span>
+                            <strong style={{ color: "#E07800" }}>− {formatEUR(user.charges)}</strong>
+                          </>
+                        )}
+                        <span>Mensualité prêt</span>
+                        <strong>− {formatEUR(s.mensualite)}</strong>
+                        <span>Reste du quotidien</span>
+                        <strong>− {formatEUR(sumProj - s.mensualite)}</strong>
+                        <span
+                          style={{
+                            borderTop: "1px dashed rgba(110, 106, 149, 0.3)",
+                            marginTop: 4,
+                            paddingTop: 4,
+                            fontWeight: 700,
+                          }}
+                        >
+                          = Solde
+                        </span>
+                        <strong
+                          style={{
+                            borderTop: "1px dashed rgba(110, 106, 149, 0.3)",
+                            marginTop: 4,
+                            paddingTop: 4,
+                            color: soldeProj < 0 ? "#D14545" : "#1F9D7A",
+                          }}
+                        >
+                          {formatEUR(soldeProj, { withSign: true })}
                         </strong>
                       </div>
                     </div>
