@@ -621,6 +621,18 @@ export default function SimulateurPage() {
                 const soldeAujourdhui = totalRevenue - user.charges - sumActuel;
                 const soldeProj = totalRevenue - user.charges - sumProj;
                 const soldeDelta = soldeProj - soldeAujourdhui;
+                /* Pour le breakdown : on sépare 'vie + épargne actuelle'
+                   (somme exacte du tableau de l'étape Impact, colonne
+                   Aujourd'hui) et 'économies' (savings réels apportés
+                   par les arbitrages suggérés du scénario). Sinon la
+                   ligne 'Vie + épargne' du breakdown ne matche pas le
+                   tableau et l'utilisateur ne peut pas vérifier. */
+                const sumActuelOther = sumActuel - (
+                  customActualBudget["logement"] != null
+                    ? customActualBudget["logement"]
+                    : (activeCategories.find((c) => c.id === "logement")?.actuel ?? 0)
+                );
+                const economiesScenario = sumActuelOther - (sumProj - s.mensualite);
                 return (
                   <button
                     key={s.key}
@@ -699,8 +711,16 @@ export default function SimulateurPage() {
                         )}
                         <span>Mensualité prêt</span>
                         <strong>− {formatEUR(s.mensualite)}</strong>
-                        <span>Vie + épargne</span>
-                        <strong>− {formatEUR(sumProj - s.mensualite)}</strong>
+                        <span>Vie + épargne (actuelle)</span>
+                        <strong>− {formatEUR(sumActuelOther)}</strong>
+                        {economiesScenario > 0 && (
+                          <>
+                            <span>Économies du scénario</span>
+                            <strong style={{ color: "#1F9D7A" }}>
+                              + {formatEUR(economiesScenario)}
+                            </strong>
+                          </>
+                        )}
                         <span
                           style={{
                             borderTop: "1px dashed rgba(110, 106, 149, 0.3)",
