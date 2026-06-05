@@ -405,10 +405,18 @@ export default function SimulateurPage() {
 
   const stressOptions = useMemo(() => buildStressOptions(user), [user]);
 
-  /* Épargne de précaution réelle = épargne dispo − apport mobilisé.
-     Sert de cushion pour absorber les aléas (mois de chômage, etc.).
-     C'est le vrai matelas restant après la mise de départ. */
-  const cushionAfterApport = Math.max(0, user.epargneDispo - user.apportProjet);
+  /* Deux concepts à ne pas confondre :
+     - precautionRecommandee : norme finance perso = 3 mois de revenus,
+       l'épargne de précaution que la banque (et le bon sens) recommande
+       AVANT et APRÈS l'achat pour faire face aux aléas.
+     - liquideApresApport : ce qu'il reste réellement de liquide une fois
+       l'apport mobilisé. C'est le vrai matelas disponible pour absorber
+       un choc — souvent bien inférieur à la précaution recommandée. */
+  const precautionRecommandee = Math.round(totalRevenue * 3);
+  const liquideApresApport = Math.max(0, user.epargneDispo - user.apportProjet);
+  /* Pour le calcul des stress-tests on utilise le liquide réel
+     (c'est ce qu'on peut effectivement dépenser), pas la recommandation. */
+  const cushionAfterApport = liquideApresApport;
 
   /* Verdict dynamique à partir des chiffres réels (au lieu d'un
      texte rassurant hardcodé). Combine le solde de base déjà projeté
@@ -430,7 +438,7 @@ export default function SimulateurPage() {
         tone: "bad" as const,
         soldeApres,
         months: 0,
-        text: `Non absorbable : ${formatEUR(drainMensuel)} / mois à trouver, et aucune épargne de précaution disponible après l'apport.`,
+        text: `Non absorbable : ${formatEUR(drainMensuel)} / mois à trouver, et aucun liquide restant après l'apport.`,
       };
     }
     const months = Math.floor(cushionAfterApport / drainMensuel);
@@ -439,7 +447,7 @@ export default function SimulateurPage() {
         tone: "good" as const,
         soldeApres,
         months,
-        text: `Couvert ${months}+ mois par votre épargne de précaution (${formatEUR(cushionAfterApport)}). Vous avez largement le temps de vous adapter.`,
+        text: `Couvert ${months}+ mois par votre matelas après apport (${formatEUR(cushionAfterApport)}). Vous avez largement le temps de vous adapter.`,
       };
     }
     if (months >= 12) {
@@ -447,7 +455,7 @@ export default function SimulateurPage() {
         tone: "okay" as const,
         soldeApres,
         months,
-        text: `Tient ~${months} mois sur votre épargne (${formatEUR(cushionAfterApport)}). Le temps d'ajuster vos dépenses.`,
+        text: `Tient ~${months} mois sur votre matelas après apport (${formatEUR(cushionAfterApport)}). Le temps d'ajuster vos dépenses.`,
       };
     }
     if (months >= 6) {
@@ -455,7 +463,7 @@ export default function SimulateurPage() {
         tone: "warn" as const,
         soldeApres,
         months,
-        text: `Tendu : votre épargne (${formatEUR(cushionAfterApport)}) ne tient que ${months} mois. Prévoyez un plan B.`,
+        text: `Tendu : votre matelas après apport (${formatEUR(cushionAfterApport)}) ne tient que ${months} mois. Prévoyez un plan B.`,
       };
     }
     if (months >= 1) {
@@ -463,14 +471,14 @@ export default function SimulateurPage() {
         tone: "bad" as const,
         soldeApres,
         months,
-        text: `Risqué : épargne épuisée en ${months} mois. Le projet ne survit pas sans rebond rapide.`,
+        text: `Risqué : matelas épuisé en ${months} mois. Le projet ne survit pas sans rebond rapide.`,
       };
     }
     return {
       tone: "bad" as const,
       soldeApres,
       months: 0,
-      text: `Non absorbable : ${formatEUR(drainMensuel)} / mois à trouver, votre épargne (${formatEUR(cushionAfterApport)}) part en moins d'un mois.`,
+      text: `Non absorbable : ${formatEUR(drainMensuel)} / mois à trouver, votre matelas (${formatEUR(cushionAfterApport)}) part en moins d'un mois.`,
     };
   }
   const isReady = user.epargneDispo >= 15000 && scenario.endettementPct <= 33;
@@ -1041,35 +1049,57 @@ export default function SimulateurPage() {
 
             {/* Baseline : si le solde projeté est déjà négatif AVANT
                 tout aléa, on doit le dire — sinon la suite est un
-                mensonge. */}
-            <div
-              style={{
-                background: baselineSousTension ? "#FFEAD2" : "#EEF7FF",
-                border: `1px solid ${baselineSousTension ? "#FFC78A" : "#CFE3FB"}`,
-                borderRadius: 14,
-                padding: "14px 18px",
-                marginBottom: 20,
-                fontSize: 14,
-                lineHeight: 1.5,
-                color: baselineSousTension ? "#7A4400" : "#1B3A6B",
-              }}
-            >
-              <strong style={{ display: "block", marginBottom: 4 }}>
-                {baselineSousTension
-                  ? `⚠️ Votre projet ${scenario.name} démarre déjà sous tension`
-                  : `Point de départ : votre projet ${scenario.name}`}
-              </strong>
-              Solde projeté <strong>{formatEUR(soldeNouveau, { withSign: true })} / mois</strong>{" "}
-              · Épargne de précaution restante après apport{" "}
-              <strong>{formatEUR(cushionAfterApport)}</strong>.
-              {baselineSousTension && (
-                <>
-                  {" "}Avant même tout aléa, il manque{" "}
-                  <strong>{formatEUR(-soldeNouveau)} / mois</strong> à votre budget.
-                  Les stress-tests ci-dessous viennent <em>en plus</em>.
-                </>
-              )}
-            </div>
+                mensonge. On expose aussi la précaution recommandée
+                (3 mois de revenus) face au liquide réel restant après
+                apport pour que l'utilisateur voie le gap. */}
+            {(() => {
+              const precautionSousNorme = liquideApresApport < precautionRecommandee;
+              const niveau = baselineSousTension ? "alert" : precautionSousNorme ? "warn" : "info";
+              const bg = niveau === "alert" ? "#FFEAD2" : niveau === "warn" ? "#FFF6E5" : "#EEF7FF";
+              const border = niveau === "alert" ? "#FFC78A" : niveau === "warn" ? "#FFE0AC" : "#CFE3FB";
+              const color = niveau === "alert" ? "#7A4400" : niveau === "warn" ? "#7A4400" : "#1B3A6B";
+              return (
+                <div
+                  style={{
+                    background: bg,
+                    border: `1px solid ${border}`,
+                    borderRadius: 14,
+                    padding: "14px 18px",
+                    marginBottom: 20,
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                    color,
+                  }}
+                >
+                  <strong style={{ display: "block", marginBottom: 4 }}>
+                    {baselineSousTension
+                      ? `⚠️ Votre projet ${scenario.name} démarre déjà sous tension`
+                      : precautionSousNorme
+                      ? `Point de départ : votre projet ${scenario.name} — matelas faible`
+                      : `Point de départ : votre projet ${scenario.name}`}
+                  </strong>
+                  Solde projeté <strong>{formatEUR(soldeNouveau, { withSign: true })} / mois</strong>{" "}
+                  · Liquide restant après apport{" "}
+                  <strong>{formatEUR(liquideApresApport)}</strong>{" "}
+                  (précaution recommandée : <strong>{formatEUR(precautionRecommandee)}</strong>, soit 3 mois de revenus).
+                  {baselineSousTension && (
+                    <>
+                      {" "}Avant même tout aléa, il manque{" "}
+                      <strong>{formatEUR(-soldeNouveau)} / mois</strong> à votre budget.
+                      Les stress-tests ci-dessous viennent <em>en plus</em>.
+                    </>
+                  )}
+                  {!baselineSousTension && precautionSousNorme && (
+                    <>
+                      {" "}Il vous manque{" "}
+                      <strong>{formatEUR(precautionRecommandee - liquideApresApport)}</strong>{" "}
+                      pour atteindre la précaution recommandée — à reconstituer dans les mois
+                      qui suivent l'achat avant que la vie ne change.
+                    </>
+                  )}
+                </div>
+              );
+            })()}
 
             <div className={styles.stressGrid}>
               {stressOptions.map((opt) => {
@@ -1146,8 +1176,8 @@ export default function SimulateurPage() {
                 ) : (
                   <>
                     <strong>Aucun stress-test activé.</strong> Cliquez les scénarios
-                    qui vous inquiètent — l'app calcule combien de mois votre épargne
-                    de précaution ({formatEUR(cushionAfterApport)}) absorbe le choc.
+                    qui vous inquiètent — l'app calcule combien de mois votre matelas
+                    après apport ({formatEUR(cushionAfterApport)}) absorbe le choc.
                   </>
                 )}
               </div>
