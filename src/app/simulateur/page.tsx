@@ -699,7 +699,7 @@ export default function SimulateurPage() {
                         )}
                         <span>Mensualité prêt</span>
                         <strong>− {formatEUR(s.mensualite)}</strong>
-                        <span>Reste du quotidien</span>
+                        <span>Vie + épargne</span>
                         <strong>− {formatEUR(sumProj - s.mensualite)}</strong>
                         <span
                           style={{
