@@ -679,18 +679,18 @@ export default function SimulateurPage() {
                         à la main par l'utilisateur. */}
                     <div
                       style={{
-                        marginTop: 8,
+                        marginTop: 6,
                         padding: "8px 10px",
                         background: "rgba(125, 90, 255, 0.05)",
                         borderRadius: 8,
-                        fontSize: 11.5,
-                        lineHeight: 1.4,
+                        fontSize: 12.5,
+                        lineHeight: 1.35,
                         textAlign: "left",
                       }}
                     >
                       <div
                         style={{
-                          fontSize: 9.5,
+                          fontSize: 10,
                           fontWeight: 700,
                           textTransform: "uppercase",
                           letterSpacing: 0.4,
@@ -700,7 +700,7 @@ export default function SimulateurPage() {
                       >
                         Comment ce solde se calcule
                       </div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr auto", rowGap: 2, columnGap: 10 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr auto", rowGap: 1, columnGap: 10 }}>
                         <span>Revenus du foyer</span>
                         <strong style={{ color: "#1F9D7A" }}>+ {formatEUR(totalRevenue)}</strong>
                         {user.charges > 0 && (

@@ -26,7 +26,7 @@
 .topbar {
   background: #0F0F19;
   border-bottom: 1px solid #2a2750;
-  padding: 14px 32px;
+  padding: 10px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -75,7 +75,7 @@
 /* ── Progress rail ─────────────────────────────────────────────────── */
 .progressBar {
   background: #fff;
-  padding: 16px 24px;
+  padding: 10px 24px;
   border-bottom: 1px solid #E4ECFB;
   display: flex;
   align-items: center;
@@ -119,7 +119,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 36px 24px 48px;
+  padding: 16px 24px 24px;
 }
 .mainNarrow {
   max-width: 760px;
@@ -141,16 +141,16 @@
   font-weight: 800;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  padding: 5px 11px;
+  padding: 6px 12px;
   border-radius: 999px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .title {
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 900;
   letter-spacing: -1.2px;
-  margin: 0 0 8px;
-  line-height: 1.1;
+  margin: 0 0 6px;
+  line-height: 1.05;
 }
 .title em {
   font-style: normal;
@@ -160,10 +160,10 @@
   color: transparent;
 }
 .lead {
-  font-size: 15px;
+  font-size: 17px;
   color: #6E6A95;
-  margin: 0 0 20px;
-  line-height: 1.5;
+  margin: 0 0 14px;
+  line-height: 1.4;
   max-width: 620px;
 }
 
@@ -172,7 +172,7 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 .btnPrimary {
   display: inline-flex;
@@ -896,14 +896,14 @@
 .scenarios {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 10px;
+  gap: 14px;
+  margin-top: 8px;
 }
 .scenarioCard {
   background: #fff;
   border: 2px solid #E4ECFB;
   border-radius: 18px;
-  padding: 16px 18px 18px;
+  padding: 14px 18px 14px;
   text-align: left;
   font-family: inherit;
   cursor: pointer;
@@ -941,7 +941,7 @@
   box-shadow: 0 6px 16px rgba(92, 80, 232, 0.35);
 }
 .scenarioName {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   color: #5C50E8;
   letter-spacing: 0.4px;
@@ -951,29 +951,29 @@
 .scenarioTag {
   font-size: 12px;
   color: #6E6A95;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .scenarioPrice {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 900;
   letter-spacing: -1px;
   line-height: 1;
   color: #1B1A3B;
 }
-.scenarioPriceLbl { font-size: 11px; color: #6E6A95; margin-top: 3px; font-weight: 600; }
+.scenarioPriceLbl { font-size: 12px; color: #6E6A95; margin-top: 2px; font-weight: 600; }
 .scenarioBody {
-  margin: 12px 0;
+  margin: 8px 0 6px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0;
   flex: 1;
 }
 .scenarioRow {
   display: flex;
   justify-content: space-between;
-  font-size: 12.5px;
+  font-size: 13px;
   color: #6E6A95;
-  padding: 6px 0;
+  padding: 5px 0;
   border-bottom: 1px solid #F0F0F8;
 }
 .scenarioRow:last-child { border-bottom: none; }
@@ -984,20 +984,20 @@
   background: #F4F0FF;
   border-radius: 10px;
   padding: 8px 10px;
-  font-size: 12px;
+  font-size: 12.5px;
   color: #4A4680;
-  line-height: 1.45;
+  line-height: 1.4;
   margin-top: 4px;
 }
 .scenarioImpact strong { color: #5C50E8; font-weight: 800; }
 .scenarioCta {
-  margin-top: 12px;
+  margin-top: 8px;
   background: transparent;
   border: 1.5px solid #5C50E8;
   color: #5C50E8;
   padding: 9px 14px;
   border-radius: 10px;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 800;
   cursor: pointer;
   text-align: center;
