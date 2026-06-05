@@ -399,7 +399,8 @@ export default function SimulateurPage() {
           <div className={styles.mainNarrow}>
             <span className={styles.eyebrow}>Sans engagement · 2 min</span>
             <h1 className={styles.title}>
-              Vous y pensez ? <em>On regarde ensemble si c'est faisable.</em>
+              Être propriétaire ? Vous y pensez…<br />
+              <em>On regarde ensemble si c'est faisable.</em>
             </h1>
             <p className={styles.lead}>
               On adapte le calcul à votre situation — pas à un dossier bancaire.
