@@ -593,23 +593,25 @@ export default function SimulateurPage() {
               {scenarios.map((s) => {
                 const isSelected = s.key === scenarioKey;
                 const isRecommended = s.key === "cible";
-                /* Solde aujourd'hui : mêmes dépenses + loyer actuel, pour
-                   donner un point de référence à l'utilisateur. */
-                const sumOtherDepenses = activeCategories.reduce((sum, c) => {
-                  if (c.id === "logement") return sum;
+                /* Solde aujourd'hui : référence stable, mêmes dépenses
+                   actuelles pour les trois cards. */
+                const sumActuel = activeCategories.reduce((sum, c) => {
                   const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
                   return sum + baseActuel;
                 }, 0);
-                const loyerActuel = customActualBudget["logement"] != null
-                  ? customActualBudget["logement"]
-                  : (activeCategories.find((c) => c.id === "logement")?.actuel ?? user.loyerActuel);
-                const soldeAujourdhui = totalRevenue - user.charges - loyerActuel - sumOtherDepenses;
-                /* Solde "brut" du scénario : on ne swappe QUE le loyer
-                   par la mensualité, sans appliquer les suggestions de
-                   coupes Loisirs/Vacances/etc. Sinon le solde monterait
-                   quand l'endettement augmente, ce qui est trompeur.
-                   Les arbitrages s'appliquent au Step 4 (Impact). */
-                const soldeProj = totalRevenue - user.charges - s.mensualite - sumOtherDepenses;
+                /* Solde projeté : MÊME formule qu'à l'étape Impact —
+                   logement → mensualité du scénario, autres lignes =
+                   arbitrages suggérés si présents, sinon valeurs
+                   actuelles. Sinon la card promet un solde différent
+                   de ce que l'utilisateur verra en cliquant "Choisir". */
+                const sumProj = activeCategories.reduce((sum, c) => {
+                  if (c.id === "logement") return sum + s.mensualite;
+                  if (s.budgetAdjustments[c.id] != null) return sum + s.budgetAdjustments[c.id];
+                  const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
+                  return sum + baseActuel;
+                }, 0);
+                const soldeAujourdhui = totalRevenue - user.charges - sumActuel;
+                const soldeProj = totalRevenue - user.charges - sumProj;
                 const soldeDelta = soldeProj - soldeAujourdhui;
                 return (
                   <button
