@@ -245,60 +245,6 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SPOTLIGHT — the NEW credit immo simulator (HERO #2)
-          ══════════════════════════════════════════════════════════ */}
-      <section className={styles.spotlight}>
-        <div className={styles.container}>
-          <div className={styles.spotlightGrid}>
-            <div>
-              <span className={styles.newBadge}>Nouveauté · Octobre 2026</span>
-              <h2>
-                Simulez votre prêt immo,<br />
-                <em>découvrez votre capacité</em>
-              </h2>
-              <p className={styles.spotlightLead}>
-                La toute nouvelle feature Bankin' qui calcule votre capacité
-                d'emprunt en 2 minutes et compare automatiquement les meilleurs
-                taux parmi nos 15 banques partenaires.
-              </p>
-              <ul className={styles.spotlightList}>
-                <li>Adapté à tous les profils — CDI, CDD, indépendant ou couple mixte</li>
-                <li>Inclut le PTZ, les frais de notaire et le taux d'assurance</li>
-                <li>Comparaison Pretto, Meilleurtaux et 15 banques partenaires</li>
-                <li>Vos données restent confidentielles — aucun partage sans accord</li>
-              </ul>
-              <Link href="/simulateur" className={styles.spotlightCta}>
-                Lancer la simulation →
-              </Link>
-            </div>
-
-            <div className={styles.spotlightMockup} aria-hidden="true">
-              <span className={styles.spotlightMockupBadge}>RÉSULTAT DE SIMULATION</span>
-              <h3>Capacité d'emprunt estimée</h3>
-              <div className={styles.spotlightAmount}>325 000 €</div>
-              <div className={styles.spotlightInfo}>
-                Sur 25 ans · Taux estimé 3,75 % · Profil CDI
-              </div>
-              <div className={styles.spotlightMockupChips}>
-                <div><strong>1 580 €</strong>Mensualité max</div>
-                <div><strong>380 k€</strong>Prix achat max</div>
-                <div><strong>+ 18 k€</strong>PTZ estimé</div>
-              </div>
-              <div className={styles.spotlightStab}>
-                <div className={styles.spotlightStabHead}>
-                  <span>✅ Profil Excellent</span>
-                  <strong>3 / 3</strong>
-                </div>
-                <div className={styles.spotlightStabBar}>
-                  <div />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════
           STATS
           ══════════════════════════════════════════════════════════ */}
       <section className={styles.stats}>
