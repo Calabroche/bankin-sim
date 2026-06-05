@@ -386,29 +386,29 @@ export default function LandingPage() {
       <section id="how" className={styles.sectionDark}>
         <div className={styles.container}>
           <div className={styles.sectionHead}>
-            <h2>Comment ça marche</h2>
-            <p>2 minutes — Bankin' fait le travail à votre place.</p>
+            <h2>Pourquoi 6 millions de Français nous font confiance</h2>
+            <p>Plus qu'une app — votre allié pour mieux décider de votre argent.</p>
           </div>
           <div className={styles.steps}>
             <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>1</div>
-              <h3>Votre point de départ</h3>
-              <p>Pré-rempli depuis vos comptes : revenus, charges, épargne, stabilité.</p>
+              <div className={styles.stepNumber}>🎯</div>
+              <h3>Vision claire</h3>
+              <p>Tous vos comptes au même endroit. Solde fin de mois anticipé en temps réel.</p>
             </div>
             <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>2</div>
-              <h3>3 scénarios</h3>
-              <p>Sereine, Cible, Ambitieux — chacun avec son impact sur votre rythme de vie.</p>
+              <div className={styles.stepNumber}>🛡</div>
+              <h3>Indépendance totale</h3>
+              <p>Aucune banque actionnaire. Pas de conflit d'intérêt, pas de produit caché.</p>
             </div>
             <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>3</div>
-              <h3>Votre quotidien</h3>
-              <p>Vos vraies catégories de dépenses, avant / après le projet immobilier.</p>
+              <div className={styles.stepNumber}>🚀</div>
+              <h3>Toujours en avance</h3>
+              <p>Cashback, projection budget, IA — on construit le futur de l'argent avec vous.</p>
             </div>
             <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>4</div>
-              <h3>Stress-test & roadmap</h3>
-              <p>« Et si la vie change ? » Et si vous n'êtes pas prêts : le chemin pour y arriver.</p>
+              <div className={styles.stepNumber}>🔒</div>
+              <h3>Sécurité maximale</h3>
+              <p>Agrément ACPR, chiffrement bancaire, données jamais revendues à un tiers.</p>
             </div>
           </div>
         </div>
