@@ -361,9 +361,14 @@ export default function SimulateurPage() {
   }, [scenario, customBudget]);
   const hasCustomEdits = Object.keys(customBudget).length > 0;
 
-  const soldeActuel = totalRevenue - CATEGORIES.reduce((sum, c) => sum + c.actuel, 0);
+  /* Solde = revenus − charges crédits − dépenses budget.
+     Les charges crédits sont des prélèvements automatiques fixes
+     pour des crédits en cours (auto, perso, etc.), à part des
+     catégories de dépenses quotidiennes. */
+  const soldeActuel =
+    totalRevenue - user.charges - CATEGORIES.reduce((sum, c) => sum + c.actuel, 0);
   const soldeNouveau =
-    totalRevenue - newBudget.reduce((sum, c) => sum + c.nouveau, 0);
+    totalRevenue - user.charges - newBudget.reduce((sum, c) => sum + c.nouveau, 0);
 
   const stressOptions = useMemo(() => buildStressOptions(user), [user]);
   const isReady = user.epargneDispo >= 15000 && scenario.endettementPct <= 33;
@@ -454,6 +459,14 @@ export default function SimulateurPage() {
                 <div className={`${styles.dataSub} ${styles.dataSubGood}`}>
                   Stables depuis {user.revenusStable} mois ({describeContrats(user)})
                 </div>
+                {user.charges > 0 && (
+                  <div
+                    className={styles.dataSub}
+                    style={{ marginTop: 8, color: "#FFC966", fontWeight: 700 }}
+                  >
+                    ⚠️ − {formatEUR(user.charges)} / mois en charges crédits
+                  </div>
+                )}
               </div>
 
               <div className={styles.dataCard}>
@@ -633,6 +646,39 @@ export default function SimulateurPage() {
                 <span>Avec ce projet</span>
                 <span style={{ textAlign: "right" }}>Δ</span>
               </div>
+
+              {/* Revenu row — info read-only en haut du tableau */}
+              <div className={styles.budgetRow} style={{ background: "#F7F8FF" }}>
+                <div className={styles.budgetCat}>
+                  <span>💼</span>
+                  <span>Revenus du foyer</span>
+                </div>
+                <div className={styles.budgetVal} style={{ color: "#00C48C" }}>
+                  + {formatEUR(totalRevenue)}
+                </div>
+                <div className={styles.budgetValDiff} style={{ color: "#00C48C" }}>
+                  <span className={styles.budgetValLocked}>+ {formatEUR(totalRevenue)}</span>
+                </div>
+                <div className={styles.budgetDelta}>—</div>
+              </div>
+
+              {/* Charges crédits row — affichée uniquement si > 0 */}
+              {user.charges > 0 && (
+                <div className={styles.budgetRow} style={{ background: "#FFF6E5" }}>
+                  <div className={styles.budgetCat}>
+                    <span>💳</span>
+                    <span>Charges crédits en cours</span>
+                  </div>
+                  <div className={styles.budgetVal} style={{ color: "#E07800" }}>
+                    − {formatEUR(user.charges)}
+                  </div>
+                  <div className={styles.budgetValDiff} style={{ color: "#E07800" }}>
+                    <span className={styles.budgetValLocked}>− {formatEUR(user.charges)}</span>
+                  </div>
+                  <div className={styles.budgetDelta}>—</div>
+                </div>
+              )}
+
               {newBudget.map((c) => {
                 const diff = c.nouveau - c.actuel;
                 const cls = diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat;
@@ -1202,6 +1248,40 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
         </div>
       )}
 
+      {/* ── ÉPARGNE ───────────────────────────────────────────────── */}
+      <div className={styles.editSectionTitle}>Épargne</div>
+
+      <div className={styles.editTwoCol}>
+        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+          <label className={styles.editLabel}>Épargne disponible totale</label>
+          <div className={styles.editInputWrap}>
+            <input
+              type="number"
+              className={styles.editInput}
+              value={draft.epargneDispo}
+              onChange={(e) => update({ epargneDispo: Number(e.target.value) || 0 })}
+              min={0}
+              step={500}
+            />
+            <span className={styles.editUnit}>€</span>
+          </div>
+        </div>
+        <div className={styles.editGroup} style={{ marginBottom: 0 }}>
+          <label className={styles.editLabel}>Épargne mensuelle</label>
+          <div className={styles.editInputWrap}>
+            <input
+              type="number"
+              className={styles.editInput}
+              value={draft.epargneMensuelle}
+              onChange={(e) => update({ epargneMensuelle: Number(e.target.value) || 0 })}
+              min={0}
+              step={50}
+            />
+            <span className={styles.editUnit}>€ / mois</span>
+          </div>
+        </div>
+      </div>
+
       {/* ── PROJET ────────────────────────────────────────────────── */}
       <div className={styles.editSectionTitle}>Projet immobilier</div>
 
@@ -1313,10 +1393,11 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
           />
           <span className={styles.editUnit}>€ (mobilisé pour ce projet)</span>
         </div>
-        <div className={styles.editComputed}>
-          <span>Épargne disponible totale</span>
-          <strong>{formatEUR(draft.epargneDispo)}</strong>
-        </div>
+        {draft.apportProjet > draft.epargneDispo && (
+          <div className={styles.editComputed} style={{ background: "#FFF6E5", color: "#7A4400" }}>
+            <span>⚠️ L'apport dépasse l'épargne disponible totale ({formatEUR(draft.epargneDispo)}).</span>
+          </div>
+        )}
       </div>
 
       <div className={styles.editActions}>
