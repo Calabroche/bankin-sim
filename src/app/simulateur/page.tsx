@@ -404,6 +404,75 @@ export default function SimulateurPage() {
     totalRevenue - user.charges - newBudget.reduce((sum, c) => sum + c.nouveau, 0);
 
   const stressOptions = useMemo(() => buildStressOptions(user), [user]);
+
+  /* Épargne de précaution réelle = épargne dispo − apport mobilisé.
+     Sert de cushion pour absorber les aléas (mois de chômage, etc.).
+     C'est le vrai matelas restant après la mise de départ. */
+  const cushionAfterApport = Math.max(0, user.epargneDispo - user.apportProjet);
+
+  /* Verdict dynamique à partir des chiffres réels (au lieu d'un
+     texte rassurant hardcodé). Combine le solde de base déjà projeté
+     pour le scénario sélectionné avec l'impact des stress activés —
+     c'est ce que ressentirait vraiment l'utilisateur. */
+  function evaluateStress(combinedMonthlyImpact: number) {
+    const soldeApres = soldeNouveau + combinedMonthlyImpact; // impact est ≤ 0
+    const drainMensuel = Math.max(0, -soldeApres);
+    if (drainMensuel === 0) {
+      return {
+        tone: "good" as const,
+        soldeApres,
+        months: Infinity,
+        text: "Absorbé sans toucher à votre épargne — votre solde reste à l'équilibre ou positif.",
+      };
+    }
+    if (cushionAfterApport === 0) {
+      return {
+        tone: "bad" as const,
+        soldeApres,
+        months: 0,
+        text: `Non absorbable : ${formatEUR(drainMensuel)} / mois à trouver, et aucune épargne de précaution disponible après l'apport.`,
+      };
+    }
+    const months = Math.floor(cushionAfterApport / drainMensuel);
+    if (months >= 24) {
+      return {
+        tone: "good" as const,
+        soldeApres,
+        months,
+        text: `Couvert ${months}+ mois par votre épargne de précaution (${formatEUR(cushionAfterApport)}). Vous avez largement le temps de vous adapter.`,
+      };
+    }
+    if (months >= 12) {
+      return {
+        tone: "okay" as const,
+        soldeApres,
+        months,
+        text: `Tient ~${months} mois sur votre épargne (${formatEUR(cushionAfterApport)}). Le temps d'ajuster vos dépenses.`,
+      };
+    }
+    if (months >= 6) {
+      return {
+        tone: "warn" as const,
+        soldeApres,
+        months,
+        text: `Tendu : votre épargne (${formatEUR(cushionAfterApport)}) ne tient que ${months} mois. Prévoyez un plan B.`,
+      };
+    }
+    if (months >= 1) {
+      return {
+        tone: "bad" as const,
+        soldeApres,
+        months,
+        text: `Risqué : épargne épuisée en ${months} mois. Le projet ne survit pas sans rebond rapide.`,
+      };
+    }
+    return {
+      tone: "bad" as const,
+      soldeApres,
+      months: 0,
+      text: `Non absorbable : ${formatEUR(drainMensuel)} / mois à trouver, votre épargne (${formatEUR(cushionAfterApport)}) part en moins d'un mois.`,
+    };
+  }
   const isReady = user.epargneDispo >= 15000 && scenario.endettementPct <= 33;
 
   return (
@@ -928,7 +997,38 @@ export default function SimulateurPage() {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 4 && (() => {
+          /* Baseline = solde projeté avec le scénario sélectionné,
+             sans aucun stress. C'est le contexte de départ que la
+             page doit honnêtement reconnaître. */
+          const baselineVerdict = evaluateStress(0);
+          const baselineSousTension = soldeNouveau < 0;
+
+          const activeImpactSum = stressOptions
+            .filter((opt) => activeStresses.has(opt.id))
+            .reduce((sum, opt) => sum + opt.monthlyImpact, 0);
+          const combinedVerdict = evaluateStress(activeImpactSum);
+
+          const toneBg: Record<"good" | "okay" | "warn" | "bad", string> = {
+            good: "#E8F8EF",
+            okay: "#FFF6E5",
+            warn: "#FFEAD2",
+            bad: "#FFE1DD",
+          };
+          const toneBorder: Record<"good" | "okay" | "warn" | "bad", string> = {
+            good: "#9FDDB8",
+            okay: "#FFE0AC",
+            warn: "#FFC78A",
+            bad: "#F5A39A",
+          };
+          const toneText: Record<"good" | "okay" | "warn" | "bad", string> = {
+            good: "#1B6A38",
+            okay: "#7A4400",
+            warn: "#9B4D00",
+            bad: "#8C1F12",
+          };
+
+          return (
           <div className={styles.mainNarrow}>
             <span className={styles.eyebrow}>Stress-test</span>
             <h1 className={styles.title}>
@@ -939,9 +1039,42 @@ export default function SimulateurPage() {
               Vérifions que votre projet tient le coup dans les vrais scénarios de vie.
             </p>
 
+            {/* Baseline : si le solde projeté est déjà négatif AVANT
+                tout aléa, on doit le dire — sinon la suite est un
+                mensonge. */}
+            <div
+              style={{
+                background: baselineSousTension ? "#FFEAD2" : "#EEF7FF",
+                border: `1px solid ${baselineSousTension ? "#FFC78A" : "#CFE3FB"}`,
+                borderRadius: 14,
+                padding: "14px 18px",
+                marginBottom: 20,
+                fontSize: 14,
+                lineHeight: 1.5,
+                color: baselineSousTension ? "#7A4400" : "#1B3A6B",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: 4 }}>
+                {baselineSousTension
+                  ? `⚠️ Votre projet ${scenario.name} démarre déjà sous tension`
+                  : `Point de départ : votre projet ${scenario.name}`}
+              </strong>
+              Solde projeté <strong>{formatEUR(soldeNouveau, { withSign: true })} / mois</strong>{" "}
+              · Épargne de précaution restante après apport{" "}
+              <strong>{formatEUR(cushionAfterApport)}</strong>.
+              {baselineSousTension && (
+                <>
+                  {" "}Avant même tout aléa, il manque{" "}
+                  <strong>{formatEUR(-soldeNouveau)} / mois</strong> à votre budget.
+                  Les stress-tests ci-dessous viennent <em>en plus</em>.
+                </>
+              )}
+            </div>
+
             <div className={styles.stressGrid}>
               {stressOptions.map((opt) => {
                 const active = activeStresses.has(opt.id);
+                const optVerdict = evaluateStress(opt.monthlyImpact);
                 return (
                   <button
                     key={opt.id}
@@ -962,8 +1095,27 @@ export default function SimulateurPage() {
                       <p>{opt.description}</p>
                       {active && (
                         <>
-                          <span className={styles.stressImpact}>Impact : {formatEUR(opt.monthlyImpact)} / mois</span>
-                          <span className={styles.stressOk}>✓ {opt.mitigation}</span>
+                          <span className={styles.stressImpact}>
+                            Impact : {formatEUR(opt.monthlyImpact)} / mois · solde après stress{" "}
+                            {formatEUR(optVerdict.soldeApres, { withSign: true })} / mois
+                          </span>
+                          <span
+                            style={{
+                              display: "block",
+                              marginTop: 8,
+                              padding: "8px 12px",
+                              borderRadius: 10,
+                              background: toneBg[optVerdict.tone],
+                              border: `1px solid ${toneBorder[optVerdict.tone]}`,
+                              color: toneText[optVerdict.tone],
+                              fontSize: 13,
+                              fontWeight: 600,
+                              lineHeight: 1.45,
+                            }}
+                          >
+                            {optVerdict.tone === "good" ? "✓ " : optVerdict.tone === "okay" ? "● " : "⚠️ "}
+                            {optVerdict.text}
+                          </span>
                         </>
                       )}
                     </div>
@@ -972,16 +1124,54 @@ export default function SimulateurPage() {
               })}
             </div>
 
+            {/* Verdict combiné : dynamique, basé sur les vrais chiffres. */}
             {activeStresses.size === 0 ? (
-              <div className={styles.stressSummary}>
-                <strong>Aucun stress-test activé.</strong> Cliquez les scénarios
-                qui vous inquiètent — l'app vous montre l'impact et comment l'absorber.
+              <div
+                style={{
+                  background: baselineSousTension ? "#FFE1DD" : "#F4F0FF",
+                  border: `1px solid ${baselineSousTension ? "#F5A39A" : "#D6CCFF"}`,
+                  borderRadius: 14,
+                  padding: "14px 18px",
+                  color: baselineSousTension ? "#8C1F12" : "#4A4680",
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                }}
+              >
+                {baselineSousTension ? (
+                  <>
+                    <strong>Aucun aléa testé — et déjà dans le rouge.</strong>{" "}
+                    Avant d'aller plus loin, revenez à la step Impact et coupez des
+                    dépenses, ou choisissez un scénario moins endetté.
+                  </>
+                ) : (
+                  <>
+                    <strong>Aucun stress-test activé.</strong> Cliquez les scénarios
+                    qui vous inquiètent — l'app calcule combien de mois votre épargne
+                    de précaution ({formatEUR(cushionAfterApport)}) absorbe le choc.
+                  </>
+                )}
               </div>
             ) : (
-              <div className={`${styles.stressSummary} ${styles.stressSummaryClean}`}>
-                <strong>Tous les scénarios testés sont absorbables.</strong> Votre
-                épargne de précaution, l'assurance emprunteur et le coussin sur
-                la mensualité couvrent ces aléas. Votre projet est résilient.
+              <div
+                style={{
+                  background: toneBg[combinedVerdict.tone],
+                  border: `1px solid ${toneBorder[combinedVerdict.tone]}`,
+                  borderRadius: 14,
+                  padding: "14px 18px",
+                  color: toneText[combinedVerdict.tone],
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                }}
+              >
+                <strong style={{ display: "block", marginBottom: 4 }}>
+                  {combinedVerdict.tone === "good" && "✓ Combinés, ces aléas sont absorbables."}
+                  {combinedVerdict.tone === "okay" && "● Combinés, ces aléas sont absorbables — mais sur un temps limité."}
+                  {combinedVerdict.tone === "warn" && "⚠️ Combinés, ces aléas mettent le projet sous tension."}
+                  {combinedVerdict.tone === "bad" && "✗ Combinés, ces aléas ne sont pas absorbables avec votre épargne actuelle."}
+                </strong>
+                Solde projeté avec ces {activeStresses.size} aléa{activeStresses.size > 1 ? "s" : ""}{" "}
+                : <strong>{formatEUR(combinedVerdict.soldeApres, { withSign: true })} / mois</strong>.{" "}
+                {combinedVerdict.text}
               </div>
             )}
 
@@ -992,7 +1182,8 @@ export default function SimulateurPage() {
               </button>
             </div>
           </div>
-        )}
+          );
+        })()}
 
         {step === 5 && (
           <div className={styles.mainWide}>
