@@ -126,13 +126,15 @@ interface CatBudget {
 }
 
 const CATEGORIES: CatBudget[] = [
-  { id: "logement",        nom: "Logement",            emoji: "🏠", actuel: 1400, fixe: true },
-  { id: "courses",         nom: "Courses",             emoji: "🛒", actuel: 680 },
+  { id: "logement",        nom: "Logement",                emoji: "🏠", actuel: 1400, fixe: true },
+  { id: "courses",         nom: "Courses",                 emoji: "🛒", actuel: 680 },
   { id: "enfants",         nom: "Enfants (crèche, école)", emoji: "👶", actuel: 420 },
-  { id: "loisirs",         nom: "Loisirs & sorties",   emoji: "🎬", actuel: 580 },
-  { id: "vacances",        nom: "Vacances (lissé)",    emoji: "✈️", actuel: 250 },
-  { id: "epargne_enfants", nom: "Épargne enfants",     emoji: "💰", actuel: 200 },
-  { id: "courant",         nom: "Reste à vivre",       emoji: "🍽️", actuel: 170 },
+  { id: "loisirs",         nom: "Loisirs & sorties",       emoji: "🎬", actuel: 580 },
+  { id: "vacances",        nom: "Vacances (lissé)",        emoji: "✈️", actuel: 250 },
+  { id: "epargne_enfants", nom: "Épargne enfants",         emoji: "💰", actuel: 200 },
+  { id: "essence",         nom: "Essence & transport",     emoji: "⛽", actuel: 150 },
+  { id: "courant",         nom: "Dépenses non prévues",    emoji: "🛠️", actuel: 170 },
+  { id: "epargne",         nom: "Épargne mensuelle",       emoji: "🐷", actuel: 800 },
 ];
 
 /* ── Helpers ─────────────────────────────────────────────────────── */
@@ -355,12 +357,16 @@ export default function SimulateurPage() {
 
   /* Catégories actives selon le profil : on cache les lignes "enfants" et
      "épargne enfants" si l'utilisateur a déclaré 0 enfant. Pas pertinent
-     dans son budget réel, et ça pollue la décision. */
+     dans son budget réel, et ça pollue la décision.
+     La ligne épargne reçoit son défaut depuis user.epargneMensuelle pour
+     rester synchro avec ce qui est déclaré dans le panneau d'édition. */
   const activeCategories = useMemo(
-    () => CATEGORIES.filter((c) =>
-      user.enfants > 0 ? true : c.id !== "enfants" && c.id !== "epargne_enfants"
-    ),
-    [user.enfants],
+    () => CATEGORIES
+      .filter((c) =>
+        user.enfants > 0 ? true : c.id !== "enfants" && c.id !== "epargne_enfants"
+      )
+      .map((c) => (c.id === "epargne" ? { ...c, actuel: user.epargneMensuelle } : c)),
+    [user.enfants, user.epargneMensuelle],
   );
 
   // Compute the new budget for the selected scenario, with optional
