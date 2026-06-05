@@ -340,6 +340,10 @@ export default function SimulateurPage() {
   /* customBudget : overrides utilisateur sur la colonne "Avec ce projet".
      Reset à chaque changement de scénario pour repartir des suggestions. */
   const [customBudget, setCustomBudget] = useState<Record<string, number>>({});
+  /* customActualBudget : overrides utilisateur sur la colonne "Aujourd'hui".
+     Persiste tant que l'utilisateur ne reset pas — c'est SES dépenses
+     réelles, pas une suggestion liée à un scénario. */
+  const [customActualBudget, setCustomActualBudget] = useState<Record<string, number>>({});
 
   const scenario = scenarios.find((s) => s.key === scenarioKey)!;
   const totalRevenue = computeTotalRevenue(user);
@@ -349,10 +353,23 @@ export default function SimulateurPage() {
 
   const progress = ((step + 1) / 6) * 100;
 
+  /* Catégories actives selon le profil : on cache les lignes "enfants" et
+     "épargne enfants" si l'utilisateur a déclaré 0 enfant. Pas pertinent
+     dans son budget réel, et ça pollue la décision. */
+  const activeCategories = useMemo(
+    () => CATEGORIES.filter((c) =>
+      user.enfants > 0 ? true : c.id !== "enfants" && c.id !== "epargne_enfants"
+    ),
+    [user.enfants],
+  );
+
   // Compute the new budget for the selected scenario, with optional
   // user overrides (customBudget takes priority over scenario suggestion).
+  // Idem pour la colonne "Aujourd'hui" : l'utilisateur peut corriger
+  // les montants par défaut si son budget réel diffère.
   const newBudget = useMemo(() => {
-    return CATEGORIES.map((cat) => {
+    return activeCategories.map((cat) => {
+      const actuel = customActualBudget[cat.id] != null ? customActualBudget[cat.id] : cat.actuel;
       let nouveau: number;
       if (cat.id === "logement") {
         nouveau = scenario.mensualite;
@@ -361,11 +378,11 @@ export default function SimulateurPage() {
       } else if (scenario.budgetAdjustments[cat.id] != null) {
         nouveau = scenario.budgetAdjustments[cat.id];
       } else {
-        nouveau = cat.actuel;
+        nouveau = actuel;
       }
-      return { ...cat, nouveau };
+      return { ...cat, actuel, nouveau };
     });
-  }, [scenario, customBudget]);
+  }, [scenario, customBudget, customActualBudget, activeCategories]);
   const hasCustomEdits = Object.keys(customBudget).length > 0;
 
   /* Solde = revenus − charges crédits − dépenses budget.
@@ -373,7 +390,7 @@ export default function SimulateurPage() {
      pour des crédits en cours (auto, perso, etc.), à part des
      catégories de dépenses quotidiennes. */
   const soldeActuel =
-    totalRevenue - user.charges - CATEGORIES.reduce((sum, c) => sum + c.actuel, 0);
+    totalRevenue - user.charges - newBudget.reduce((sum, c) => sum + c.actuel, 0);
   const soldeNouveau =
     totalRevenue - user.charges - newBudget.reduce((sum, c) => sum + c.nouveau, 0);
 
@@ -553,9 +570,11 @@ export default function SimulateurPage() {
                    Les arbitrages s'appliquent au Step 4 (Impact). */
                 const soldeProj =
                   totalRevenue -
-                  CATEGORIES.reduce((sum, c) => {
+                  user.charges -
+                  activeCategories.reduce((sum, c) => {
+                    const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
                     if (c.id === "logement") return sum + s.mensualite;
-                    return sum + c.actuel;
+                    return sum + baseActuel;
                   }, 0);
                 return (
                   <button
@@ -696,7 +715,29 @@ export default function SimulateurPage() {
                       <span>{c.emoji}</span>
                       <span>{c.nom}</span>
                     </div>
-                    <div className={styles.budgetVal}>{formatEUR(c.actuel)}</div>
+                    <div className={styles.budgetVal}>
+                      {isLocked ? (
+                        formatEUR(c.actuel)
+                      ) : (
+                        <label className={styles.budgetEditWrap}>
+                          <input
+                            type="number"
+                            className={styles.budgetEdit}
+                            value={c.actuel}
+                            onChange={(e) =>
+                              setCustomActualBudget((prev) => ({
+                                ...prev,
+                                [c.id]: Math.max(0, Number(e.target.value) || 0),
+                              }))
+                            }
+                            min={0}
+                            step={10}
+                            aria-label={`Montant ${c.nom} aujourd'hui`}
+                          />
+                          <span className={styles.budgetEditUnit}>€</span>
+                        </label>
+                      )}
+                    </div>
                     <div className={`${styles.budgetValDiff} ${cls}`}>
                       {isLocked ? (
                         <span className={styles.budgetValLocked}>{formatEUR(c.nouveau)}</span>
