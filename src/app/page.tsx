@@ -60,9 +60,6 @@ export default function LandingPage() {
                   <Link href="/simulateur" className={styles.heroCta}>
                     Voir si c'est faisable →
                   </Link>
-                  <a href="#how" className={styles.heroCtaSecondary}>
-                    Comment ça marche
-                  </a>
                 </div>
                 <div className={styles.heroTrust}>
                   <span>Pré-rempli depuis vos comptes</span>
