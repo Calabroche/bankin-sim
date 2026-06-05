@@ -105,7 +105,7 @@ export default function LandingPage() {
                           <span>Mensualité</span>
                           <strong>1 485 €</strong>
                         </div>
-                        <div className={styles.lapCardSolde}>+ 1 095 €/mois</div>
+                        <div className={styles.lapCardSolde}>+ 715 €/mois</div>
                         <div className={styles.lapCardImpact}>
                           <strong>Impact :</strong> Loisirs −280 € et Vacances −100 € par mois.
                         </div>
@@ -120,7 +120,7 @@ export default function LandingPage() {
                           <span>Mensualité</span>
                           <strong>1 575 €</strong>
                         </div>
-                        <div className={styles.lapCardSolde}>+ 1 205 €/mois</div>
+                        <div className={styles.lapCardSolde}>+ 625 €/mois</div>
                         <div className={styles.lapCardImpact}>
                           <strong>Impact :</strong> Loisirs, vacances et épargne enfants réduits.
                         </div>
@@ -163,7 +163,7 @@ export default function LandingPage() {
                           <span>Mensualité 1 485 €</span>
                           <strong>33 % endett.</strong>
                         </div>
-                        <div className={styles.phScenCardSolde}>+ 1 095 €/mois</div>
+                        <div className={styles.phScenCardSolde}>+ 715 €/mois</div>
                         <div className={styles.phScenCardImpact}>
                           <strong>Impact :</strong> Loisirs −280 € et Vacances −100 €/mois.
                         </div>
@@ -178,7 +178,7 @@ export default function LandingPage() {
                           <span>Mensualité 1 575 €</span>
                           <strong>35 % endett.</strong>
                         </div>
-                        <div className={styles.phScenCardSolde}>+ 1 205 €/mois</div>
+                        <div className={styles.phScenCardSolde}>+ 625 €/mois</div>
                         <div className={styles.phScenCardImpact}>
                           <strong>Impact :</strong> Loisirs, vacances, épargne enfants.
                         </div>

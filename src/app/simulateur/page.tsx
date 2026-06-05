@@ -188,7 +188,7 @@ function buildScenarios(u: UserData): Scenario[] {
       tag: "On garde notre rythme de vie",
       pct: 0.27,
       adjustments: {},
-      impactLine: "Vous gardez ~95 % de votre rythme actuel. Pas de gros arbitrage.",
+      impactLine: "Mensualité < loyer actuel. Marge qui grimpe, aucun arbitrage nécessaire.",
     },
     {
       key: "cible",
@@ -196,7 +196,7 @@ function buildScenarios(u: UserData): Scenario[] {
       tag: "Le bon équilibre",
       pct: 0.33,
       adjustments: { loisirs: 300, vacances: 150 },
-      impactLine: "Vous réduisez Loisirs (−280 €) et Vacances (−100 €) par mois.",
+      impactLine: "+85 €/mois sur le logement. Suggestion : couper Loisirs et Vacances pour préserver la marge.",
     },
     {
       key: "ambitieux",
@@ -204,7 +204,7 @@ function buildScenarios(u: UserData): Scenario[] {
       tag: "Au plafond légal (35 %)",
       pct: 0.35,
       adjustments: { loisirs: 250, vacances: 120, epargne_enfants: 80 },
-      impactLine: "Loisirs, vacances et épargne enfants réduits. Confort minimum.",
+      impactLine: "+175 €/mois sur le logement. Marge tendue, plusieurs arbitrages nécessaires.",
     },
   ];
 
@@ -525,11 +525,16 @@ export default function SimulateurPage() {
               {scenarios.map((s) => {
                 const isSelected = s.key === scenarioKey;
                 const isRecommended = s.key === "cible";
+                /* Solde "brut" du scénario : on ne swappe QUE le loyer
+                   par la mensualité, sans appliquer les suggestions de
+                   coupes Loisirs/Vacances/etc. Sinon le solde monterait
+                   quand l'endettement augmente, ce qui est trompeur.
+                   Les arbitrages s'appliquent au Step 4 (Impact). */
                 const soldeProj =
                   totalRevenue -
                   CATEGORIES.reduce((sum, c) => {
                     if (c.id === "logement") return sum + s.mensualite;
-                    return sum + (s.budgetAdjustments[c.id] ?? c.actuel);
+                    return sum + c.actuel;
                   }, 0);
                 return (
                   <button
