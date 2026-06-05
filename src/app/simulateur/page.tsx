@@ -1007,8 +1007,87 @@ export default function SimulateurPage() {
                     Un bien jusqu'à <strong>{formatEUR(scenario.prixMax)}</strong>, mensualité
                     {" "}<strong>{formatEUR(scenario.mensualite)}</strong>, taux d'endettement
                     {" "}<strong>{scenario.endettementPct} %</strong>. Votre dossier est rassurant
-                    pour une banque : 2 CDI stables, taux d'épargne 24 %, primo-accédants éligibles PTZ.
+                    pour une banque : {describeContrats(user).toLowerCase().includes("cdi") ? "contrats stables" : "revenus solides"}
+                    {user.primoAccedant ? ", primo-accédants éligibles PTZ" : ""}.
                   </p>
+                </div>
+
+                {/* Récap profil — pour que l'utilisateur ait sous les yeux
+                    tout ce qui a été pris en compte avant de cliquer sur
+                    une action (courtier, banque, suivi). */}
+                <div
+                  style={{
+                    background: "#fff",
+                    border: "1px solid #E4ECFB",
+                    borderRadius: 16,
+                    padding: 20,
+                    marginBottom: 20,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 800,
+                      letterSpacing: 1.2,
+                      textTransform: "uppercase",
+                      color: "#6E6A95",
+                      marginBottom: 14,
+                    }}
+                  >
+                    Votre profil en bref
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: 16,
+                    }}
+                  >
+                    {[
+                      {
+                        icon: "👨‍👩‍👧‍👦",
+                        label: "Foyer",
+                        value: `${user.prenom}${user.enCouple ? ` & ${user.conjoint}` : ""}${user.enfants > 0 ? ` · ${user.enfants} enfant${user.enfants > 1 ? "s" : ""}` : ""}`,
+                      },
+                      {
+                        icon: "💼",
+                        label: "Revenus",
+                        value: `${formatEUR(totalRevenue)} / mois · ${describeContrats(user)}`,
+                      },
+                      {
+                        icon: "🏠",
+                        label: "Statut",
+                        value: `${user.situation === "locataire" ? "Locataire" : "Propriétaire"}${user.primoAccedant ? " · primo-accédant" : ""}`,
+                      },
+                      {
+                        icon: "💵",
+                        label: "Épargne",
+                        value: `${formatEUR(user.epargneDispo)} dispo · ${formatEUR(user.epargneMensuelle)} / mois`,
+                      },
+                      {
+                        icon: "🎯",
+                        label: "Projet",
+                        value: `Bien ${user.typeBien === "neuf" ? "neuf" : "ancien"} à ${user.ville} · ${user.duree} ans`,
+                      },
+                      {
+                        icon: "💰",
+                        label: "Apport mobilisé",
+                        value: `${formatEUR(user.apportProjet)}${scenario.ptz > 0 ? ` + PTZ ${formatEUR(scenario.ptz)}` : ""}`,
+                      },
+                    ].map((item) => (
+                      <div key={item.label} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                        <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{item.icon}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: "#6E6A95", textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 2 }}>
+                            {item.label}
+                          </div>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#1B1A3B", lineHeight: 1.35 }}>
+                            {item.value}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <h3 style={{ margin: "0 0 16px", fontSize: 20, fontWeight: 900 }}>
@@ -1017,21 +1096,23 @@ export default function SimulateurPage() {
                 <div className={styles.options}>
                   <a href="#" className={styles.optionCard}>
                     <span className={styles.optionEmoji}>🤝</span>
-                    <h4>Faire négocier par Pretto</h4>
+                    <h4>Faire négocier par un courtier</h4>
                     <p>
-                      Notre partenaire courtier négocie votre dossier avec 100+ banques.
-                      Gratuit pour vous, vous gardez la main, vous n'êtes pas engagés.
+                      Un courtier — Pretto (en ligne, 100+ banques) ou un courtier
+                      local à {user.ville} — défend votre dossier. Gratuit pour
+                      vous, vous gardez la main, vous n'êtes pas engagés.
                     </p>
-                    <span className={styles.optionCta}>Démarrer avec Pretto →</span>
+                    <span className={styles.optionCta}>Comparer les courtiers →</span>
                   </a>
                   <a href="#" className={styles.optionCard}>
-                    <span className={styles.optionEmoji}>🏛️</span>
-                    <h4>Voir les courtiers à {user.ville}</h4>
+                    <span className={styles.optionEmoji}>🏦</span>
+                    <h4>Aller voir votre banque actuelle</h4>
                     <p>
-                      3 courtiers locaux indépendants. Rendez-vous en agence ou
-                      visio, vous choisissez.
+                      On vous prépare la checklist du dossier (bulletins, contrats,
+                      relevés, projet). Votre conseiller voit le rapport Bankin'
+                      et a un point de comparaison clair.
                     </p>
-                    <span className={styles.optionCta}>Voir les courtiers →</span>
+                    <span className={styles.optionCta}>Préparer mon dossier →</span>
                   </a>
                   <a href="#" className={styles.optionCard}>
                     <span className={styles.optionEmoji}>📌</span>
