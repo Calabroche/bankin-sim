@@ -565,23 +565,52 @@ export default function SimulateurPage() {
               vous changez d'avis — le bon scénario, c'est le vôtre.
             </p>
 
+            {/* Garde-fou pédago : explique pourquoi un crédit en cours
+                ne change pas le solde mais réduit le prix max. */}
+            {user.charges > 0 && (
+              <div
+                className={styles.scenarioNote}
+                style={{
+                  margin: "0 auto 24px",
+                  maxWidth: 820,
+                  padding: "12px 16px",
+                  background: "#FFF6E5",
+                  border: "1px solid #FFE0AC",
+                  borderRadius: 12,
+                  color: "#7A4400",
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                }}
+              >
+                💡 <strong>Vos {formatEUR(user.charges)} de crédits en cours</strong> n'apparaissent
+                pas dans le solde : ils sont absorbés par la mensualité, qui baisse pour que le total
+                d'endettement reste à 27 / 33 / 35 %. Conséquence : un crédit en cours{" "}
+                <strong>ne réduit pas votre reste à vivre, il réduit le prix du bien que vous pouvez acheter.</strong>
+              </div>
+            )}
+
             <div className={styles.scenarios}>
               {scenarios.map((s) => {
                 const isSelected = s.key === scenarioKey;
                 const isRecommended = s.key === "cible";
+                /* Solde aujourd'hui : mêmes dépenses + loyer actuel, pour
+                   donner un point de référence à l'utilisateur. */
+                const sumOtherDepenses = activeCategories.reduce((sum, c) => {
+                  if (c.id === "logement") return sum;
+                  const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
+                  return sum + baseActuel;
+                }, 0);
+                const loyerActuel = customActualBudget["logement"] != null
+                  ? customActualBudget["logement"]
+                  : (activeCategories.find((c) => c.id === "logement")?.actuel ?? user.loyerActuel);
+                const soldeAujourdhui = totalRevenue - user.charges - loyerActuel - sumOtherDepenses;
                 /* Solde "brut" du scénario : on ne swappe QUE le loyer
                    par la mensualité, sans appliquer les suggestions de
                    coupes Loisirs/Vacances/etc. Sinon le solde monterait
                    quand l'endettement augmente, ce qui est trompeur.
                    Les arbitrages s'appliquent au Step 4 (Impact). */
-                const soldeProj =
-                  totalRevenue -
-                  user.charges -
-                  activeCategories.reduce((sum, c) => {
-                    const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
-                    if (c.id === "logement") return sum + s.mensualite;
-                    return sum + baseActuel;
-                  }, 0);
+                const soldeProj = totalRevenue - user.charges - s.mensualite - sumOtherDepenses;
+                const soldeDelta = soldeProj - soldeAujourdhui;
                 return (
                   <button
                     key={s.key}
@@ -609,6 +638,17 @@ export default function SimulateurPage() {
                       <div className={`${styles.scenarioRow} ${styles.solde} ${soldeProj < 0 ? styles.bad : ""}`}>
                         <span>Solde fin de mois</span>
                         <strong>{formatEUR(soldeProj, { withSign: true })}</strong>
+                      </div>
+                      <div
+                        className={styles.scenarioRow}
+                        style={{ opacity: 0.7, fontSize: 13, marginTop: -4 }}
+                      >
+                        <span>
+                          Aujourd'hui : {formatEUR(soldeAujourdhui, { withSign: true })}
+                        </span>
+                        <strong style={{ color: soldeDelta >= 0 ? "#1F9D7A" : "#D14545" }}>
+                          {soldeDelta >= 0 ? "+ " : "− "}{formatEUR(Math.abs(soldeDelta))}
+                        </strong>
                       </div>
                     </div>
 
