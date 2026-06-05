@@ -179,6 +179,8 @@ function buildScenarios(u: UserData): Scenario[] {
   const apport = u.apportProjet;
   const ptz = u.primoAccedant && u.situation === "locataire" ? ptzFromKids(u.enfants) : 0;
   const totalRev = computeTotalRevenue(u);
+  // Plafond réglementaire HCSF : 35 % d'endettement TOUTES dettes confondues.
+  // La mensualité disponible pour le prêt = (totalRev × 35 %) − charges crédits en cours.
   const maxMensualite = Math.max(0, totalRev * 0.35 - u.charges);
 
   const tiers: { key: Scenario["key"]; name: string; tag: string; pct: number; adjustments: Record<string, number>; impactLine: string }[] = [
@@ -209,7 +211,12 @@ function buildScenarios(u: UserData): Scenario[] {
   ];
 
   return tiers.map((t) => {
-    const targetMensualite = Math.round(totalRev * t.pct);
+    // Le pct est un taux d'endettement TOTAL (mensualité + crédits en cours).
+    // Ce qui reste pour la mensualité du prêt = totalRev × pct − charges.
+    // Si on ne soustrait pas les charges, tous les scénarios s'écrasent
+    // sur le plafond 35 % dès que les charges montent ou que les revenus
+    // sont élevés — chaque tier perd sa différenciation.
+    const targetMensualite = Math.max(0, Math.round(totalRev * t.pct - u.charges));
     const mensualite = Math.min(targetMensualite, Math.round(maxMensualite));
     const capital = capacityFromMonthly(mensualite, duree, taux);
     const prixMax = capital + apport + ptz;
