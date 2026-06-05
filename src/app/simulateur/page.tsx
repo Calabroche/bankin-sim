@@ -134,7 +134,7 @@ const CATEGORIES: CatBudget[] = [
   { id: "epargne_enfants", nom: "Épargne enfants",         emoji: "💰", actuel: 200 },
   { id: "essence",         nom: "Essence & transport",     emoji: "⛽", actuel: 150 },
   { id: "courant",         nom: "Dépenses non prévues",    emoji: "🛠️", actuel: 170 },
-  { id: "epargne",         nom: "Épargne mensuelle",       emoji: "🐷", actuel: 800 },
+  { id: "epargne",         nom: "Épargne mensuelle",       emoji: "💵", actuel: 800 },
 ];
 
 /* ── Helpers ─────────────────────────────────────────────────────── */
