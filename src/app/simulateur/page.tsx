@@ -1003,11 +1003,63 @@ export default function SimulateurPage() {
                   <h2>
                     {user.prenom}{user.enCouple ? ` & ${user.conjoint}` : ""}, votre scénario {scenario.name.toLowerCase()} est solide.
                   </h2>
+
+                  {/* Les 3 chiffres clés en gros — c'est la conclusion
+                      du simulateur, on veut qu'ils sautent aux yeux
+                      avant le texte rassurant. */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: 18,
+                      margin: "20px 0 16px",
+                      position: "relative",
+                    }}
+                  >
+                    {[
+                      { label: "Bien jusqu'à", value: formatEUR(scenario.prixMax) },
+                      { label: "Mensualité", value: formatEUR(scenario.mensualite) + " / mois" },
+                      { label: "Taux d'endettement", value: `${scenario.endettementPct} %` },
+                    ].map((stat, i) => (
+                      <div
+                        key={stat.label}
+                        style={{
+                          background: "rgba(255, 255, 255, 0.12)",
+                          border: "1px solid rgba(255, 255, 255, 0.18)",
+                          borderRadius: 14,
+                          padding: "14px 18px",
+                          backdropFilter: "blur(8px)",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 800,
+                            letterSpacing: 1.2,
+                            textTransform: "uppercase",
+                            color: "rgba(255, 255, 255, 0.75)",
+                            marginBottom: 6,
+                          }}
+                        >
+                          {stat.label}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: i === 0 ? 28 : 24,
+                            fontWeight: 900,
+                            letterSpacing: -0.8,
+                            lineHeight: 1.05,
+                            color: "#fff",
+                          }}
+                        >
+                          {stat.value}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
                   <p>
-                    Un bien jusqu'à <strong>{formatEUR(scenario.prixMax)}</strong>, mensualité
-                    {" "}<strong>{formatEUR(scenario.mensualite)}</strong>, taux d'endettement
-                    {" "}<strong>{scenario.endettementPct} %</strong>. Votre dossier est rassurant
-                    pour une banque : {describeContrats(user).toLowerCase().includes("cdi") ? "contrats stables" : "revenus solides"}
+                    Votre dossier est rassurant pour une banque : {describeContrats(user).toLowerCase().includes("cdi") ? "contrats stables" : "revenus solides"}
                     {user.primoAccedant ? ", primo-accédants éligibles PTZ" : ""}.
                   </p>
                 </div>
