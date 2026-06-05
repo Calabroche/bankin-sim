@@ -264,7 +264,7 @@ function buildStressOptions(u: UserData): StressOption[] {
     {
       id: "troisieme_enfant",
       emoji: "🍼",
-      title: "Un 3ᵉ enfant",
+      title: u.enfants === 0 ? "Un premier enfant" : "Un nouvel enfant",
       description: "Crèche + temps partiel pendant les premiers mois.",
       monthlyImpact: -680,
       mitigation: "Ajustement budget Loisirs + activation épargne projet pour 18 mois.",
