@@ -141,15 +141,15 @@
   font-weight: 800;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 999px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .title {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 900;
   letter-spacing: -1.2px;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   line-height: 1.1;
 }
 .title em {
@@ -160,10 +160,10 @@
   color: transparent;
 }
 .lead {
-  font-size: 17px;
+  font-size: 15px;
   color: #6E6A95;
-  margin: 0 0 32px;
-  line-height: 1.55;
+  margin: 0 0 20px;
+  line-height: 1.5;
   max-width: 620px;
 }
 
@@ -172,7 +172,7 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 28px;
+  margin-top: 20px;
 }
 .btnPrimary {
   display: inline-flex;
@@ -896,14 +896,14 @@
 .scenarios {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-top: 14px;
+  gap: 16px;
+  margin-top: 10px;
 }
 .scenarioCard {
   background: #fff;
   border: 2px solid #E4ECFB;
-  border-radius: 20px;
-  padding: 22px 22px 24px;
+  border-radius: 18px;
+  padding: 16px 18px 18px;
   text-align: left;
   font-family: inherit;
   cursor: pointer;
@@ -941,39 +941,39 @@
   box-shadow: 0 6px 16px rgba(92, 80, 232, 0.35);
 }
 .scenarioName {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   color: #5C50E8;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .scenarioTag {
   font-size: 12px;
   color: #6E6A95;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 .scenarioPrice {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 900;
   letter-spacing: -1px;
   line-height: 1;
   color: #1B1A3B;
 }
-.scenarioPriceLbl { font-size: 12px; color: #6E6A95; margin-top: 4px; font-weight: 600; }
+.scenarioPriceLbl { font-size: 11px; color: #6E6A95; margin-top: 3px; font-weight: 600; }
 .scenarioBody {
-  margin: 18px 0;
+  margin: 12px 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
   flex: 1;
 }
 .scenarioRow {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 12.5px;
   color: #6E6A95;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px solid #F0F0F8;
 }
 .scenarioRow:last-child { border-bottom: none; }
@@ -983,21 +983,21 @@
 .scenarioImpact {
   background: #F4F0FF;
   border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 12.5px;
+  padding: 8px 10px;
+  font-size: 12px;
   color: #4A4680;
-  line-height: 1.5;
+  line-height: 1.45;
   margin-top: 4px;
 }
 .scenarioImpact strong { color: #5C50E8; font-weight: 800; }
 .scenarioCta {
-  margin-top: 18px;
+  margin-top: 12px;
   background: transparent;
   border: 1.5px solid #5C50E8;
   color: #5C50E8;
-  padding: 11px 16px;
+  padding: 9px 14px;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 800;
   cursor: pointer;
   text-align: center;
