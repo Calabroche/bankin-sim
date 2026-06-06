@@ -90,9 +90,12 @@ export default function LandingPage() {
                           <span>Mensualité</span>
                           <strong>1 215 €</strong>
                         </div>
-                        <div className={styles.lapCardSolde}>+ 985 €/mois</div>
+                        <div className={styles.lapCardSolde}>+ 35 €/mois</div>
+                        <div className={styles.lapCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 185 €</strong>
+                        </div>
                         <div className={styles.lapCardImpact}>
-                          <strong>Impact :</strong> ~95 % de votre rythme actuel. Pas de gros arbitrage.
+                          <strong>Impact :</strong> Mensualité &lt; loyer actuel. Aucun arbitrage nécessaire.
                         </div>
                         <div className={styles.lapCardCta}>Choisir ce scénario</div>
                       </div>
@@ -105,9 +108,12 @@ export default function LandingPage() {
                           <span>Mensualité</span>
                           <strong>1 485 €</strong>
                         </div>
-                        <div className={styles.lapCardSolde}>+ 715 €/mois</div>
+                        <div className={styles.lapCardSolde}>+ 145 €/mois</div>
+                        <div className={styles.lapCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 295 €</strong>
+                        </div>
                         <div className={styles.lapCardImpact}>
-                          <strong>Impact :</strong> Loisirs −280 € et Vacances −100 € par mois.
+                          <strong>Impact :</strong> Suggestion : couper Loisirs −280 € et Vacances −100 €.
                         </div>
                         <div className={styles.lapCardCta}>✓ Scénario choisi</div>
                       </div>
@@ -120,9 +126,12 @@ export default function LandingPage() {
                           <span>Mensualité</span>
                           <strong>1 575 €</strong>
                         </div>
-                        <div className={styles.lapCardSolde}>+ 625 €/mois</div>
+                        <div className={styles.lapCardSolde}>+ 255 €/mois</div>
+                        <div className={styles.lapCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 405 €</strong>
+                        </div>
                         <div className={styles.lapCardImpact}>
-                          <strong>Impact :</strong> Loisirs, vacances et épargne enfants réduits.
+                          <strong>Impact :</strong> Marge tendue, plusieurs arbitrages nécessaires.
                         </div>
                         <div className={styles.lapCardCta}>Choisir ce scénario</div>
                       </div>
@@ -148,9 +157,12 @@ export default function LandingPage() {
                           <span>Mensualité 1 215 €</span>
                           <strong>27 % endett.</strong>
                         </div>
-                        <div className={styles.phScenCardSolde}>+ 985 €/mois</div>
+                        <div className={styles.phScenCardSolde}>+ 35 €/mois</div>
+                        <div className={styles.phScenCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 185 €</strong>
+                        </div>
                         <div className={styles.phScenCardImpact}>
-                          <strong>Impact :</strong> ~95 % de votre rythme actuel.
+                          <strong>Impact :</strong> Mensualité &lt; loyer. Aucun arbitrage.
                         </div>
                         <div className={styles.phScenCardCta}>Choisir ce scénario</div>
                       </div>
@@ -163,9 +175,12 @@ export default function LandingPage() {
                           <span>Mensualité 1 485 €</span>
                           <strong>33 % endett.</strong>
                         </div>
-                        <div className={styles.phScenCardSolde}>+ 715 €/mois</div>
+                        <div className={styles.phScenCardSolde}>+ 145 €/mois</div>
+                        <div className={styles.phScenCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 295 €</strong>
+                        </div>
                         <div className={styles.phScenCardImpact}>
-                          <strong>Impact :</strong> Loisirs −280 € et Vacances −100 €/mois.
+                          <strong>Impact :</strong> Couper Loisirs −280 € et Vacances −100 €.
                         </div>
                         <div className={styles.phScenCardCta}>✓ Scénario choisi</div>
                       </div>
@@ -178,9 +193,12 @@ export default function LandingPage() {
                           <span>Mensualité 1 575 €</span>
                           <strong>35 % endett.</strong>
                         </div>
-                        <div className={styles.phScenCardSolde}>+ 625 €/mois</div>
+                        <div className={styles.phScenCardSolde}>+ 255 €/mois</div>
+                        <div className={styles.phScenCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 405 €</strong>
+                        </div>
                         <div className={styles.phScenCardImpact}>
-                          <strong>Impact :</strong> Loisirs, vacances, épargne enfants.
+                          <strong>Impact :</strong> Marge tendue, plusieurs arbitrages.
                         </div>
                         <div className={styles.phScenCardCta}>Choisir ce scénario</div>
                       </div>
