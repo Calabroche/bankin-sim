@@ -703,7 +703,7 @@ export default function SimulateurPage() {
             <div className={styles.actions}>
               <button type="button" className={styles.btnGhost} onClick={goPrev}>← Retour</button>
               <button type="button" className={styles.btnPrimary} onClick={goNext}>
-                Voir mes 3 scénarios →
+                Voir mes {scenarios.length} scénarios →
               </button>
             </div>
           </div>
@@ -713,7 +713,7 @@ export default function SimulateurPage() {
           <div className={styles.mainWide}>
             <span className={styles.eyebrow}>Pas un chiffre — un éventail</span>
             <h1 className={styles.title}>
-              3 scénarios pour <em>vous projeter</em>.
+              {scenarios.length} scénarios pour <em>vous projeter</em>.
             </h1>
             <p className={styles.lead}>
               Chacun avec un impact différent sur votre quotidien. Vous choisissez,
