@@ -135,6 +135,24 @@ export default function LandingPage() {
                         </div>
                         <div className={styles.lapCardCta}>Choisir ce scénario</div>
                       </div>
+                      <div className={styles.lapCard}>
+                        <div className={styles.lapCardName}>PERSONNALISÉ</div>
+                        <div className={styles.lapCardSub}>Selon votre mensualité</div>
+                        <div className={styles.lapCardPrice}>275 k€</div>
+                        <div className={styles.lapCardPriceLbl}>Bien jusqu'à</div>
+                        <div className={styles.lapCardRow}>
+                          <span>Mensualité</span>
+                          <strong>1 200 €</strong>
+                        </div>
+                        <div className={styles.lapCardSolde}>+ 235 €/mois</div>
+                        <div className={styles.lapCardSubSolde}>
+                          26,7 % endett. · <strong>Δ + 385 €</strong>
+                        </div>
+                        <div className={styles.lapCardImpact}>
+                          <strong>Impact :</strong> Mensualité plus douce que Sereine. Beaucoup de marge.
+                        </div>
+                        <div className={styles.lapCardCta}>Choisir ce scénario</div>
+                      </div>
                     </div>
                   </div>
                   <div className={styles.laptopBase} />
@@ -199,6 +217,24 @@ export default function LandingPage() {
                         </div>
                         <div className={styles.phScenCardImpact}>
                           <strong>Impact :</strong> Marge tendue, plusieurs arbitrages.
+                        </div>
+                        <div className={styles.phScenCardCta}>Choisir ce scénario</div>
+                      </div>
+                      <div className={styles.phScenCard}>
+                        <div className={styles.phScenCardHead}>
+                          <span className={styles.phScenCardName}>Personnalisé</span>
+                          <span className={styles.phScenCardPrice}>275 k€</span>
+                        </div>
+                        <div className={styles.phScenCardRow}>
+                          <span>Mensualité 1 200 €</span>
+                          <strong>26,7 % endett.</strong>
+                        </div>
+                        <div className={styles.phScenCardSolde}>+ 235 €/mois</div>
+                        <div className={styles.phScenCardSubSolde}>
+                          Aujourd'hui −150 € · <strong>Δ + 385 €</strong>
+                        </div>
+                        <div className={styles.phScenCardImpact}>
+                          <strong>Impact :</strong> Selon la mensualité que vous choisissez.
                         </div>
                         <div className={styles.phScenCardCta}>Choisir ce scénario</div>
                       </div>
