@@ -362,7 +362,7 @@ const MOMENT_OPTIONS: { id: Moment; emoji: string; title: string; desc: string }
     id: "loyer",
     emoji: "💸",
     title: "Marre de payer un loyer",
-    desc: "On donne 1 400 € par mois à quelqu'un d'autre — autant rembourser le nôtre.",
+    desc: "Chaque mois on dépense une somme pour notre loyer. Autant rembourser notre propre bien.",
   },
   {
     id: "espace",
@@ -505,7 +505,7 @@ export default function SimulateurPage() {
         tone: "good" as const,
         soldeApres,
         months: Infinity,
-        text: "Absorbé sans toucher à votre épargne — votre solde reste à l'équilibre ou positif.",
+        text: "Absorbé sans toucher à votre épargne. Votre solde reste à l'équilibre ou positif.",
       };
     }
     if (cushionAfterApport === 0) {
@@ -579,7 +579,7 @@ export default function SimulateurPage() {
           </div>
           <div className={styles.progressMeta}>
             <strong>Étape {step + 1} / 6</strong>
-            <span className={styles.progressLabel}> — {STEP_LABELS[step]}</span>
+            <span className={styles.progressLabel}> · {STEP_LABELS[step]}</span>
           </div>
         </div>
       </div>
@@ -593,7 +593,7 @@ export default function SimulateurPage() {
               <em>On regarde ensemble si c'est faisable.</em>
             </h1>
             <p className={styles.lead}>
-              On adapte le calcul à votre situation — pas à un dossier bancaire.
+              On adapte le calcul à votre situation, pas à un dossier bancaire.
               Pourquoi ce projet aujourd'hui ?
             </p>
             <div className={styles.momentGrid}>
@@ -711,13 +711,13 @@ export default function SimulateurPage() {
 
         {step === 2 && (
           <div className={styles.mainWide}>
-            <span className={styles.eyebrow}>Pas un chiffre — un éventail</span>
+            <span className={styles.eyebrow}>Pas un chiffre, un éventail</span>
             <h1 className={styles.title}>
               {scenarios.length} scénarios pour <em>vous projeter</em>.
             </h1>
             <p className={styles.lead}>
               Chacun avec un impact différent sur votre quotidien. Vous choisissez,
-              vous changez d'avis — le bon scénario, c'est le vôtre.
+              vous changez d'avis. Le bon scénario, c'est le vôtre.
             </p>
 
             {/* Garde-fou pédago : explique pourquoi un crédit en cours
@@ -929,7 +929,7 @@ export default function SimulateurPage() {
               Votre quotidien <em>avec ce projet.</em>
             </h1>
             <p className={styles.lead}>
-              Pas un score bancaire — vos vraies catégories Bankin', avant / après.
+              Pas un score bancaire, vos vraies catégories Bankin', avant et après.
               Les arbitrages sont visibles et négociables.
             </p>
 
@@ -1159,7 +1159,7 @@ export default function SimulateurPage() {
                     {baselineSousTension
                       ? `⚠️ Votre projet ${scenario.name} démarre déjà sous tension`
                       : precautionSousNorme
-                      ? `Point de départ : votre projet ${scenario.name} — matelas faible`
+                      ? `Point de départ : votre projet ${scenario.name}, matelas faible`
                       : `Point de départ : votre projet ${scenario.name}`}
                   </strong>
                   Solde projeté <strong>{formatEUR(soldeNouveau, { withSign: true })} / mois</strong>{" "}
@@ -1177,7 +1177,7 @@ export default function SimulateurPage() {
                     <>
                       {" "}Il vous manque{" "}
                       <strong>{formatEUR(precautionRecommandee - liquideApresApport)}</strong>{" "}
-                      pour atteindre la précaution recommandée — à reconstituer dans les mois
+                      pour atteindre la précaution recommandée. À reconstituer dans les mois
                       qui suivent l'achat avant que la vie ne change.
                     </>
                   )}
@@ -1253,14 +1253,14 @@ export default function SimulateurPage() {
               >
                 {baselineSousTension ? (
                   <>
-                    <strong>Aucun aléa testé — et déjà dans le rouge.</strong>{" "}
+                    <strong>Aucun aléa testé et déjà dans le rouge.</strong>{" "}
                     Avant d'aller plus loin, revenez à la step Impact et coupez des
                     dépenses, ou choisissez un scénario moins endetté.
                   </>
                 ) : (
                   <>
                     <strong>Aucun stress-test activé.</strong> Cliquez les scénarios
-                    qui vous inquiètent — l'app calcule combien de mois votre matelas
+                    qui vous inquiètent. L'app calcule combien de mois votre matelas
                     après apport ({formatEUR(cushionAfterApport)}) absorbe le choc.
                   </>
                 )}
@@ -1279,7 +1279,7 @@ export default function SimulateurPage() {
               >
                 <strong style={{ display: "block", marginBottom: 4 }}>
                   {combinedVerdict.tone === "good" && "✓ Combinés, ces aléas sont absorbables."}
-                  {combinedVerdict.tone === "okay" && "● Combinés, ces aléas sont absorbables — mais sur un temps limité."}
+                  {combinedVerdict.tone === "okay" && "● Combinés, ces aléas sont absorbables, mais sur un temps limité."}
                   {combinedVerdict.tone === "warn" && "⚠️ Combinés, ces aléas mettent le projet sous tension."}
                   {combinedVerdict.tone === "bad" && "✗ Combinés, ces aléas ne sont pas absorbables avec votre épargne actuelle."}
                 </strong>
@@ -1455,8 +1455,8 @@ export default function SimulateurPage() {
                     <span className={styles.optionEmoji}>🤝</span>
                     <h4>Faire négocier par un courtier</h4>
                     <p>
-                      Un courtier — Pretto (en ligne, 100+ banques) ou un courtier
-                      local à {user.ville} — défend votre dossier. Gratuit pour
+                      Un courtier (Pretto en ligne avec 100+ banques, ou un courtier
+                      local à {user.ville}) défend votre dossier. Gratuit pour
                       vous, vous gardez la main, vous n'êtes pas engagés.
                     </p>
                     <span className={styles.optionCta}>Comparer les courtiers →</span>
@@ -1486,7 +1486,7 @@ export default function SimulateurPage() {
               <>
                 <div className={`${styles.verdict} ${styles.notReady}`}>
                   <span className={styles.verdictTag}>Encore un peu de chemin</span>
-                  <h2>Vous y êtes presque — voici comment accélérer.</h2>
+                  <h2>Vous y êtes presque, voici comment accélérer.</h2>
                   <p>
                     Avec votre rythme actuel d'épargne, le scénario {scenario.name.toLowerCase()}
                     {" "}reste atteignable. On vous propose 3 leviers, choisissez celui
@@ -1795,7 +1795,7 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
       <div className={styles.editPerson}>
         <div className={styles.editPersonHead}>
           <span className={styles.editPersonDot}>V</span>
-          <span>Vous — {contratLabel(draft.contrat1)}</span>
+          <span>Vous · {contratLabel(draft.contrat1)}</span>
         </div>
         <div className={styles.editGroup}>
           <label className={styles.editLabel}>Statut professionnel</label>
@@ -1820,7 +1820,7 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
         <div className={styles.editPerson}>
           <div className={styles.editPersonHead}>
             <span className={`${styles.editPersonDot} ${styles.dotC}`}>C</span>
-            <span>Conjoint(e) — {contratLabel(draft.contrat2)}</span>
+            <span>Conjoint(e) · {contratLabel(draft.contrat2)}</span>
           </div>
           <div className={styles.editGroup}>
             <label className={styles.editLabel}>Statut professionnel</label>
@@ -2024,6 +2024,15 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
         )}
       </div>
 
+      {/* ── MENSUALITÉ SOUHAITÉE ──────────────────────────────────
+          Section distincte du bloc Projet immobilier parce que c'est
+          un paramètre optionnel qui déclenche un 4ème scénario, pas
+          un simple input de plus. On veut qu'il soit visible et qu'il
+          respire. */}
+      <div className={styles.editSectionTitle} style={{ marginTop: 28 }}>
+        Mensualité souhaitée (optionnel)
+      </div>
+
       <div className={styles.editGroup}>
         <label className={styles.editLabel}>Mensualité maximale souhaitée</label>
         <div className={styles.editInputWrap}>
@@ -2040,8 +2049,8 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
         <div className={styles.editComputed} style={{ background: "#EEF7FF", color: "#1B3A6B" }}>
           <span>
             {draft.mensualiteMaxSouhaitee > 0
-              ? `Les 3 scénarios seront recalculés en respectant ce plafond de ${formatEUR(draft.mensualiteMaxSouhaitee)} / mois.`
-              : "Laissez à 0 pour le calcul automatique (35 % des revenus − charges). Mettez une valeur si un seul des deux conjoints contracte le prêt, ou si vous voulez plafonner votre effort mensuel."}
+              ? `Un 4ème scénario "Personnalisé" sera ajouté à l'étape suivante avec cette mensualité de ${formatEUR(draft.mensualiteMaxSouhaitee)} / mois.`
+              : "Laissez à 0 pour ne voir que les 3 scénarios standards. Mettez une valeur si un seul des deux conjoints contracte le prêt, ou si vous voulez plafonner votre effort mensuel. Un 4ème scénario sur mesure apparaîtra alors à l'étape suivante."}
           </span>
         </div>
       </div>

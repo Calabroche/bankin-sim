@@ -2,7 +2,7 @@ import Link from "next/link";
 import styles from "./landing.module.css";
 
 export const metadata = {
-  title: "Bankin' — L'app tout-en-1 pour mieux gérer son argent",
+  title: "Bankin' · L'app tout-en-1 pour mieux gérer son argent",
   description:
     "Calculez votre capacité d'emprunt en 2 minutes et comparez les meilleurs taux du marché. Tous vos comptes, 1 seule app, 0 stress.",
 };
@@ -53,8 +53,8 @@ export default function LandingPage() {
                 </h1>
                 <p className={styles.heroSub}>
                   Bankin' connaît déjà vos revenus, vos charges et votre rythme
-                  d'épargne. On vous montre <strong>3 scénarios et l'impact réel sur votre quotidien</strong> —
-                  pas un score bancaire.
+                  d'épargne. On vous montre <strong>3 scénarios et l'impact réel sur votre quotidien</strong>.
+                  Pas un score bancaire.
                 </p>
                 <div className={styles.heroCtas}>
                   <Link href="/simulateur" className={styles.heroCta}>
@@ -76,7 +76,7 @@ export default function LandingPage() {
                 {/* Laptop — back, showing the 3 scénarios view */}
                 <div className={styles.laptop} aria-hidden="true">
                   <div className={styles.laptopScreen}>
-                    <span className={styles.lapEyebrow}>PAS UN CHIFFRE — UN ÉVENTAIL</span>
+                    <span className={styles.lapEyebrow}>PAS UN CHIFFRE, UN ÉVENTAIL</span>
                     <h3 className={styles.lapTitle}>
                       3 scénarios pour <em>vous projeter</em>
                     </h3>
@@ -333,7 +333,7 @@ export default function LandingPage() {
             <h2>L'app tout-en-1 pour mieux gérer son argent</h2>
             <p>
               Pilotez vos dépenses, anticipez votre solde de fin de mois,
-              gagnez de l'argent avec le cashback — et simulez votre prêt
+              gagnez de l'argent avec le cashback, et simulez votre prêt
               immobilier en 2 minutes.
             </p>
           </div>
@@ -350,7 +350,7 @@ export default function LandingPage() {
               <div className={`${styles.featureIcon} ${styles.green}`}>📊</div>
               <h3>Solde fin de mois anticipé</h3>
               <p>
-                Projection mise à jour en temps réel — vos transactions
+                Projection mise à jour en temps réel. Vos transactions
                 récurrentes et opérations à venir sont prises en compte.
               </p>
             </div>
@@ -384,7 +384,7 @@ export default function LandingPage() {
         <div className={styles.container}>
           <div className={styles.sectionHead}>
             <h2>Pourquoi 6 millions de Français nous font confiance</h2>
-            <p>Plus qu'une app — votre allié pour mieux décider de votre argent.</p>
+            <p>Plus qu'une app, votre allié pour mieux décider de votre argent.</p>
           </div>
           <div className={styles.steps}>
             <div className={styles.stepCard}>
@@ -400,7 +400,7 @@ export default function LandingPage() {
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>🚀</div>
               <h3>Toujours en avance</h3>
-              <p>Cashback, projection budget, IA — on construit le futur de l'argent avec vous.</p>
+              <p>Cashback, projection budget, IA. On construit le futur de l'argent avec vous.</p>
             </div>
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>🔒</div>
@@ -499,7 +499,7 @@ export default function LandingPage() {
             <div className={styles.testimonial}>
               <div className={styles.stars}>★★★★★</div>
               <p>
-                « Enfin un outil qui gère bien le profil indépendant — calcul à
+                « Enfin un outil qui gère bien le profil indépendant. Calcul à
                 70 % du BIC, exigence de 3 ans d'activité. Très transparent. »
               </p>
               <div className={styles.author}>
@@ -588,7 +588,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className={styles.footerBottom}>
-            <span>© 2026 Bankin' — Concept produit · Florian Calabrese</span>
+            <span>© 2026 Bankin' · Concept produit · Florian Calabrese</span>
             <span>ACPR n° 14-058 · ORIAS n° 21 003 542</span>
           </div>
         </div>
