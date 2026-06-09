@@ -899,9 +899,16 @@
   gap: 14px;
   margin-top: 8px;
 }
-/* Quand l'utilisateur a fixé une mensualité souhaitée, on passe en 4 cards. */
+/* Quand l'utilisateur a fixé une mensualité souhaitée, on passe en 4 cards.
+   On élargit aussi la grille au-delà du conteneur mainWide (1100 px) pour
+   donner plus d'air à chaque card, recentré par rapport au viewport et
+   capé par la largeur visible. */
 .scenarios.scenariosFour {
   grid-template-columns: repeat(4, 1fr);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100vw - 48px), 1400px);
 }
 .scenarioCard {
   background: #fff;
