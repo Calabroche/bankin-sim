@@ -358,15 +358,20 @@ export default function SimulateurPage() {
   /* Catégories actives selon le profil : on cache les lignes "enfants" et
      "épargne enfants" si l'utilisateur a déclaré 0 enfant. Pas pertinent
      dans son budget réel, et ça pollue la décision.
-     La ligne épargne reçoit son défaut depuis user.epargneMensuelle pour
-     rester synchro avec ce qui est déclaré dans le panneau d'édition. */
+     Les lignes logement et épargne reçoivent leur défaut depuis le profil
+     utilisateur (user.loyerActuel, user.epargneMensuelle) pour rester
+     synchro avec ce qui est déclaré dans le panneau d'édition. */
   const activeCategories = useMemo(
     () => CATEGORIES
       .filter((c) =>
         user.enfants > 0 ? true : c.id !== "enfants" && c.id !== "epargne_enfants"
       )
-      .map((c) => (c.id === "epargne" ? { ...c, actuel: user.epargneMensuelle } : c)),
-    [user.enfants, user.epargneMensuelle],
+      .map((c) => {
+        if (c.id === "logement") return { ...c, actuel: user.loyerActuel };
+        if (c.id === "epargne") return { ...c, actuel: user.epargneMensuelle };
+        return c;
+      }),
+    [user.enfants, user.epargneMensuelle, user.loyerActuel],
   );
 
   // Compute the new budget for the selected scenario, with optional
@@ -377,13 +382,17 @@ export default function SimulateurPage() {
     return activeCategories.map((cat) => {
       const actuel = customActualBudget[cat.id] != null ? customActualBudget[cat.id] : cat.actuel;
       let nouveau: number;
-      if (cat.id === "logement") {
-        nouveau = scenario.mensualite;
-      } else if (customBudget[cat.id] != null) {
+      if (customBudget[cat.id] != null) {
+        /* Override utilisateur prioritaire sur tout, y compris pour
+           le logement. Cas d'usage : un seul des deux conjoints
+           contracte le prêt, donc la mensualité dans le budget du foyer
+           est inférieure à la projection mécanique du scénario. */
         nouveau = customBudget[cat.id];
+      } else if (cat.id === "logement") {
+        nouveau = scenario.mensualite;
       } else if (scenario.budgetAdjustments[cat.id] != null) {
         /* L'arbitrage suggéré est un PLAFOND : si l'utilisateur dépense
-           déjà moins que la suggestion, on garde son montant — sinon on
+           déjà moins que la suggestion, on garde son montant. Sinon on
            lui imposerait une hausse en prétendant l'aider à couper. */
         nouveau = Math.min(actuel, scenario.budgetAdjustments[cat.id]);
       } else {
@@ -870,8 +879,9 @@ export default function SimulateurPage() {
 
             <div className={styles.budgetHint}>
               <span>
-                💡 <strong>Vos arbitrages, votre choix.</strong> Cliquez sur un montant
-                pour ajuster vos dépenses futures. Logement = mensualité (verrouillé).
+                💡 <strong>Vos arbitrages, votre choix.</strong> Cliquez sur n'importe
+                quel montant pour l'ajuster, y compris le loyer actuel et la mensualité.
+                Utile par exemple si un seul des deux contracte le prêt.
               </span>
               {hasCustomEdits && (
                 <button type="button" className={styles.budgetReset} onClick={() => setCustomBudget({})}>
@@ -923,7 +933,12 @@ export default function SimulateurPage() {
               {newBudget.map((c) => {
                 const diff = c.nouveau - c.actuel;
                 const cls = diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat;
-                const isLocked = c.id === "logement";
+                /* Tout est éditable, y compris le logement. Cas d'usage
+                   logement aujourd'hui : Bankin connait le loyer via les
+                   prélèvements mais l'utilisateur peut vouloir corriger.
+                   Cas d'usage logement avec ce projet : un seul des deux
+                   contracte le prêt, donc la mensualité réellement payée
+                   par le foyer est inférieure à la projection du scénario. */
                 return (
                   <div key={c.id} className={styles.budgetRow}>
                     <div className={styles.budgetCat}>
@@ -931,50 +946,42 @@ export default function SimulateurPage() {
                       <span>{c.nom}</span>
                     </div>
                     <div className={styles.budgetVal}>
-                      {isLocked ? (
-                        formatEUR(c.actuel)
-                      ) : (
-                        <label className={styles.budgetEditWrap}>
-                          <input
-                            type="number"
-                            className={styles.budgetEdit}
-                            value={c.actuel}
-                            onChange={(e) =>
-                              setCustomActualBudget((prev) => ({
-                                ...prev,
-                                [c.id]: Math.max(0, Number(e.target.value) || 0),
-                              }))
-                            }
-                            min={0}
-                            step={10}
-                            aria-label={`Montant ${c.nom} aujourd'hui`}
-                          />
-                          <span className={styles.budgetEditUnit}>€</span>
-                        </label>
-                      )}
+                      <label className={styles.budgetEditWrap}>
+                        <input
+                          type="number"
+                          className={styles.budgetEdit}
+                          value={c.actuel}
+                          onChange={(e) =>
+                            setCustomActualBudget((prev) => ({
+                              ...prev,
+                              [c.id]: Math.max(0, Number(e.target.value) || 0),
+                            }))
+                          }
+                          min={0}
+                          step={10}
+                          aria-label={`Montant ${c.nom} aujourd'hui`}
+                        />
+                        <span className={styles.budgetEditUnit}>€</span>
+                      </label>
                     </div>
                     <div className={`${styles.budgetValDiff} ${cls}`}>
-                      {isLocked ? (
-                        <span className={styles.budgetValLocked}>{formatEUR(c.nouveau)}</span>
-                      ) : (
-                        <label className={styles.budgetEditWrap}>
-                          <input
-                            type="number"
-                            className={styles.budgetEdit}
-                            value={c.nouveau}
-                            onChange={(e) =>
-                              setCustomBudget((prev) => ({
-                                ...prev,
-                                [c.id]: Math.max(0, Number(e.target.value) || 0),
-                              }))
-                            }
-                            min={0}
-                            step={10}
-                            aria-label={`Montant ${c.nom} avec ce projet`}
-                          />
-                          <span className={styles.budgetEditUnit}>€</span>
-                        </label>
-                      )}
+                      <label className={styles.budgetEditWrap}>
+                        <input
+                          type="number"
+                          className={styles.budgetEdit}
+                          value={c.nouveau}
+                          onChange={(e) =>
+                            setCustomBudget((prev) => ({
+                              ...prev,
+                              [c.id]: Math.max(0, Number(e.target.value) || 0),
+                            }))
+                          }
+                          min={0}
+                          step={10}
+                          aria-label={`Montant ${c.nom} avec ce projet`}
+                        />
+                        <span className={styles.budgetEditUnit}>€</span>
+                      </label>
                       {diff > 0 && <span>↑</span>}
                       {diff < 0 && <span>↓</span>}
                     </div>
