@@ -899,6 +899,10 @@
   gap: 14px;
   margin-top: 8px;
 }
+/* Quand l'utilisateur a fixé une mensualité souhaitée, on passe en 4 cards. */
+.scenarios.scenariosFour {
+  grid-template-columns: repeat(4, 1fr);
+}
 .scenarioCard {
   background: #fff;
   border: 2px solid #E4ECFB;
@@ -1498,7 +1502,7 @@
   .lead { font-size: 15px; margin-bottom: 24px; }
   .momentGrid { grid-template-columns: 1fr; }
   .departGrid { grid-template-columns: 1fr; }
-  .scenarios { grid-template-columns: 1fr; }
+  .scenarios, .scenarios.scenariosFour { grid-template-columns: 1fr; }
   .stressGrid { grid-template-columns: 1fr; }
   .options { grid-template-columns: 1fr; }
   .budgetHead, .budgetRow, .budgetFoot {

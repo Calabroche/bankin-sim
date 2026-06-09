@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./simulateur.module.css";
 
 /* ──────────────────────────────────────────────────────────────────────
@@ -166,7 +166,7 @@ function ptzFromKids(kids: number): number {
 /* ── Scenarios ───────────────────────────────────────────────────── */
 
 interface Scenario {
-  key: "sereine" | "cible" | "ambitieux";
+  key: "sereine" | "cible" | "ambitieux" | "personnalise";
   name: string;
   tag: string;
   mensualite: number;       // € total monthly payment toward the loan
@@ -192,12 +192,6 @@ function buildScenarios(u: UserData): Scenario[] {
   // Plafond réglementaire HCSF : 35 % d'endettement TOUTES dettes confondues.
   // La mensualité disponible pour le prêt = (totalRev × 35 %) − charges crédits en cours.
   const maxHcsf = Math.max(0, totalRev * 0.35 - u.charges);
-  /* Si l'utilisateur a fixé un plafond manuel à la step Point de départ
-     (cas : un seul des deux contracte le prêt), on prend le plus
-     contraignant des deux. Sinon, seul le plafond HCSF s'applique. */
-  const maxMensualite = u.mensualiteMaxSouhaitee > 0
-    ? Math.min(maxHcsf, u.mensualiteMaxSouhaitee)
-    : maxHcsf;
 
   const tiers: { key: Scenario["key"]; name: string; tag: string; pct: number; adjustments: Record<string, number>; impactLine: string }[] = [
     {
@@ -226,14 +220,11 @@ function buildScenarios(u: UserData): Scenario[] {
     },
   ];
 
-  return tiers.map((t) => {
+  const scenarios: Scenario[] = tiers.map((t) => {
     // Le pct est un taux d'endettement TOTAL (mensualité + crédits en cours).
     // Ce qui reste pour la mensualité du prêt = totalRev × pct − charges.
-    // Si on ne soustrait pas les charges, tous les scénarios s'écrasent
-    // sur le plafond 35 % dès que les charges montent ou que les revenus
-    // sont élevés — chaque tier perd sa différenciation.
     const targetMensualite = Math.max(0, Math.round(totalRev * t.pct - u.charges));
-    const mensualite = Math.min(targetMensualite, Math.round(maxMensualite));
+    const mensualite = Math.min(targetMensualite, Math.round(maxHcsf));
     const capital = capacityFromMonthly(mensualite, duree, taux);
     const prixMax = capital + apport + ptz;
     return {
@@ -252,6 +243,48 @@ function buildScenarios(u: UserData): Scenario[] {
       impactLine: t.impactLine,
     };
   });
+
+  /* 4ème scénario optionnel "Personnalisé". Apparait uniquement si
+     l'utilisateur a fixé une mensualité maximale souhaitée à la step
+     Point de départ. La mensualité prêt = ce que l'utilisateur a choisi
+     (capé au plafond HCSF si la valeur est délirante), et le taux
+     d'endettement résultant est calculé en remontant : on additionne
+     les charges crédits en cours et on divise par les revenus. */
+  if (u.mensualiteMaxSouhaitee > 0 && totalRev > 0) {
+    const mensualite = Math.min(u.mensualiteMaxSouhaitee, Math.round(maxHcsf));
+    const capital = capacityFromMonthly(mensualite, duree, taux);
+    const prixMax = capital + apport + ptz;
+    const endettementPct = Math.round(((mensualite + u.charges) / totalRev) * 100);
+    /* Texte d'impact dynamique selon le positionnement de la mens
+       choisie par rapport aux 3 tiers. */
+    const mensSereine = scenarios[0]?.mensualite ?? 0;
+    const mensAmbitieux = scenarios[2]?.mensualite ?? 0;
+    let impactLine: string;
+    if (mensualite <= mensSereine) {
+      impactLine = "Mensualité plus douce que le scénario Sereine. Effort très contenu, beaucoup de marge.";
+    } else if (mensualite < mensAmbitieux) {
+      impactLine = "Mensualité intermédiaire, entre Sereine et Ambitieux. Bon compromis sur mesure.";
+    } else {
+      impactLine = "Mensualité au plafond légal. Reste à voir si le quotidien suit.";
+    }
+    scenarios.push({
+      key: "personnalise",
+      name: "Personnalisé",
+      tag: "Selon votre mensualité souhaitée",
+      mensualite,
+      capital,
+      apport,
+      ptz,
+      prixMax,
+      duree,
+      taux,
+      endettementPct,
+      budgetAdjustments: {},
+      impactLine,
+    });
+  }
+
+  return scenarios;
 }
 
 /* ── Stress tests ────────────────────────────────────────────────── */
@@ -352,6 +385,24 @@ export default function SimulateurPage() {
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const scenarios = useMemo(() => buildScenarios(user), [user]);
   const [scenarioKey, setScenarioKey] = useState<Scenario["key"]>("cible");
+  /* Si l'utilisateur avait sélectionné "personnalise" puis a retiré le
+     plafond de mensualité à la step 1, scenarios ne contient plus cette
+     clé. On retombe sur Cible silencieusement pour éviter un crash. */
+  useEffect(() => {
+    if (!scenarios.find((s) => s.key === scenarioKey)) {
+      setScenarioKey("cible");
+    }
+  }, [scenarios, scenarioKey]);
+  /* Quand la 4ème card Personnalisé apparait (l'utilisateur vient de
+     fixer une mensualité souhaitée), on bascule automatiquement la
+     sélection dessus. C'est ce qu'il a explicitement demandé en
+     remplissant le champ — pas la peine de le forcer à cliquer. La
+     dépendance porte sur le booléen scenarios.length === 4, donc on
+     ne fire qu'à la transition 3 → 4 et pas à chaque modif de mens. */
+  const hasPersonnalise = scenarios.length === 4;
+  useEffect(() => {
+    if (hasPersonnalise) setScenarioKey("personnalise");
+  }, [hasPersonnalise]);
   const [activeStresses, setActiveStresses] = useState<Set<string>>(new Set());
   /* customBudget : overrides utilisateur sur la colonne "Avec ce projet".
      Reset à chaque changement de scénario pour repartir des suggestions. */
@@ -693,10 +744,15 @@ export default function SimulateurPage() {
               </div>
             )}
 
-            <div className={styles.scenarios}>
+            <div className={`${styles.scenarios} ${scenarios.length === 4 ? styles.scenariosFour : ""}`}>
               {scenarios.map((s) => {
                 const isSelected = s.key === scenarioKey;
-                const isRecommended = s.key === "cible";
+                /* Quand le 4ème scénario (Personnalisé) existe, c'est
+                   lui qu'on met en avant : c'est le choix explicite de
+                   l'utilisateur. Sinon on garde Cible comme reco. */
+                const isRecommended = scenarios.length === 4
+                  ? s.key === "personnalise"
+                  : s.key === "cible";
                 /* Solde aujourd'hui : référence stable, mêmes dépenses
                    actuelles pour les trois cards. */
                 const sumActuel = activeCategories.reduce((sum, c) => {
