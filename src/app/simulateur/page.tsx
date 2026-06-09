@@ -51,6 +51,13 @@ interface UserData {
   travaux: number;
   duree: number;            // années (10-25)
   apportProjet: number;     // € mobilisés (≤ épargneDispo)
+  /* Plafond optionnel sur la mensualité prêt (en € / mois).
+     Si > 0, vient capper le calcul auto des 3 scénarios. Cas d'usage :
+     un seul des deux conjoints contracte le prêt, donc la mensualité
+     réellement payée par le foyer est inférieure à ce que les revenus
+     du couple permettraient. 0 = pas de plafond, on utilise le calcul
+     auto (35 % des revenus − charges). */
+  mensualiteMaxSouhaitee: number;
 
   ville: string;
 }
@@ -89,6 +96,7 @@ const INITIAL_USER: UserData = {
   travaux: 0,
   duree: 25,
   apportProjet: 20000,
+  mensualiteMaxSouhaitee: 0,
 
   ville: "Lyon",
 };
@@ -183,7 +191,13 @@ function buildScenarios(u: UserData): Scenario[] {
   const totalRev = computeTotalRevenue(u);
   // Plafond réglementaire HCSF : 35 % d'endettement TOUTES dettes confondues.
   // La mensualité disponible pour le prêt = (totalRev × 35 %) − charges crédits en cours.
-  const maxMensualite = Math.max(0, totalRev * 0.35 - u.charges);
+  const maxHcsf = Math.max(0, totalRev * 0.35 - u.charges);
+  /* Si l'utilisateur a fixé un plafond manuel à la step Point de départ
+     (cas : un seul des deux contracte le prêt), on prend le plus
+     contraignant des deux. Sinon, seul le plafond HCSF s'applique. */
+  const maxMensualite = u.mensualiteMaxSouhaitee > 0
+    ? Math.min(maxHcsf, u.mensualiteMaxSouhaitee)
+    : maxHcsf;
 
   const tiers: { key: Scenario["key"]; name: string; tag: string; pct: number; adjustments: Record<string, number>; impactLine: string }[] = [
     {
@@ -382,14 +396,15 @@ export default function SimulateurPage() {
     return activeCategories.map((cat) => {
       const actuel = customActualBudget[cat.id] != null ? customActualBudget[cat.id] : cat.actuel;
       let nouveau: number;
-      if (customBudget[cat.id] != null) {
-        /* Override utilisateur prioritaire sur tout, y compris pour
-           le logement. Cas d'usage : un seul des deux conjoints
-           contracte le prêt, donc la mensualité dans le budget du foyer
-           est inférieure à la projection mécanique du scénario. */
-        nouveau = customBudget[cat.id];
-      } else if (cat.id === "logement") {
+      if (cat.id === "logement") {
+        /* La mensualité du logement vient du scénario, qui lui-même
+           respecte le plafond mensualiteMaxSouhaitee fixé à la step 1.
+           On verrouille ici pour éviter deux endroits où modifier la
+           même chose et garantir que l'étape Et maintenant reflète
+           toujours le choix structurel de l'utilisateur. */
         nouveau = scenario.mensualite;
+      } else if (customBudget[cat.id] != null) {
+        nouveau = customBudget[cat.id];
       } else if (scenario.budgetAdjustments[cat.id] != null) {
         /* L'arbitrage suggéré est un PLAFOND : si l'utilisateur dépense
            déjà moins que la suggestion, on garde son montant. Sinon on
@@ -880,8 +895,9 @@ export default function SimulateurPage() {
             <div className={styles.budgetHint}>
               <span>
                 💡 <strong>Vos arbitrages, votre choix.</strong> Cliquez sur n'importe
-                quel montant pour l'ajuster, y compris le loyer actuel et la mensualité.
-                Utile par exemple si un seul des deux contracte le prêt.
+                quel montant pour l'ajuster, y compris le loyer actuel. La mensualité
+                projet est verrouillée ici. Pour la plafonner (cas un seul emprunteur),
+                revenez à la step 1 et renseignez « Mensualité maximale souhaitée ».
               </span>
               {hasCustomEdits && (
                 <button type="button" className={styles.budgetReset} onClick={() => setCustomBudget({})}>
@@ -933,12 +949,13 @@ export default function SimulateurPage() {
               {newBudget.map((c) => {
                 const diff = c.nouveau - c.actuel;
                 const cls = diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat;
-                /* Tout est éditable, y compris le logement. Cas d'usage
-                   logement aujourd'hui : Bankin connait le loyer via les
-                   prélèvements mais l'utilisateur peut vouloir corriger.
-                   Cas d'usage logement avec ce projet : un seul des deux
-                   contracte le prêt, donc la mensualité réellement payée
-                   par le foyer est inférieure à la projection du scénario. */
+                /* La cellule Aujourd'hui est éditable pour tous (y compris
+                   le loyer actuel, que Bankin connait mais que l'utilisateur
+                   peut vouloir corriger). La cellule Avec ce projet est
+                   verrouillée uniquement pour le logement (la mensualité
+                   se choisit à la step 1 via mensualiteMaxSouhaitee pour
+                   que le choix propage à toutes les étapes suivantes). */
+                const projetLocked = c.id === "logement";
                 return (
                   <div key={c.id} className={styles.budgetRow}>
                     <div className={styles.budgetCat}>
@@ -965,23 +982,27 @@ export default function SimulateurPage() {
                       </label>
                     </div>
                     <div className={`${styles.budgetValDiff} ${cls}`}>
-                      <label className={styles.budgetEditWrap}>
-                        <input
-                          type="number"
-                          className={styles.budgetEdit}
-                          value={c.nouveau}
-                          onChange={(e) =>
-                            setCustomBudget((prev) => ({
-                              ...prev,
-                              [c.id]: Math.max(0, Number(e.target.value) || 0),
-                            }))
-                          }
-                          min={0}
-                          step={10}
-                          aria-label={`Montant ${c.nom} avec ce projet`}
-                        />
-                        <span className={styles.budgetEditUnit}>€</span>
-                      </label>
+                      {projetLocked ? (
+                        <span className={styles.budgetValLocked}>{formatEUR(c.nouveau)}</span>
+                      ) : (
+                        <label className={styles.budgetEditWrap}>
+                          <input
+                            type="number"
+                            className={styles.budgetEdit}
+                            value={c.nouveau}
+                            onChange={(e) =>
+                              setCustomBudget((prev) => ({
+                                ...prev,
+                                [c.id]: Math.max(0, Number(e.target.value) || 0),
+                              }))
+                            }
+                            min={0}
+                            step={10}
+                            aria-label={`Montant ${c.nom} avec ce projet`}
+                          />
+                          <span className={styles.budgetEditUnit}>€</span>
+                        </label>
+                      )}
                       {diff > 0 && <span>↑</span>}
                       {diff < 0 && <span>↓</span>}
                     </div>
@@ -1945,6 +1966,28 @@ function EditPanel({ draft, onChange, onSave, onCancel }: EditPanelProps) {
             <span>⚠️ L'apport dépasse l'épargne disponible totale ({formatEUR(draft.epargneDispo)}).</span>
           </div>
         )}
+      </div>
+
+      <div className={styles.editGroup}>
+        <label className={styles.editLabel}>Mensualité maximale souhaitée</label>
+        <div className={styles.editInputWrap}>
+          <input
+            type="number"
+            className={styles.editInput}
+            value={draft.mensualiteMaxSouhaitee}
+            onChange={(e) => update({ mensualiteMaxSouhaitee: Number(e.target.value) || 0 })}
+            min={0}
+            step={50}
+          />
+          <span className={styles.editUnit}>€ / mois (0 = pas de plafond)</span>
+        </div>
+        <div className={styles.editComputed} style={{ background: "#EEF7FF", color: "#1B3A6B" }}>
+          <span>
+            {draft.mensualiteMaxSouhaitee > 0
+              ? `Les 3 scénarios seront recalculés en respectant ce plafond de ${formatEUR(draft.mensualiteMaxSouhaitee)} / mois.`
+              : "Laissez à 0 pour le calcul automatique (35 % des revenus − charges). Mettez une valeur si un seul des deux conjoints contracte le prêt, ou si vous voulez plafonner votre effort mensuel."}
+          </span>
+        </div>
       </div>
 
       <div className={styles.editActions}>
