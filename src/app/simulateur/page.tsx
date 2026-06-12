@@ -353,8 +353,8 @@ type Moment = "bebe" | "loyer" | "espace" | "projet";
 const STEP_LABELS = [
   "Votre moment",
   "Votre point de départ",
-  "Vos 3 scénarios",
   "Impact sur votre quotidien",
+  "Vos scénarios",
   "Et si… ?",
   "Et maintenant ?",
 ];
@@ -711,13 +711,13 @@ export default function SimulateurPage() {
             <div className={styles.actions}>
               <button type="button" className={styles.btnGhost} onClick={goPrev}>← Retour</button>
               <button type="button" className={styles.btnPrimary} onClick={goNext}>
-                Voir mes {scenarios.length} scénarios →
+                Voir l'impact sur votre quotidien →
               </button>
             </div>
           </div>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <div className={styles.mainWide}>
             <span className={styles.eyebrow}>Pas un chiffre, un éventail</span>
             <h1 className={styles.title}>
@@ -953,13 +953,13 @@ export default function SimulateurPage() {
             <div className={styles.actions}>
               <button type="button" className={styles.btnGhost} onClick={goPrev}>← Retour</button>
               <button type="button" className={styles.btnPrimary} onClick={goNext}>
-                Voir l'impact sur votre quotidien →
+                Maintenant, et si… ? →
               </button>
             </div>
           </div>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <div className={styles.mainWide}>
             <span className={styles.eyebrow}>Le vrai test : votre vie de tous les jours</span>
             <h1 className={styles.title}>
@@ -979,7 +979,7 @@ export default function SimulateurPage() {
               <div className="right">
                 <strong>{scenario.endettementPct} %</strong>
                 <span>Taux d'endettement</span>
-                <button type="button" className={styles.impactChangeBtn} onClick={() => setStep(2)}>
+                <button type="button" className={styles.impactChangeBtn} onClick={() => setStep(3)}>
                   Changer de scénario
                 </button>
               </div>
@@ -1120,7 +1120,7 @@ export default function SimulateurPage() {
             <div className={styles.actions}>
               <button type="button" className={styles.btnGhost} onClick={goPrev}>← Retour</button>
               <button type="button" className={styles.btnPrimary} onClick={goNext}>
-                Maintenant, et si… ? →
+                Voir mes scénarios →
               </button>
             </div>
           </div>
