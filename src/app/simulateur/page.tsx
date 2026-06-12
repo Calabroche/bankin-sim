@@ -804,9 +804,16 @@ export default function SimulateurPage() {
                 const sumProj = activeCategories.reduce((sum, c) => {
                   if (c.id === "logement") return sum + s.mensualite;
                   const baseActuel = customActualBudget[c.id] != null ? customActualBudget[c.id] : c.actuel;
-                  /* L'arbitrage suggéré est un PLAFOND, pas un remplacement.
-                     Si l'utilisateur dépense déjà moins, on garde sa valeur —
-                     sinon on lui "imposerait" une hausse en disant l'inverse. */
+                  /* Priorité 1 : choix utilisateur fait à la step Impact
+                     (customBudget). Dans le nouveau flux, l'étape Impact
+                     vient AVANT les Scénarios, donc les arbitrages saisis
+                     là sont la cible budgétaire de référence pour toutes
+                     les cards. Sinon on retombe sur les arbitrages
+                     suggérés par le scénario (plafonnés à l'actuel pour
+                     ne pas inviter à dépenser plus), sinon l'actuel. */
+                  if (customBudget[c.id] != null) {
+                    return sum + customBudget[c.id];
+                  }
                   if (s.budgetAdjustments[c.id] != null) {
                     return sum + Math.min(baseActuel, s.budgetAdjustments[c.id]);
                   }
@@ -833,8 +840,13 @@ export default function SimulateurPage() {
                     type="button"
                     className={`${styles.scenarioCard} ${isSelected ? styles.selected : ""} ${isRecommended ? styles.recommended : ""}`}
                     onClick={() => {
+                      /* Important : on ne RESET pas customBudget. Les
+                         arbitrages saisis à l'étape Impact sont la cible
+                         budget de référence et doivent rester appliqués
+                         à toutes les cards quand on switch de scénario.
+                         Seul le logement (mensualité prêt) varie d'un
+                         scénario à l'autre. */
                       setScenarioKey(s.key);
-                      setCustomBudget({});
                     }}
                   >
                     <div className={styles.scenarioName}>{s.name}</div>
@@ -909,7 +921,7 @@ export default function SimulateurPage() {
                         <strong>− {formatEUR(sumActuelOther)}</strong>
                         {economiesScenario > 0 && (
                           <>
-                            <span>Économies du scénario</span>
+                            <span>Vos arbitrages appliqués</span>
                             <strong style={{ color: "#1F9D7A" }}>
                               + {formatEUR(economiesScenario)}
                             </strong>
