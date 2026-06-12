@@ -193,7 +193,12 @@ function buildScenarios(u: UserData): Scenario[] {
   // La mensualité disponible pour le prêt = (totalRev × 35 %) − charges crédits en cours.
   const maxHcsf = Math.max(0, totalRev * 0.35 - u.charges);
 
-  const tiers: { key: Scenario["key"]; name: string; tag: string; pct: number; adjustments: Record<string, number>; impactLine: string }[] = [
+  /* Règle métier : avec des enfants à charge, on n'affiche pas le
+     scénario à 35 % d'endettement. Les banques sont nettement plus
+     prudentes sur un foyer avec dépendants et plafonnent en pratique
+     à 33 %. Garder Ambitieux dans ce cas, c'est laisser miroiter un
+     prêt qui ne passera pas en commission. */
+  const allTiers: { key: Scenario["key"]; name: string; tag: string; pct: number; adjustments: Record<string, number>; impactLine: string }[] = [
     {
       key: "sereine",
       name: "Sereine",
@@ -219,6 +224,9 @@ function buildScenarios(u: UserData): Scenario[] {
       impactLine: "+175 €/mois sur le logement. Marge tendue, plusieurs arbitrages nécessaires.",
     },
   ];
+  const tiers = u.enfants > 0
+    ? allTiers.filter((t) => t.key !== "ambitieux")
+    : allTiers;
 
   const scenarios: Scenario[] = tiers.map((t) => {
     // Le pct est un taux d'endettement TOTAL (mensualité + crédits en cours).
@@ -744,7 +752,36 @@ export default function SimulateurPage() {
               </div>
             )}
 
-            <div className={`${styles.scenarios} ${scenarios.length === 4 ? styles.scenariosFour : ""}`}>
+            {/* Garde-fou métier : avec des enfants à charge, on n'affiche
+                pas le scénario à 35 %. Les banques sont en pratique plus
+                prudentes sur un foyer avec dépendants et plafonnent à
+                33 %. Autant être honnête plutôt que faire miroiter un
+                prêt qui ne passera pas. */}
+            {user.enfants > 0 && (
+              <div
+                style={{
+                  margin: "0 auto 24px",
+                  maxWidth: 820,
+                  padding: "12px 16px",
+                  background: "#EEF7FF",
+                  border: "1px solid #CFE3FB",
+                  borderRadius: 12,
+                  color: "#1B3A6B",
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                }}
+              >
+                👨‍👩‍👧 <strong>Pas de scénario Ambitieux (35 %) avec des enfants à charge.</strong>{" "}
+                Les banques sont plus prudentes sur les foyers avec dépendants et plafonnent en
+                pratique à 33 %. Le scénario Cible devient votre cible max.
+              </div>
+            )}
+
+            <div
+              className={`${styles.scenarios} ${
+                scenarios.length === 4 ? styles.scenariosFour : ""
+              } ${scenarios.length === 2 ? styles.scenariosTwo : ""}`}
+            >
               {scenarios.map((s) => {
                 const isSelected = s.key === scenarioKey;
                 /* Quand le 4ème scénario (Personnalisé) existe, c'est

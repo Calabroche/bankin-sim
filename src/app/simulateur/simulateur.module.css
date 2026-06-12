@@ -910,6 +910,15 @@
   transform: translateX(-50%);
   width: min(calc(100vw - 48px), 1400px);
 }
+/* Quand le foyer a des enfants à charge, on retire Ambitieux et il
+   reste 2 ou 3 cards. À 2 cards, on resserre la grille au centre
+   pour éviter une colonne vide à droite. */
+.scenarios.scenariosTwo {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
 .scenarioCard {
   background: #fff;
   border: 2px solid #E4ECFB;
@@ -1509,7 +1518,7 @@
   .lead { font-size: 15px; margin-bottom: 24px; }
   .momentGrid { grid-template-columns: 1fr; }
   .departGrid { grid-template-columns: 1fr; }
-  .scenarios, .scenarios.scenariosFour { grid-template-columns: 1fr; }
+  .scenarios, .scenarios.scenariosFour, .scenarios.scenariosTwo { grid-template-columns: 1fr; }
   .stressGrid { grid-template-columns: 1fr; }
   .options { grid-template-columns: 1fr; }
   .budgetHead, .budgetRow, .budgetFoot {
